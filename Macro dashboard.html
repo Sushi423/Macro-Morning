@@ -406,7 +406,7 @@ window.addEventListener('storage',e=>{if(e.key===SNAP&&e.newValue)location.reloa
 async function hop(cfg,url,kind){const errors=[];
   for(const rt of ROUTES){
     const qk=rt.n+'|'+kind;
-    if((QZ[qk]||0)>=2){errors.push(rt.n+':q');continue;}
+    if((QZ[qk]||0)>=2 && cfg.tag!=='UST:CURVE'){errors.push(rt.name+':q');continue;}
     const t0=performance.now();let txt;
     try{txt=await via(rt,url,cfg.tag);}
     catch(e){const ms=((performance.now()-t0)/1e3).toFixed(1);QZ[qk]=(QZ[qk]||0)+1;
@@ -467,14 +467,19 @@ async function runFeed(c){c.stage='ROUTE';const att=[];
 const UST_BASE='https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/daily_treasury_par_yield_curve_rates';
 async function fetchCurve(){const p={tag:'UST:CURVE',stage:'ROUTE'};
   const D=isoDay(Date.now()-40*864e5);
+  /* v1–v4 mirror proven shapes; v5 = probe shape + sort only (closest to the
+     one Treasury shape that has EVER succeeded through r.jina) */
   const tries=[
     UST_BASE+'?filter=record_date:gte:'+D+'&sort=-record_date&page%5Bsize%5D=200&format=json',
     UST_BASE+'?filter=record_date:gte:'+D+'&sort=-record_date&page%5Bsize%5D=200&fields='+['record_date'].concat(TENORS.map(x=>x[1])).join(',')+'&format=json',
     UST_BASE+'?filter=record_date:gte:'+D+'&page%5Bsize%5D=100&format=json',
-    UST_BASE+'?page%5Bsize%5D=5&sort=-record_date&format=json'
+    UST_BASE+'?page%5Bsize%5D=5&sort=-record_date&format=json',
+    UST_BASE+'?page%5Bsize%5D=60&format=json'
   ];
   for(let i=0;i<tries.length;i++){
-    try{const r=await hop(p,tries[i],'curve');M.curve=r.rows;
+    for(const k in QZ){if(k.endsWith('|curve'))delete QZ[k];}   /* reset quarantine between variants */
+    try{const r=await hop(p,tries[i],'curve');
+      if(!M.curve)M.curve=r.rows; else M.curve=r.rows;
       flog('UST:CURVE','succeeded on URL variant '+(i+1),'lok');return true;}
     catch(e){flog('UST:CURVE','variant '+(i+1)+' failed','lwarn');}
   }
@@ -482,7 +487,7 @@ async function fetchCurve(){const p={tag:'UST:CURVE',stage:'ROUTE'};
   if(M.DGS2&&M.DGS10&&M.DGS30){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v])),m30=new Map(M.DGS30.vals.map(r=>[r.d,r.v]));
     M.curve=M.DGS10.vals.filter(r=>m2.has(r.d)&&m30.has(r.d)).map(r=>({d:r.d,y:{'2Y':m2.get(r.d),'10Y':r.v,'30Y':m30.get(r.d)}}));return true;}
   return false;}
-
+  
 /* ============ stage 1 — connectivity matrix ============ */
 async function diagnose(){log('\u2500\u2500 STAGE 1 · CONNECTIVITY MATRIX (4 upstreams \u00d7 '+ROUTES.length+' routes, parallel) \u2500\u2500','lhi');
   status('STAGE 1 · probing routes…');

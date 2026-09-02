@@ -171,7 +171,7 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
   <section class="chartday rv">
     <div><div class="kick">U.S. Treasury par curve — latest vs one month ago</div>
       <div id="curve"><span class="ph">waiting on Treasury data…</span></div>
-      <div class="cfoot">Constant-maturity par yields · U.S. Treasury Fiscal Data · solid = latest, dotted = 1M ago · <b>click any figure for source</b></div>
+      <div class="cfoot">Constant-maturity par yields · FRED daily series, date-matched · solid = latest, dotted = 1M ago · <b>click any figure for source</b></div>
     </div>
     <aside><div class="kick">Read</div><div id="curveRead"><span class="ph">—</span></div></aside>
   </section>
@@ -208,7 +208,7 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
   <div class="pgrid"><div class="log" id="log"></div><div class="hlth" id="hlth"></div></div>
 </div></section>
 
-<footer class="wrap"><b>READING THIS BRIEF</b> — first view: three asset groups at your chosen basis (W/W · 1M · 3M · a picked date, frequency-aware per series) plus the full Treasury curve. "Latest prints" lists announced government releases only (weekly &amp; monthly cadence) — daily market-derived series and traded instruments are excluded by design. Every figure is clickable: publisher, series ID, observation date, cadence, freshness. Inflation = <b>headline CPI (NSA)</b> and <b>core CPI (NSA)</b> y/y unless labelled otherwise; PCE is BEA-keyed, hence absent. JOLTS lags ~7 weeks. Credit spreads are ICE BofA OAS. Not investment advice.</footer>
+<footer class="wrap"><b>READING THIS BRIEF</b> — first view: three asset groups at your chosen basis (W/W · 1M · 3M · a picked date, frequency-aware per series) plus the full Treasury curve, assembled from FRED's per-tenor daily series (1M–30Y, date-matched). "Latest prints" lists announced government releases only (weekly &amp; monthly cadence). Every figure is clickable: publisher, series ID, observation date, cadence, freshness. Inflation = <b>headline CPI (NSA)</b> and <b>core CPI (NSA)</b> y/y unless labelled otherwise; PCE is BEA-keyed, hence absent. JOLTS lags ~7 weeks. Credit spreads are ICE BofA OAS. Not investment advice.</footer>
 
 <div id="scrim"></div>
 <aside id="drawer"><div class="dwh"><span class="t" id="dwT">—</span><button id="dwX">×</button></div><div id="dwB"></div></aside>
@@ -275,10 +275,17 @@ const MEANS={UNRATE:'labor-market slack',JTSJOL:'labor demand — workers employ
   T5YIE:'near-term market inflation expectations',T5YIFR:'the long-run inflation anchor',
   DFEDTARU:'the Fed\u2019s current policy stance'};
 
-/* ============ feed config ============ */
+/* ============ feed config — v13.5 adds 7 curve tenors ============ */
 const FEEDS=[
+ {id:'DGS1MO',src:'fred',freq:'daily',sid:'DGS1MO',label:'US 1M',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS3MO',src:'fred',freq:'daily',sid:'DGS3MO',label:'US 3M',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS6MO',src:'fred',freq:'daily',sid:'DGS6MO',label:'US 6M',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS1',src:'fred',freq:'daily',sid:'DGS1',label:'US 1Y',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS2',src:'fred',freq:'daily',sid:'DGS2',label:'US 2Y',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS5',src:'fred',freq:'daily',sid:'DGS5',label:'US 5Y',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS7',src:'fred',freq:'daily',sid:'DGS7',label:'US 7Y',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS10',src:'fred',freq:'daily',sid:'DGS10',label:'US 10Y',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS20',src:'fred',freq:'daily',sid:'DGS20',label:'US 20Y',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS30',src:'fred',freq:'daily',sid:'DGS30',label:'US 30Y',dp:2,span:210,du:'bp',good:-1},
  {id:'T10YIE',src:'fred',freq:'daily',sid:'T10YIE',label:'10Y BREAKEVEN',dp:2,span:210,du:'bp',good:0},
  {id:'T5YIE',src:'fred',freq:'daily',sid:'T5YIE',label:'5Y BREAKEVEN',dp:2,span:210,du:'bp',good:0},
@@ -308,8 +315,9 @@ const FEEDS=[
 const cfgOf=id=>FEEDS.find(f=>f.id===id);
 const UST_MAP={DGS2:'BC_2YEAR',DGS10:'BC_10YEAR',DGS30:'BC_30YEAR'};
 const BLS_MAP={UNRATE:'LNS14000000',CPIAUCSL:'CUUR0000SA0',CPILFESL:'CUUR0000SA0L1E'};
-const TENORS=[['1M','BC_1MONTH'],['3M','BC_3MONTH'],['6M','BC_6MONTH'],['1Y','BC_1YEAR'],['2Y','BC_2YEAR'],
- ['3Y','BC_3YEAR'],['5Y','BC_5YEAR'],['7Y','BC_7YEAR'],['10Y','BC_10YEAR'],['20Y','BC_20YEAR'],['30Y','BC_30YEAR']];
+/* v13.5: curve assembled from these FRED tenors — no Treasury API call */
+const CURVE_TENORS=[['1M','DGS1MO'],['3M','DGS3MO'],['6M','DGS6MO'],['1Y','DGS1'],['2Y','DGS2'],
+ ['5Y','DGS5'],['7Y','DGS7'],['10Y','DGS10'],['20Y','DGS20'],['30Y','DGS30']];
 const DERIVED={
  SPREAD:{label:'2s10s spread',unit:'bp',dp:1,comps:['DGS10','DGS2'],note:'DGS10 minus DGS2, matched by date'},
  SP2S30:{label:'2s30s spread',unit:'bp',dp:1,comps:['DGS30','DGS2'],note:'DGS30 minus DGS2, matched by date'},
@@ -368,12 +376,6 @@ function pUst(t,cfg){const j=JSON.parse(t);const arr=j&&j.data;
   const rows=[];for(const r of arr){const v=parseFloat(r[UST_MAP[cfg.id]]);
     if(r.record_date&&isFinite(v))rows.push({d:r.record_date,v});}
   rows.sort((a,b)=>a.d<b.d?-1:1);if(!rows.length)throw new Error('0 rows '+UST_MAP[cfg.id]);return rows;}
-function pCurve(t){const j=JSON.parse(t);const arr=j&&j.data;
-  if(!Array.isArray(arr))throw new Error('no fiscal data');
-  const rows=[];for(const r of arr){if(!r.record_date)continue;const y={};let n=0;
-    for(const p of TENORS){const v=parseFloat(r[p[1]]);if(isFinite(v)){y[p[0]]=v;n++;}}
-    if(n>=4)rows.push({d:r.record_date,y});}
-  rows.sort((a,b)=>a.d<b.d?-1:1);if(!rows.length)throw new Error('0 curve rows');return rows;}
 function pBls(t){const j=JSON.parse(t);const s=j&&j.Results&&j.Results.series&&j.Results.series[0];
   if(!s||!Array.isArray(s.data))throw new Error('no BLS data');
   const rows=[];for(const p of s.data){if(!/^M\d{2}$/.test(p.period||''))continue;
@@ -404,8 +406,7 @@ window.addEventListener('storage',e=>{if(e.key===SNAP&&e.newValue)location.reloa
 
 /* ============ fetch engine ============ */
 async function hop(cfg,url,kind){const errors=[];
-  for(const rt of ROUTES){
-    const qk=rt.n+'|'+kind;
+  for(const rt of ROUTES){const qk=rt.n+'|'+kind;
     if((QZ[qk]||0)>=2){errors.push(rt.n+':q');continue;}
     const t0=performance.now();let txt;
     try{txt=await via(rt,url,cfg.tag);}
@@ -414,22 +415,18 @@ async function hop(cfg,url,kind){const errors=[];
       flog(cfg.tag,'\u2717 '+rt.n+' · '+esc(r)+' · '+ms+'s'+(e.body?' · target said: "'+esc(e.body)+'"':''),'lwarn');
       errors.push(rt.n+':'+r);continue;}
     const bytes=txt.length,ms=((performance.now()-t0)/1e3).toFixed(1);
-    const j=kind==='json'||kind==='ust'||kind==='bls'||kind==='curve';
+    const j=kind==='json'||kind==='ust'||kind==='bls';
     let rows;
     try{const p=j?trim(txt):trimTxt(txt);
-      rows= kind==='stooq'?pStooq(p):kind==='fred'?pFred(p):kind==='ust'?pUst(p,cfg):
-            kind==='curve'?pCurve(p):kind==='bls'?pBls(p):pYah(p);}
+      rows= kind==='stooq'?pStooq(p):kind==='fred'?pFred(p):kind==='ust'?pUst(p,cfg):kind==='bls'?pBls(p):pYah(p);}
     catch(pe){QZ[qk]=(QZ[qk]||0)+1;cfg.stage='PARSE';
-      /* v13.4: body head widened to 240 chars so 404 pages self-explain */
       flog(cfg.tag,'\u2717 '+rt.n+' · 200 · '+bytes+'B · UNUSABLE — '+esc(pe.message)+' · head "'+p0(txt)+'"','lerr');
       errors.push(rt.n+':parse');continue;}
     if(!rows.length){cfg.stage='EMPTY';flog(cfg.tag,'\u2717 '+rt.n+' · 200 · '+bytes+'B · 0 rows','lerr');errors.push(rt.n+':empty');continue;}
     QZ[qk]=0;
-    const tail=kind==='curve'?rows.length+' curve days':rows.length+' obs ('+rows[0].d+' → '+rows[rows.length-1].d+')';
-    flog(cfg.tag,'\u2713 '+rt.n+' · 200 · '+bytes+'B · '+ms+'s · '+tail,'lok');
+    flog(cfg.tag,'\u2713 '+rt.n+' · 200 · '+bytes+'B · '+ms+'s · '+rows.length+' obs ('+rows[0].d+' → '+rows[rows.length-1].d+')','lok');
     return{rows,via:rt.n,bytes,ms};}
   throw new Error('all hops failed ['+errors.join('|')+']');}
-/* v13.4: 240-char head — full 404 explanation visible in the log */
 function p0(t){return String(t).slice(0,240).replace(/\s+/g,' ');}
 function chainOf(c){if(c.src==='yahoo'){const a=['yahoo'];if(c.s)a.push('stooq');return a;}
   const a=['fred'];if(UST_MAP[c.id])a.push('treasury');if(BLS_MAP[c.id])a.push('bls');return a;}
@@ -459,29 +456,27 @@ async function runFeed(c){c.stage='ROUTE';const att=[];
     state[c.id]={rows:[],via:'err',src:'none',stage:c.stage};}
   return false;}
 
-/* v13.4 — curve fetch as a variant ladder. Each variant mirrors a shape
-   proven to work elsewhere: v1/v2 mirror the feed-chain treasury URL
-   (filter+sort+page200, with/without fields); v3 loose filter; v4 the
-   Stage-1 probe shape (page5). First success wins; all four failing
-   falls back to the 3-point DGS2/10/30 curve. */
-const UST_BASE='https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/daily_treasury_par_yield_curve_rates';
-async function fetchCurve(){const p={tag:'UST:CURVE',stage:'ROUTE'};
-  const D=isoDay(Date.now()-40*864e5);
-  const tries=[
-    UST_BASE+'?filter=record_date:gte:'+D+'&sort=-record_date&page%5Bsize%5D=200&format=json',
-    UST_BASE+'?filter=record_date:gte:'+D+'&sort=-record_date&page%5Bsize%5D=200&fields='+['record_date'].concat(TENORS.map(x=>x[1])).join(',')+'&format=json',
-    UST_BASE+'?filter=record_date:gte:'+D+'&page%5Bsize%5D=100&format=json',
-    UST_BASE+'?page%5Bsize%5D=5&sort=-record_date&format=json'
-  ];
-  for(let i=0;i<tries.length;i++){
-    try{const r=await hop(p,tries[i],'curve');M.curve=r.rows;
-      flog('UST:CURVE','succeeded on URL variant '+(i+1),'lok');return true;}
-    catch(e){flog('UST:CURVE','variant '+(i+1)+' failed','lwarn');}
-  }
-  flog('UST:CURVE','all variants failed → 3-point fallback from DGS2/10/30','lwarn');
-  if(M.DGS2&&M.DGS10&&M.DGS30){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v])),m30=new Map(M.DGS30.vals.map(r=>[r.d,r.v]));
-    M.curve=M.DGS10.vals.filter(r=>m2.has(r.d)&&m30.has(r.d)).map(r=>({d:r.d,y:{'2Y':m2.get(r.d),'10Y':r.v,'30Y':m30.get(r.d)}}));return true;}
-  return false;}
+/* v13.5 — curve assembled from FRED per-tenor series already in memory.
+   No Treasury API call: the parameterized Treasury URL 404s through every
+   relay we have, while the FRED /data/ pipe has never failed. Date-matched
+   across tenors on the 10Y's observation calendar. */
+function buildCurveFromFRED(){
+  const maps={};const labs=[];
+  for(const pair of CURVE_TENORS){const id=pair[1];
+    if(M[id]&&M[id].vals&&M[id].vals.length){maps[pair[0]]=new Map(M[id].vals.map(r=>[r.d,r.v]));labs.push(pair[0]);}}
+  if(labs.length<3){flog('UST:CURVE','only '+labs.length+' tenor(s) available — cannot assemble','lwarn');return false;}
+  const base=M.DGS10?M.DGS10.vals:null;
+  if(!base||!base.length){flog('UST:CURVE','no 10Y calendar to anchor on','lwarn');return false;}
+  const rows=[];
+  for(const r of base){const y={};let n=0;
+    for(const lab of labs){const v=maps[lab].get(r.d);if(v!=null){y[lab]=v;n++;}}
+    if(n>=3)rows.push({d:r.d,y:y});}
+  rows.sort((a,b)=>a.d<b.d?-1:1);
+  if(!rows.length){flog('UST:CURVE','0 date-matched rows','lwarn');return false;}
+  M.curve=rows;
+  flog('UST:CURVE','assembled from '+labs.length+' FRED tenor series · '+rows.length+' days ('+rows[0].d+' → '+rows[rows.length-1].d+')','lok');
+  return true;}
+function fetchCurve(){return Promise.resolve(buildCurveFromFRED());}
 
 /* ============ stage 1 — connectivity matrix ============ */
 async function diagnose(){log('\u2500\u2500 STAGE 1 · CONNECTIVITY MATRIX (4 upstreams \u00d7 '+ROUTES.length+' routes, parallel) \u2500\u2500','lhi');
@@ -492,7 +487,7 @@ async function diagnose(){log('\u2500\u2500 STAGE 1 · CONNECTIVITY MATRIX (4 up
   const PROBES=[
     {n:'fred',u:'https://fred.stlouisfed.org/data/DGS10.txt',re:/\d{4}-\d{2}-\d{2}/},
     {n:'yahoo',u:'https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=1d&interval=1d',re:/chart|meta/},
-    {n:'treasury',u:UST_BASE+'?page%5Bsize%5D=5&format=json',re:/data/},
+    {n:'treasury',u:'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/daily_treasury_par_yield_curve_rates?page%5Bsize%5D=5&format=json',re:/data/},
     {n:'bls',u:'https://api.bls.gov/publicAPI/v2/timeseries/data/LNS14000000?startyear='+new Date().getFullYear()+'&endyear='+new Date().getFullYear(),re:/Results|data/}];
   const sc={};
   await Promise.all(ROUTES.map(async rt=>{const rs=await Promise.all(PROBES.map(async p=>{
@@ -601,7 +596,7 @@ function renderInteg(){const r=integReport(),h=document.getElementById('integ');
     :'<div class="di ok">\u2713 All '+FEEDS.length+' feeds current — every figure live-sourced and within its release window</div>';}
 
 /* ============ render ============ */
-const GROUPS=[['RATES',['DGS2','DGS10','DGS30','T10YIE']],
+const GROUPS=[['RATES',['DGS1MO','DGS3MO','DGS6MO','DGS1','DGS2','DGS5','DGS7','DGS10','DGS20','DGS30','T10YIE']],
   ['COMMODITIES · FX',['WTI','BRENT','NATGAS','WHEAT','GOLD','SILVER','DXY']],
   ['EQUITIES · CRYPTO',['SP500','NAS','DOW','VIX','BTC']]];
 function spark(vals,w,h){const v=(vals||[]).filter(x=>x!=null);if(v.length<2)return'';
@@ -643,7 +638,7 @@ function renderCurve(){const host=document.getElementById('curve'),read=document
   if(!M.curve||!M.curve.length){host.innerHTML='<span class="ph">curve unavailable — see log</span>';read.innerHTML='<span class="ph">—</span>';return;}
   const L=M.curve[0];let P=null;
   for(const r of M.curve){if(Date.parse(L.d)-Date.parse(r.d)>=25*864e5){P=r;break;}}
-  const ts=TENORS.map(x=>x[0]).filter(t=>L.y[t]!=null);
+  const ts=CURVE_TENORS.map(x=>x[0]).filter(t=>L.y[t]!=null);
   const W=680,H=232,La=44,Ra=54,T=14,B=26;
   const vs=ts.map(t=>L.y[t]);if(P)ts.forEach(t=>{if(P.y[t]!=null)vs.push(P.y[t]);});
   let mn=Math.min(...vs),mx=Math.max(...vs);const pad=Math.max((mx-mn)*.18,.15);mn-=pad;mx+=pad;
@@ -852,7 +847,7 @@ function renderHealth(){let ok=0,ca=0,dd=0;
     else if(s.stage==='PEND'){dc='dr';tx='PEND';dd++;}
     else{dc='dr';tx='\u2717'+s.stage;dd++;}
     return'<div class="chip" title="'+c.id+' · '+(s.src||'?')+' via '+(s.via||'?')+'"><span class="dot '+dc+'"></span><b>'+c.id+'</b>·'+tx+'</div>';}).join('');
-  $('pstats').textContent=FEEDS.length+' FEEDS + CURVE · '+ok+' OK · '+ca+' CACHE · '+dd+' STUCK';return dd;}
+  $('pstats').textContent=FEEDS.length+' FEEDS · '+ok+' OK · '+ca+' CACHE · '+dd+' STUCK';return dd;}
 function mast(st){const o=document.querySelector('.mmeta');if(o)o.remove();
   const m=document.createElement('div');m.className='mmeta';
   m.innerHTML='<div class="dt">'+etDate()+'</div><div class="bt">BUILT '+etTime()+' ET · TAPE '+st+'</div>';
@@ -881,7 +876,7 @@ function renderAll(st){derive();const s=st||narrative();
 async function boot(matrix){if(busy)return;busy=true;
   $('bRun').disabled=true;$('bDiag').disabled=true;
   ROUTES=routes();for(const k in QZ)delete QZ[k];
-  log('\u2500\u2500 BOOT v13.4 · ladder: '+ROUTES.map(r=>r.n).join(' → ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
+  log('\u2500\u2500 BOOT v13.5 · ladder: '+ROUTES.map(r=>r.n).join(' → ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
   if(restore()){document.getElementById('snap').classList.add('on');renderAll();}
   setStage(0,'probing routes…');
   if(matrix||!goodRoutes.length)goodRoutes=await diagnose();
@@ -905,7 +900,7 @@ async function boot(matrix){if(busy)return;busy=true;
   await fetchCurve();
   const out=renderAll();
   const bySrc={};FEEDS.forEach(c=>{const s=state[c.id];if(s&&s.rows.length)bySrc[s.src||c.src]=(bySrc[s.src||c.src]||0)+1;});
-  log('provenance: '+Object.entries(bySrc).map(e=>e[0]+'\u00d7'+e[1]).join(' · ')+' · ust-curve\u00d71','lhi');
+  log('provenance: '+Object.entries(bySrc).map(e=>e[0]+'\u00d7'+e[1]).join(' · '),'lhi');
   snapshot();document.getElementById('snap').classList.remove('on');
   setStage(3,'built '+etTime()+' ET');
   log('\u2500\u2500 BUILD COMPLETE · '+out.dead+' feed(s) stuck · snapshot saved \u2500\u2500','lok');
@@ -937,9 +932,9 @@ document.querySelectorAll('.bbtn[data-b]').forEach(x=>x.addEventListener('click'
  $('bDateClr').addEventListener('click',()=>{$('bDate').value='';BDATE='';setBasis('ww');});
 document.querySelectorAll('.rv').forEach((el,i)=>el.style.animationDelay=(i*60)+'ms');
 setBasis(BASIS);if(BASIS==='date'&&BDATE)$('bDate').value=BDATE;
-log('morning macro v13.4 — curve fetch now a 4-variant ladder mirroring proven-working Treasury URL shapes','lhi');
-log('parse-failure body head widened to 240 chars — a stubborn 404 will log Treasury\u2019s own explanation','ldim');
-log('matrix denominator fixed (was hardcoded /2) \u00b7 fallback chain intact: variants → 3-point DGS2/10/30 curve','ldim');
+log('morning macro v13.5 — curve rebuilt FRED-native: 7 new tenor feeds (DGS1MO/3MO/6MO/1/5/7/20), curve date-matched in-memory','lhi');
+log('no Treasury parameterized API calls remain — the source that 404d through every relay is gone; 35 feeds total','ldim');
+log('curve chart now derives from the same proven /data/ pipe as every other figure — same health chips, same integrity line','ldim');
 boot(true);
 </script>
 </body>

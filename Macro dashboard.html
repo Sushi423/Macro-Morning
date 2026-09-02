@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Morning Macro</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--pp:#F5F1E6;--ink:#191510;--ink2:#6B6355;--hr:rgba(25,21,16,.2);--hr2:rgba(25,21,16,.1);--red:#A63B2A;--grn:#1F6647;--amb:#A87B24;--pan:#17130D;--pi:#E7E0CF}
+html{background:var(--pp)}body{font-family:'Newsreader',Georgia,serif;color:var(--ink);-webkit-font-smoothing:antialiased;font-size:17px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.rv{animation:rise .5s both}@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.mono,.btn,.bbtn,.seg,.chip,.log,.di,.cn,.gi,.pr,.sub,.ag,.ph,.asof,.kick{font-family:'IBM Plex Mono',monospace}
+.mast{padding-top:22px}.mast-top{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:12px}.mark{width:11px;height:11px;background:var(--red);display:inline-block}
+h1{font-size:clamp(36px,5vw,58px);font-weight:550;letter-spacing:-.02em;line-height:.92}
+.mmeta{text-align:right}.mmeta .dt{font-size:13px;font-weight:600}.mmeta .bt{font-size:11px;color:var(--ink2);margin-top:4px}
+.acts{display:flex;gap:7px;flex-wrap:wrap}
+.btn{font-size:11px;letter-spacing:.12em;text-transform:uppercase;border:1px solid var(--ink);background:none;color:var(--ink);padding:8px 12px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.btn:hover,.btn.on{background:var(--ink);color:var(--pp)}.btn:disabled{opacity:.4;cursor:default}
+.btn svg{width:12px;height:12px;stroke:currentColor;stroke-width:2.2;fill:none}
+.rule{height:7px;border-top:3px solid var(--ink);border-bottom:1px solid var(--ink);margin-top:12px}
+.msub{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);padding:7px 0;border-bottom:1px solid var(--hr)}
+#fs.live{color:var(--ink)}
+#snap{display:none;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;color:var(--amb);padding:5px 0;border-bottom:1px solid var(--hr);text-transform:uppercase}
+#snap.on{display:block}
+.kick{font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink2);display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.kick::after{content:'';flex:1;height:1px;background:var(--hr)}
+.ph{font-size:11.5px;color:var(--ink2)}
+.basis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:14px 0 4px}
+.basis .bl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.15em;color:var(--ink2);text-transform:uppercase;margin-right:5px}
+.bbtn{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;padding:5px 11px;cursor:pointer;border:1px solid var(--hr);background:none;color:var(--ink2)}
+.bbtn:hover{border-color:var(--ink);color:var(--ink)}.bbtn.on{background:var(--ink);color:var(--pp);border-color:var(--ink)}
+#bDate{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:4px 8px;border:1px solid var(--hr);background:none;color:var(--ink)}
+.groups{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--hr);margin-top:8px}
+.grp{padding:12px 14px;border-right:1px solid var(--hr)}.grp:last-child{border-right:none}
+.gk{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.17em;color:var(--ink2);margin-bottom:5px}
+.gi{display:flex;align-items:baseline;gap:10px;padding:5px 3px;border-bottom:1px dotted var(--hr2);cursor:pointer}
+.gi:last-child{border-bottom:none}.gi:hover{background:rgba(25,21,16,.05)}
+.gi .l{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:var(--ink2);flex:1;text-transform:uppercase}
+.gi .v{font-family:'IBM Plex Mono',monospace;font-size:15px;font-weight:600;white-space:nowrap}
+.gi .d{font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:nowrap}
+.gi svg{width:52px;height:14px;flex:none;align-self:center}
+.prints{padding:16px 0 20px;border-bottom:1px solid var(--hr)}
+.pr{display:flex;gap:12px;align-items:baseline;padding:6px 3px;border-bottom:1px dotted var(--hr2);cursor:pointer}
+.pr:hover{background:rgba(25,21,16,.05)}
+.badge{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.12em;color:var(--pp);background:var(--red);padding:1px 6px;flex:none}
+.badge.old{background:none;color:var(--ink2);border:1px solid var(--hr)}
+.pr .l{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;min-width:150px;white-space:nowrap}
+.pr .v{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;white-space:nowrap}
+.pr .d{font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:nowrap}
+.pr .m{font-style:italic;font-size:15px;color:var(--ink2);flex:1;min-width:0}
+.pr .dt{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--ink2);white-space:nowrap}
+.chartday{display:grid;grid-template-columns:1fr 300px;gap:30px;padding:22px 0;border-bottom:1px solid var(--hr)}
+#curve svg{width:100%;height:auto;display:block}
+#curve .ln{fill:none;stroke:var(--ink);stroke-width:1.8}#curve .pv{fill:none;stroke:var(--ink2);stroke-width:1.2;stroke-dasharray:4 4;opacity:.75}
+#curve .dt2{fill:var(--pp);stroke:var(--ink);stroke-width:1.4}#curve .dl{fill:var(--red)}
+#curve .gd{stroke:var(--hr2)}#curve text{font-family:'IBM Plex Mono',monospace;font-size:9.5px;fill:var(--ink2)}
+#curve .vl{font-size:11px;font-weight:600;fill:var(--ink);stroke:var(--pp);stroke-width:4px;paint-order:stroke}
+.cn{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px dotted var(--hr2);font-family:'IBM Plex Mono',monospace;font-size:13px}
+.cn .l{color:var(--ink2);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding-top:2px}.cn .v{font-weight:600}
+.cfoot{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink2);margin-top:10px}
+.lead{display:grid;grid-template-columns:1fr 300px;gap:30px;padding:22px 0 24px;border-bottom:1px solid var(--hr)}
+.stamp{display:inline-block;border:1.5px solid currentColor;border-radius:2px;padding:2px 8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.15em;margin-left:10px}
+.s-on{color:var(--grn)}.s-off{color:var(--red)}.s-mix{color:var(--ink2)}
+#integ{margin:-2px 0 10px}
+.di{font-family:'IBM Plex Mono',monospace;font-size:10.5px;padding:3px 0;border-bottom:1px dotted var(--hr2);display:flex;gap:8px}
+.di.warn{color:var(--amb)}.di.err{color:var(--red)}.di.ok{color:var(--grn)}
+.narr{font-size:20px;line-height:1.6;max-width:70ch}
+.fig{font-weight:600;border-bottom:1px solid rgba(25,21,16,.35);white-space:nowrap}
+.agenda{border-left:1px solid var(--hr);padding-left:24px}
+.ag{display:flex;gap:12px;padding:8px 0;border-bottom:1px dotted var(--hr2);font-family:'IBM Plex Mono',monospace}
+.ag:last-child{border-bottom:none}
+.ag .d{font-size:11px;font-weight:600;min-width:96px;white-space:nowrap}
+.ag .t{font-size:16px;font-weight:500}.ag .s{font-size:10px;letter-spacing:.1em;color:var(--ink2);margin-top:2px;text-transform:uppercase}
+.blocks{display:grid;grid-template-columns:5fr 4fr 3fr;padding:4px 0 8px}
+.blk{padding:20px 22px}.blk+.blk{border-left:1px solid var(--hr)}.blk:first-child{padding-left:0}
+.hrow{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:4px}
+.hv{font-size:44px;font-weight:550;line-height:1}.hu{font-size:23px;color:var(--ink2);font-weight:400}
+.hd{display:flex;gap:12px;margin-top:8px;font-family:'IBM Plex Mono',monospace;font-size:11.5px;flex-wrap:wrap}.hd .lb{color:var(--ink2);font-size:10px;margin-right:3px}
+.asof{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.07em;color:var(--ink2);margin:2px 0 8px;text-transform:uppercase}.asof b{color:var(--ink)}
+.sub{display:flex;align-items:baseline;gap:8px;padding:7px 0;border-bottom:1px dotted var(--hr2);font-family:'IBM Plex Mono',monospace;font-size:13px}
+.sub .lbl{color:var(--ink2);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+.sub .dots{flex:1;border-bottom:1px dotted var(--hr2);transform:translateY(-3px);min-width:12px}
+.sub .val{font-weight:600;white-space:nowrap}.sub .d{font-size:11px;white-space:nowrap}
+.clk{cursor:pointer}.clk:hover{background:rgba(25,21,16,.06)}
+.clk:hover .val,.clk:hover .v,.clk:hover .fig,.clk:hover .hv{text-decoration:underline dotted;text-underline-offset:3px}
+details.more{margin-top:6px}
+details.more summary{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);cursor:pointer;list-style:none;padding:5px 0}
+details.more summary::-webkit-details-marker{display:none}
+details.more summary::after{content:' +';font-weight:600}details.more[open] summary::after{content:' −'}
+.spark{display:block;width:110px;height:30px}.spark polyline{fill:none;stroke:var(--ink);stroke-width:1.3}.spark circle{fill:var(--red)}
+.pipe{background:var(--pan);color:var(--pi)}.pipe .kick{color:#8B8371}.pipe .kick::after{background:rgba(231,224,207,.18)}
+.phead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-top:22px}
+.pstats{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.13em;color:#8B8371;text-transform:uppercase}
+.stbar{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.seg{font-size:10px;letter-spacing:.11em;padding:5px 10px;border:1px solid rgba(231,224,207,.18);color:#71695A}
+.seg.on{color:#E7E0CF;border-color:rgba(231,224,207,.45)}.seg.cur{background:#E7E0CF;color:var(--pan)}
+#stg{font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8B8371;margin-left:6px}
+.pgrid{display:grid;grid-template-columns:1fr 320px;gap:34px;padding:14px 0 18px}
+.log{font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;max-height:320px;overflow-y:auto;color:#C8C0AC}
+.log .t{color:#71695A;margin-right:10px}
+.lok{color:#93C4A4}.lwarn{color:#D8B36A}.lerr{color:#D0705C}.lhi{color:#EFE8D6}.ldim{color:#71695A}
+.hlth{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
+.chip{border:1px solid rgba(231,224,207,.14);padding:6px 9px;font-family:'IBM Plex Mono',monospace;font-size:10px;display:flex;gap:8px;align-items:center;color:#B5AD98;white-space:nowrap;overflow:hidden}
+.chip b{color:#E7E0CF}.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.dg{background:#5FA97C}.da{background:#D8B36A}.dr{background:#D0705C}
+#halt{display:none;border:1px solid #D0705C;background:rgba(208,112,92,.08);padding:14px 16px;margin:12px 0 4px;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.9;color:#E7E0CF}
+#halt.on{display:block}#halt b{color:#D0705C}
+.relay{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.relay label{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:#8B8371}
+.relay input{background:#0F0C08;border:1px solid rgba(231,224,207,.25);color:#E7E0CF;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 10px;width:340px;max-width:70vw}
+.rbtn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;border:1px solid rgba(231,224,207,.4);background:none;color:#E7E0CF;padding:8px 12px;cursor:pointer}
+.rbtn:hover{background:#E7E0CF;color:var(--pan)}
+.hint{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#71695A;width:100%}
+#scrim{position:fixed;inset:0;background:rgba(25,21,16,.35);opacity:0;pointer-events:none;transition:.25s;z-index:90}
+#scrim.on{opacity:1;pointer-events:auto}
+#drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:94vw;background:var(--pp);border-left:1px solid var(--ink);box-shadow:-14px 0 40px rgba(25,21,16,.18);z-index:95;transform:translateX(103%);transition:transform .28s;display:flex;flex-direction:column}
+#drawer.on{transform:none}
+.dwh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 10px;border-bottom:3px double var(--ink)}
+.dwh .t{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase}
+#dwX{font-size:15px;border:1px solid var(--ink);background:none;color:var(--ink);width:28px;height:28px;cursor:pointer}
+#dwX:hover{background:var(--ink);color:var(--pp)}
+#dwB{padding:14px 18px 36px;overflow-y:auto}
+.dv{font-size:40px;font-weight:550}.dv small{font-size:20px;color:var(--ink2);font-weight:400}
+.dsec{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink2);margin:15px 0 5px;padding-bottom:4px;border-bottom:1px solid var(--hr)}
+.dr2{display:flex;justify-content:space-between;gap:12px;padding:4px 0;font-family:'IBM Plex Mono',monospace;font-size:11.5px;border-bottom:1px dotted var(--hr2)}
+.dr2 .k{color:var(--ink2);font-size:10px;text-transform:uppercase;flex:none;padding-top:1px}
+.dr2 .v{text-align:right;font-weight:500;word-break:break-word}
+.dr2 .v.warn{color:var(--amb);font-weight:600}.dr2 .v.err{color:var(--red);font-weight:600}.dr2 .v.ok{color:var(--grn);font-weight:600}
+.dc{width:100%;height:auto;display:block;margin-top:4px}.dc polyline{fill:none;stroke:var(--ink);stroke-width:1.4}.dc circle{fill:var(--red)}
+.dnote{font-size:15px;line-height:1.5;font-style:italic;color:var(--ink2);margin-top:10px}
+footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;color:var(--ink2);padding:24px 0 56px}footer b{color:var(--ink)}
+#toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);background:var(--ink);color:var(--pp);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:11px 18px;opacity:0;pointer-events:none;transition:.28s;z-index:99}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1000px){.lead,.chartday,.pgrid{grid-template-columns:1fr}.agenda{border:none;border-top:1px solid var(--hr);padding:20px 0 0}
+.blocks{grid-template-columns:1fr}.blk{padding:20px 0}.blk+.blk{border:none;border-top:1px solid var(--hr);padding-top:20px}
+.groups{grid-template-columns:1fr}.grp{border-right:none;border-bottom:1px solid var(--hr)}.pr .m{display:none}.mmeta{text-align:left}#drawer{width:100vw}}
+</style>
+</head>
+<body>
+
+<header class="wrap mast">
+  <div class="mast-top">
+    <div class="brand"><span class="mark"></span><h1>Morning Macro</h1></div>
+    <div class="acts">
+      <button class="btn on" id="bAuto"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="autoL">Auto · 12h</span></button>
+      <button class="btn" id="bDiag"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Re-run stages</button>
+      <button class="btn" id="bRun"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-2.6-6.4M21 3v6h-6"/></svg>Run build</button>
+      <button class="btn" id="bCopy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy brief</button>
+    </div>
+  </div>
+  <div class="rule"></div>
+  <div class="msub"><span>RATES · COMMODITIES · EQUITIES · CURVE · WHAT'S NEW</span><span id="fs">booting…</span></div>
+</header>
+
+<div id="snap" class="wrap">Showing last saved build — refreshing in background</div>
+
+<main class="wrap">
+  <section class="rv" id="secG">
+    <div class="basis"><span class="bl">Change basis</span>
+      <button class="bbtn" data-b="ww">W/W</button><button class="bbtn" data-b="m1">vs 1M</button><button class="bbtn" data-b="m3">vs 3M</button>
+      <input type="date" id="bDate" title="compare against this date">
+      <button class="bbtn" id="bDateClr" title="clear date">×</button>
+      <span class="ph" id="basisNote" style="margin-left:6px">every change below follows this basis</span>
+    </div>
+    <div class="groups" id="groups"><span class="ph" style="padding:16px">feed pending…</span></div>
+  </section>
+
+  <section class="chartday rv">
+    <div><div class="kick">U.S. Treasury par curve — latest vs one month ago</div>
+      <div id="curve"><span class="ph">waiting on Treasury data…</span></div>
+      <div class="cfoot">Constant-maturity par yields · U.S. Treasury Fiscal Data · solid = latest, dotted = 1M ago · <b>click any figure for source</b></div>
+    </div>
+    <aside><div class="kick">Read</div><div id="curveRead"><span class="ph">—</span></div></aside>
+  </section>
+
+  <section class="prints rv"><div class="kick">Latest announced prints — what's new and what it reflects</div>
+    <div id="prints"><span class="ph">feed pending…</span></div>
+  </section>
+
+  <section class="lead rv">
+    <div><div class="kick">The short version<span class="stamp s-mix" id="stance" style="display:none"></span></div>
+      <div id="integ"></div><div class="narr" id="narr"><span class="ph">awaiting first successful build…</span></div>
+    </div>
+    <aside class="agenda"><div class="kick">Agenda</div><div id="agenda"><span class="ph">computing…</span></div></aside>
+  </section>
+
+  <section class="blocks rv">
+    <div class="blk" id="bRates"><div class="kick">Rates &amp; spreads — detail</div><span class="ph">feed pending…</span></div>
+    <div class="blk" id="bInfl"><div class="kick">Inflation — detail</div><span class="ph">feed pending…</span></div>
+    <div class="blk" id="bLabor"><div class="kick">Labor &amp; activity — detail</div><span class="ph">feed pending…</span></div>
+  </section>
+</main>
+
+<section class="pipe rv" id="secPipe"><div class="wrap">
+  <div class="phead"><div class="kick" style="flex:1">Pipeline log · feed health</div><div class="pstats" id="pstats">—</div></div>
+  <div class="stbar"><span class="seg" id="sg0">1 · CONNECTIVITY</span><span class="seg" id="sg1">2 · PILOT</span><span class="seg" id="sg2">3 · FULL BUILD</span><span class="seg" id="sg3">READY</span><span id="stg">booting…</span></div>
+  <div id="halt"><b>PIPELINE HALTED — no usable route.</b><br>
+    ① VPN / corporate filter / ad-blocker killing relays → disable, RE-RUN STAGES.<br>
+    ② Free relays down or rate-limited → deploy your own (2 min, free) and paste below.<br>
+    ③ Network blocks all cross-origin (control probe will have said so) → custom relay is the only client-side fix.</div>
+  <div class="relay"><label for="relayIn">CUSTOM RELAY</label>
+    <input id="relayIn" spellcheck="false" placeholder="https://your-worker.workers.dev/?url={url}">
+    <button class="rbtn" id="relaySave">Save + re-run</button>
+    <span class="hint">supports {url} (encoded) or {raw}; plain prefix appends to source URL. Stored locally.</span></div>
+  <div class="pgrid"><div class="log" id="log"></div><div class="hlth" id="hlth"></div></div>
+</div></section>
+
+<footer class="wrap"><b>READING THIS BRIEF</b> — first view: three asset groups at your chosen basis (W/W · 1M · 3M · a picked date, frequency-aware per series) plus the full Treasury curve. "Latest prints" lists announced government releases only (weekly &amp; monthly cadence) — daily market-derived series and traded instruments are excluded by design. Every figure is clickable: publisher, series ID, observation date, cadence, freshness. Inflation = <b>headline CPI (NSA)</b> and <b>core CPI (NSA)</b> y/y unless labelled otherwise; PCE is BEA-keyed, hence absent. JOLTS lags ~7 weeks. Credit spreads are ICE BofA OAS. Not investment advice.</footer>
+
+<div id="scrim"></div>
+<aside id="drawer"><div class="dwh"><span class="t" id="dwT">—</span><button id="dwX">×</button></div><div id="dwB"></div></aside>
+<div id="toast"></div>
+
+<script>
+/* watchdog — independent block; reports main-script parse/truncation failures visibly */
+window.__mm=false;
+window.addEventListener('error',function(e){try{var el=document.getElementById('log');
+  var m='BOOT FAIL · '+(e.message||'?')+' · near line '+(e.lineno||'?');
+  if(el)el.innerHTML='<div class="lerr">'+m+'</div>';else{document.title='MM FAIL';alert(m);}}catch(_){}});
+setTimeout(function(){if(window.__mm)return;var el=document.getElementById('log');
+  var m='WATCHDOG · main script never executed — parse error or truncated file. Re-copy the full file in one action.';
+  if(el)el.innerHTML='<div class="lerr">'+m+'</div>';else{document.title='MM FAIL';alert(m);}},6000);
+</script>
+
+<script>
+'use strict';
+window.__mm=true;
+
+/* ============ logging ============ */
+function log(msg,c){var el=document.getElementById('log'),d=document.createElement('div');
+  d.className=c||'';d.innerHTML='<span class="t">'+etTime()+'</span>'+msg;el.appendChild(d);
+  while(el.children.length>240)el.removeChild(el.firstChild);el.scrollTop=el.scrollHeight;}
+function flog(tag,msg,c){log('<span style="color:#8B8371">['+esc(tag)+']</span> '+msg,c);}
+function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
+  clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},2400);}
+function status(t){document.getElementById('fs').textContent=t;}
+window.addEventListener('error',e=>{try{log('JS ERROR · '+(e.message||'?')+' @ '+(e.lineno||'?'),'lerr')}catch(_){}});
+window.addEventListener('unhandledrejection',e=>{try{log('REJECT · '+((e.reason&&e.reason.message)||e.reason||'?'),'lerr')}catch(_){}});
+
+/* ============ helpers ============ */
+const $=id=>document.getElementById(id);
+const nf=(x,d)=>x==null||!isFinite(x)?'—':x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const sg=x=>x>0?'+':x<0?'\u2212':'';
+const cl=(d,g)=>d==null||d===0||!g?'fl':(d>0?1:-1)===Math.sign(g)?'up':'dn';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
+const MOSF=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOWS=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const isoDay=t=>new Date(t).toISOString().slice(0,10);
+const etTime=()=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date());
+const etDate=()=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'long',month:'long',day:'numeric',year:'numeric'}).format(new Date()).toUpperCase();
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+function fmtD(v,du){if(v==null||!isFinite(v))return'—';
+  if(du==='bp')return sg(v)+nf(Math.abs(v),Math.abs(v)<10?1:0)+'bp';
+  if(du==='pp')return sg(v)+nf(Math.abs(v),2)+'pp';
+  if(du==='pt')return sg(v)+nf(Math.abs(v),2);
+  if(du==='k')return sg(v)+nf(Math.abs(v),0)+'k';
+  return sg(v)+nf(Math.abs(v),2)+'%';}
+
+/* ============ vocabulary ============ */
+const SRC={fred:'FRED (St. Louis Fed)',treasury:'U.S. Treasury Fiscal Data',
+  bls:'BLS API v2',yahoo:'Yahoo Finance',stooq:'Stooq (last resort)',cache:'local cache (last good)'};
+const CAD={daily:'daily · ~1-day lag',weekly:'weekly · released Thu 8:30 ET',
+  monthly:'monthly · prior month by design',jolts:'monthly (JOLTS) · ~7-week release lag',
+  intraday:'quote · ~15-min delayed; weekends show Friday close',crypto:'24/7 quote · ~15-min delayed'};
+const STALE={intraday:4,daily:5,weekly:12,monthly:70,jolts:100,crypto:4};
+const FRESH={weekly:8,monthly:35,jolts:55};
+const MEANS={UNRATE:'labor-market slack',JTSJOL:'labor demand — workers employers want',
+  ICSA:'the flow of new layoffs',CPIAUCSL:'consumer price levels (headline, all items)',
+  CPILFESL:'underlying price pressure (ex food & energy)',RSAFS:'consumer spending power',
+  INDPRO:'factory and utility output',BAMLC0A0CM:'IG borrowing costs vs Treasuries',
+  BAMLH0A0HYM2:'HY borrowing costs — the credit-risk gauge',T10YIE:'market-priced decade inflation',
+  T5YIE:'near-term market inflation expectations',T5YIFR:'the long-run inflation anchor',
+  DFEDTARU:'the Fed\u2019s current policy stance'};
+
+/* ============ feed config ============ */
+const FEEDS=[
+ {id:'DGS2',src:'fred',freq:'daily',sid:'DGS2',label:'US 2Y',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS10',src:'fred',freq:'daily',sid:'DGS10',label:'US 10Y',dp:2,span:210,du:'bp',good:-1},
+ {id:'DGS30',src:'fred',freq:'daily',sid:'DGS30',label:'US 30Y',dp:2,span:210,du:'bp',good:-1},
+ {id:'T10YIE',src:'fred',freq:'daily',sid:'T10YIE',label:'10Y BREAKEVEN',dp:2,span:210,du:'bp',good:0},
+ {id:'T5YIE',src:'fred',freq:'daily',sid:'T5YIE',label:'5Y BREAKEVEN',dp:2,span:210,du:'bp',good:0},
+ {id:'T5YIFR',src:'fred',freq:'daily',sid:'T5YIFR',label:'5Y5Y INFL EXP',dp:2,span:210,du:'bp',good:0},
+ {id:'BAMLC0A0CM',src:'fred',freq:'daily',sid:'BAMLC0A0CM',label:'IG CREDIT SPREAD',dp:2,span:210,du:'bp',good:-1},
+ {id:'BAMLH0A0HYM2',src:'fred',freq:'daily',sid:'BAMLH0A0HYM2',label:'HY CREDIT SPREAD',dp:2,span:210,du:'bp',good:-1},
+ {id:'DFEDTARU',src:'fred',freq:'daily',sid:'DFEDTARU',label:'FF TARGET (UP)',dp:2,span:200,du:'pp',good:0},
+ {id:'UNRATE',src:'fred',freq:'monthly',sid:'UNRATE',label:'UNEMPLOYMENT',dp:1,span:1200,du:'pp',good:-1},
+ {id:'JTSJOL',src:'fred',freq:'jolts',sid:'JTSJOL',label:'JOB OPENINGS',dp:0,span:3000,du:'k',good:-1},
+ {id:'ICSA',src:'fred',freq:'weekly',sid:'ICSA',label:'INITIAL CLAIMS',dp:0,span:210,du:'k',good:-1},
+ {id:'CPIAUCSL',src:'fred',freq:'monthly',sid:'CPIAUCSL',label:'CPI (index)',dp:3,span:1500,du:'pp',good:0},
+ {id:'CPILFESL',src:'fred',freq:'monthly',sid:'CPILFESL',label:'CORE CPI (idx)',dp:3,span:1500,du:'pp',good:0},
+ {id:'RSAFS',src:'fred',freq:'monthly',sid:'RSAFS',label:'RETAIL SALES',dp:1,span:3000,du:'%',good:1},
+ {id:'INDPRO',src:'fred',freq:'monthly',sid:'INDPRO',label:'IND PRODUCTION',dp:1,span:3000,du:'%',good:1},
+ {id:'SP500',src:'yahoo',freq:'intraday',sid:'^GSPC',s:'^spx',range:'6mo',label:'S&P 500',dp:2,du:'%',good:1},
+ {id:'NAS',src:'yahoo',freq:'intraday',sid:'^IXIC',s:'^ndq',range:'6mo',label:'NASDAQ',dp:2,du:'%',good:1},
+ {id:'DOW',src:'yahoo',freq:'intraday',sid:'^DJI',s:'^dji',range:'6mo',label:'DOW',dp:2,du:'%',good:1},
+ {id:'VIX',src:'yahoo',freq:'intraday',sid:'^VIX',range:'6mo',label:'VIX',dp:2,du:'pt',good:-1},
+ {id:'WTI',src:'yahoo',freq:'intraday',sid:'CL=F',s:'cl.f',range:'6mo',label:'WTI CRUDE',dp:2,du:'%',good:1},
+ {id:'BRENT',src:'yahoo',freq:'intraday',sid:'BZ=F',s:'cb.f',range:'6mo',label:'BRENT',dp:2,du:'%',good:1},
+ {id:'NATGAS',src:'yahoo',freq:'intraday',sid:'NG=F',s:'ng.f',range:'6mo',label:'NAT GAS',dp:2,du:'%',good:1},
+ {id:'WHEAT',src:'yahoo',freq:'intraday',sid:'ZW=F',s:'zw.f',range:'6mo',label:'WHEAT',dp:1,du:'%',good:1},
+ {id:'GOLD',src:'yahoo',freq:'intraday',sid:'GC=F',s:'gc.f',range:'6mo',label:'GOLD',dp:0,du:'%',good:0},
+ {id:'SILVER',src:'yahoo',freq:'intraday',sid:'SI=F',s:'si.f',range:'6mo',label:'SILVER',dp:2,du:'%',good:0},
+ {id:'DXY',src:'yahoo',freq:'intraday',sid:'DX-Y.NYB',range:'6mo',label:'DOLLAR DXY',dp:2,du:'%',good:0},
+ {id:'BTC',src:'yahoo',freq:'crypto',sid:'BTC-USD',s:'btcusd',range:'1mo',label:'BITCOIN',dp:0,du:'%',good:1}];
+const cfgOf=id=>FEEDS.find(f=>f.id===id);
+const UST_MAP={DGS2:'BC_2YEAR',DGS10:'BC_10YEAR',DGS30:'BC_30YEAR'};
+const BLS_MAP={UNRATE:'LNS14000000',CPIAUCSL:'CUUR0000SA0',CPILFESL:'CUUR0000SA0L1E'};
+const TENORS=[['1M','BC_1MONTH'],['3M','BC_3MONTH'],['6M','BC_6MONTH'],['1Y','BC_1YEAR'],['2Y','BC_2YEAR'],
+ ['3Y','BC_3YEAR'],['5Y','BC_5YEAR'],['7Y','BC_7YEAR'],['10Y','BC_10YEAR'],['20Y','BC_20YEAR'],['30Y','BC_30YEAR']];
+const DERIVED={
+ SPREAD:{label:'2s10s spread',unit:'bp',dp:1,comps:['DGS10','DGS2'],note:'DGS10 minus DGS2, matched by date'},
+ SP2S30:{label:'2s30s spread',unit:'bp',dp:1,comps:['DGS30','DGS2'],note:'DGS30 minus DGS2, matched by date'},
+ CPI_YOY:{label:'Headline CPI Y/Y (NSA)',unit:'%',dp:1,comps:['CPIAUCSL'],note:'12-mo % change, headline CPI index (NSA, all items)'},
+ CORE_YOY:{label:'Core CPI Y/Y (NSA)',unit:'%',dp:1,comps:['CPILFESL'],note:'12-mo % change, core CPI index (NSA, ex food & energy)'},
+ REAL10:{label:'10Y real (est.)',unit:'%',dp:2,comps:['DGS10','T10YIE'],note:'DGS10 minus T10YIE — approximation of TIPS'}};
+
+/* ============ route ladder ============ */
+let CUSTOM='';try{CUSTOM=localStorage.getItem('mm_relay')||''}catch(e){}
+function routes(){const R=[{n:'direct',to:u=>u,tmo:8000},
+ {n:'r.jina',to:u=>'https://r.jina.ai/'+encodeURIComponent(u),tmo:25000},
+ {n:'allorigins',to:u=>'https://api.allorigins.win/raw?url='+encodeURIComponent(u),tmo:12000},
+ {n:'codetabs',to:u=>'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(u),tmo:12000}];
+ if(CUSTOM)R.unshift({n:'custom',to:u=>CUSTOM.includes('{url}')?CUSTOM.replace('{url}',encodeURIComponent(u)):CUSTOM+u,tmo:15000});
+ return R;}
+let ROUTES=routes();const QZ={};
+const why=e=>e&&e.name==='AbortError'?'timeout':e&&/Failed to fetch|NetworkError|load failed/i.test(e.message||'')?'blocked (CORS)':(e&&e.message)||'unknown';
+async function fetchText(url,tmo){const ac=new AbortController();const to=setTimeout(()=>ac.abort(),tmo);
+  try{const r=await fetch(url,{signal:ac.signal});clearTimeout(to);
+    if(!r.ok){let b='';try{b=(await r.text()).slice(0,180).replace(/\s+/g,' ')}catch(_){}
+      throw Object.assign(new Error('HTTP '+r.status),{body:b});}
+    return await r.text();}catch(e){clearTimeout(to);throw e;}}
+let lastJina=0;
+async function via(rt,url,tag){if(rt.n!=='r.jina')return fetchText(rt.to(url),rt.tmo);
+  for(let i=0;i<=2;i++){const w=lastJina+3200-Date.now();if(w>0)await sleep(w);lastJina=Date.now();
+    try{return await fetchText(rt.to(url),rt.tmo);}
+    catch(e){const r=why(e);if(i<2&&(r==='HTTP 429'||r==='timeout')){flog(tag,'r.jina '+r+' — retry in 5s ('+(i+1)+'/2)','lwarn');await sleep(5000);continue;}throw e;}}
+  throw new Error('unreachable');}
+function queue(limit){let act=0,q=[];const next=()=>{if(act>=limit||!q.length)return;act++;const j=q.shift();
+  j.fn().then(j.res,j.rej).finally(()=>{act--;next();});};
+  return fn=>new Promise((res,rej)=>{q.push({fn,res,rej});next();});}
+const q2=queue(2);
+
+/* ============ parsers ============ */
+function pFred(t){const out=[];let nul=0;
+  for(const l of String(t).split(/\r?\n/)){
+    let m=l.match(/^\|\s*(\d{4}-\d{2}-\d{2})\s*\|\s*([0-9.]+|\.)\s*\|/)||l.match(/^(\d{4}-\d{2}-\d{2})\s+(\S+)\s*$/);
+    if(!m)continue;if(m[2]==='.'){nul++;continue;}
+    const v=parseFloat(m[2]);if(isFinite(v))out.push({d:m[1],v});else nul++;}
+  out.sort((a,b)=>a.d<b.d?-1:1);out.nul=nul;return out;}
+function pStooq(t){const out=[];
+  String(t).trim().split(/\r?\n/).slice(1).forEach(l=>{const f=l.split(',');if(f.length<5)return;
+    if(!/^\d{4}-\d{2}-\d{2}/.test(f[0]))return;const v=parseFloat(f[4]);if(isFinite(v))out.push({d:f[0],v});});
+  return out;}
+function pYah(t){const j=JSON.parse(t);const r=j&&j.chart&&j.chart.result&&j.chart.result[0];
+  if(!r||!r.meta)throw new Error('no chart.result');
+  if(j.chart.error)throw new Error('yahoo: '+(j.chart.error.description||j.chart.error.code));
+  const ts=r.timestamp||[],cl=(r.indicators&&r.indicators.quote[0]&&r.indicators.quote[0].close)||[];
+  const rows=ts.map((tt,i)=>({d:new Date(tt*1e3).toISOString().slice(0,10),v:isFinite(cl[i])?cl[i]:null})).filter(x=>x.v!=null);
+  const mp=r.meta.regularMarketPrice;
+  if(typeof mp==='number'&&isFinite(mp)){const ld=r.meta.regularMarketDate?new Date(r.meta.regularMarketDate*1e3).toISOString().slice(0,10):isoDay(Date.now());
+    if(rows.length&&rows[rows.length-1].d===ld)rows[rows.length-1].v=mp;else rows.push({d:ld,v:mp});}
+  if(!rows.length)throw new Error('0 quotes');return rows;}
+function pUst(t,cfg){const j=JSON.parse(t);const arr=j&&j.data;
+  if(!Array.isArray(arr))throw new Error('no fiscal data');
+  const rows=[];for(const r of arr){const v=parseFloat(r[UST_MAP[cfg.id]]);
+    if(r.record_date&&isFinite(v))rows.push({d:r.record_date,v});}
+  rows.sort((a,b)=>a.d<b.d?-1:1);if(!rows.length)throw new Error('0 rows '+UST_MAP[cfg.id]);return rows;}
+function pCurve(t){const j=JSON.parse(t);const arr=j&&j.data;
+  if(!Array.isArray(arr))throw new Error('no fiscal data');
+  const rows=[];for(const r of arr){if(!r.record_date)continue;const y={};let n=0;
+    for(const p of TENORS){const v=parseFloat(r[p[1]]);if(isFinite(v)){y[p[0]]=v;n++;}}
+    if(n>=4)rows.push({d:r.record_date,y});}
+  rows.sort((a,b)=>a.d<b.d?-1:1);if(!rows.length)throw new Error('0 curve rows');return rows;}
+function pBls(t){const j=JSON.parse(t);const s=j&&j.Results&&j.Results.series&&j.Results.series[0];
+  if(!s||!Array.isArray(s.data))throw new Error('no BLS data');
+  const rows=[];for(const p of s.data){if(!/^M\d{2}$/.test(p.period||''))continue;
+    const v=parseFloat(p.value);if(isFinite(v))rows.push({d:p.year+'-'+p.period.slice(1)+'-01',v});}
+  rows.sort((a,b)=>a.d<b.d?-1:1);if(!rows.length)throw new Error('0 BLS obs');return rows;}
+function trim(t){let s=String(t);const m=s.indexOf('Markdown Content:');if(m>=0)s=s.slice(m+17);
+  const a=Math.min(...['{','['].map(c=>{const k=s.indexOf(c);return k<0?1/0:k;}));
+  if(a===1/0)return s.trim();const b=Math.max(s.lastIndexOf('}'),s.lastIndexOf(']'));
+  return s.slice(a,b+1);}
+function trimTxt(t){let s=String(t);const m=s.indexOf('Markdown Content:');if(m>=0)s=s.slice(m+17);
+  return s.replace(/```+/g,'');}
+
+/* ============ cache & snapshot ============ */
+function cache(id,rows){try{localStorage.setItem('mm_'+id,JSON.stringify({t:Date.now(),rows:rows.slice(-320)}))}catch(e){}}
+function uncached(id){try{const c=JSON.parse(localStorage.getItem('mm_'+id));if(c&&c.rows&&c.rows.length)return c}catch(e){}return null;}
+const SNAP='mm_snapshot';
+function snapshot(){const s={t:Date.now(),curve:M.curve||null};
+  FEEDS.forEach(c=>{const st=state[c.id];if(st&&st.rows.length)s[c.id]={rows:st.rows.slice(-320),via:st.via,src:st.src,at:st.at,meta:st.meta};});
+  try{localStorage.setItem(SNAP,JSON.stringify(s))}catch(e){}}
+function restore(){let s;try{s=JSON.parse(localStorage.getItem(SNAP))}catch(e){}
+  if(!s||!s.t)return 0;let n=0;
+  FEEDS.forEach(c=>{const e=s[c.id];if(e&&e.rows&&e.rows.length){
+    state[c.id]={rows:e.rows,via:e.via,src:e.src,at:e.at||s.t,meta:e.meta,stage:'CACHE'};n++;}});
+  if(s.curve&&s.curve.length)M.curve=s.curve;
+  if(n)log('snapshot restored — '+n+' feeds; refreshing in background','lhi');
+  return n;}
+window.addEventListener('storage',e=>{if(e.key===SNAP&&e.newValue)location.reload();});
+
+/* ============ fetch engine ============ */
+async function hop(cfg,url,kind){const errors=[];
+  for(const rt of ROUTES){
+    const qk=rt.n+'|'+kind;
+    if((QZ[qk]||0)>=2){errors.push(rt.n+':q');continue;}
+    const t0=performance.now();let txt;
+    try{txt=await via(rt,url,cfg.tag);}
+    catch(e){const ms=((performance.now()-t0)/1e3).toFixed(1);QZ[qk]=(QZ[qk]||0)+1;
+      const r=why(e);cfg.stage=r==='timeout'?'TIMEOUT':r.startsWith('HTTP')?r:'ROUTE';
+      flog(cfg.tag,'\u2717 '+rt.n+' · '+esc(r)+' · '+ms+'s'+(e.body?' · target said: "'+esc(e.body)+'"':''),'lwarn');
+      errors.push(rt.n+':'+r);continue;}
+    const bytes=txt.length,ms=((performance.now()-t0)/1e3).toFixed(1);
+    const j=kind==='json'||kind==='ust'||kind==='bls'||kind==='curve';
+    let rows;
+    try{const p=j?trim(txt):trimTxt(txt);
+      rows= kind==='stooq'?pStooq(p):kind==='fred'?pFred(p):kind==='ust'?pUst(p,cfg):
+            kind==='curve'?pCurve(p):kind==='bls'?pBls(p):pYah(p);}
+    catch(pe){QZ[qk]=(QZ[qk]||0)+1;cfg.stage='PARSE';
+      /* v13.4: body head widened to 240 chars so 404 pages self-explain */
+      flog(cfg.tag,'\u2717 '+rt.n+' · 200 · '+bytes+'B · UNUSABLE — '+esc(pe.message)+' · head "'+p0(txt)+'"','lerr');
+      errors.push(rt.n+':parse');continue;}
+    if(!rows.length){cfg.stage='EMPTY';flog(cfg.tag,'\u2717 '+rt.n+' · 200 · '+bytes+'B · 0 rows','lerr');errors.push(rt.n+':empty');continue;}
+    QZ[qk]=0;
+    const tail=kind==='curve'?rows.length+' curve days':rows.length+' obs ('+rows[0].d+' → '+rows[rows.length-1].d+')';
+    flog(cfg.tag,'\u2713 '+rt.n+' · 200 · '+bytes+'B · '+ms+'s · '+tail,'lok');
+    return{rows,via:rt.n,bytes,ms};}
+  throw new Error('all hops failed ['+errors.join('|')+']');}
+/* v13.4: 240-char head — full 404 explanation visible in the log */
+function p0(t){return String(t).slice(0,240).replace(/\s+/g,' ');}
+function chainOf(c){if(c.src==='yahoo'){const a=['yahoo'];if(c.s)a.push('stooq');return a;}
+  const a=['fred'];if(UST_MAP[c.id])a.push('treasury');if(BLS_MAP[c.id])a.push('bls');return a;}
+function feedUrl(c){
+  if(c.src==='yahoo')return'https://query1.finance.yahoo.com/v8/finance/chart/'+encodeURIComponent(c.sid)+'?range='+c.range+'&interval=1d';
+  return'https://fred.stlouisfed.org/data/'+c.id+'.txt';}
+async function runFeed(c){c.stage='ROUTE';const att=[];
+  if(c.src==='yahoo'){c.tag='YAHOO:'+c.sid;att.push({l:'yahoo',u:feedUrl(c),k:'json'});
+    if(c.s){const d1=isoDay(Date.now()-200*864e5).replace(/-/g,''),d2=isoDay(Date.now()).replace(/-/g,'');
+      att.push({l:'stooq',u:'https://stooq.com/q/d/l/?s='+encodeURIComponent(c.s)+'&d1='+d1+'&d2='+d2+'&i=d',k:'stooq'});}}
+  else{c.tag='FRED:'+c.id;att.push({l:'fred',u:feedUrl(c),k:'fred'});
+    if(UST_MAP[c.id])att.push({l:'treasury',u:'https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/daily_treasury_par_yield_curve_rates?filter=record_date:gte:'+isoDay(Date.now()-c.span*864e5)+'&sort=-record_date&page%5Bsize%5D=200&fields='+UST_MAP[c.id]+'&format=json',k:'ust'});
+    if(BLS_MAP[c.id])att.push({l:'bls',u:'https://api.bls.gov/publicAPI/v2/timeseries/data/'+BLS_MAP[c.id]+'?startyear='+new Date(Date.now()-450*864e5).getFullYear()+'&endyear='+new Date().getFullYear(),k:'bls'});}
+  for(const a of att){try{
+      const r=await hop(c,a.u,a.k);
+      const lim=STALE[c.freq]||14,lastD=r.rows[r.rows.length-1].d;
+      if(Date.parse(lastD)<Date.now()-lim*864e5)flog(c.tag,'\u26a0 last obs '+lastD+' — possibly stale','lwarn');
+      cache(c.id,r.rows);
+      state[c.id]={rows:r.rows,via:r.via,src:a.l,stage:'OK',at:Date.now(),
+        meta:{ms:r.ms,kb:r.bytes,obs:r.rows.length,first:r.rows[0].d,last:lastD,nul:r.rows.nul||0}};
+      return true;}
+    catch(e){flog(c.tag,'source '+a.l+' exhausted','lwarn');}}
+  const cch=uncached(c.id);
+  if(cch){flog(c.tag,'all sources failed → cache ('+Math.round((Date.now()-cch.t)/36e5)+'h)','lwarn');
+    state[c.id]={rows:cch.rows,via:'cache',src:'cache',stage:'CACHE',at:cch.t};}
+  else{flog(c.tag,'\u2717 DEAD — stuck at '+c.stage+', no cache','lerr');
+    state[c.id]={rows:[],via:'err',src:'none',stage:c.stage};}
+  return false;}
+
+/* v13.4 — curve fetch as a variant ladder. Each variant mirrors a shape
+   proven to work elsewhere: v1/v2 mirror the feed-chain treasury URL
+   (filter+sort+page200, with/without fields); v3 loose filter; v4 the
+   Stage-1 probe shape (page5). First success wins; all four failing
+   falls back to the 3-point DGS2/10/30 curve. */
+const UST_BASE='https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v2/accounting/od/daily_treasury_par_yield_curve_rates';
+async function fetchCurve(){const p={tag:'UST:CURVE',stage:'ROUTE'};
+  const D=isoDay(Date.now()-40*864e5);
+  const tries=[
+    UST_BASE+'?filter=record_date:gte:'+D+'&sort=-record_date&page%5Bsize%5D=200&format=json',
+    UST_BASE+'?filter=record_date:gte:'+D+'&sort=-record_date&page%5Bsize%5D=200&fields='+['record_date'].concat(TENORS.map(x=>x[1])).join(',')+'&format=json',
+    UST_BASE+'?filter=record_date:gte:'+D+'&page%5Bsize%5D=100&format=json',
+    UST_BASE+'?page%5Bsize%5D=5&sort=-record_date&format=json'
+  ];
+  for(let i=0;i<tries.length;i++){
+    try{const r=await hop(p,tries[i],'curve');M.curve=r.rows;
+      flog('UST:CURVE','succeeded on URL variant '+(i+1),'lok');return true;}
+    catch(e){flog('UST:CURVE','variant '+(i+1)+' failed','lwarn');}
+  }
+  flog('UST:CURVE','all variants failed → 3-point fallback from DGS2/10/30','lwarn');
+  if(M.DGS2&&M.DGS10&&M.DGS30){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v])),m30=new Map(M.DGS30.vals.map(r=>[r.d,r.v]));
+    M.curve=M.DGS10.vals.filter(r=>m2.has(r.d)&&m30.has(r.d)).map(r=>({d:r.d,y:{'2Y':m2.get(r.d),'10Y':r.v,'30Y':m30.get(r.d)}}));return true;}
+  return false;}
+
+/* ============ stage 1 — connectivity matrix ============ */
+async function diagnose(){log('\u2500\u2500 STAGE 1 · CONNECTIVITY MATRIX (4 upstreams \u00d7 '+ROUTES.length+' routes, parallel) \u2500\u2500','lhi');
+  status('STAGE 1 · probing routes…');
+  try{const t0=performance.now();await fetchText('https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR',8e3);
+    log('control · CORS-native API \u2192 200 · '+((performance.now()-t0)/1e3).toFixed(1)+'s','lok');}
+  catch(e){log('control \u2192 FAIL: '+esc(why(e))+' — cross-origin blocked at network level','lerr');}
+  const PROBES=[
+    {n:'fred',u:'https://fred.stlouisfed.org/data/DGS10.txt',re:/\d{4}-\d{2}-\d{2}/},
+    {n:'yahoo',u:'https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=1d&interval=1d',re:/chart|meta/},
+    {n:'treasury',u:UST_BASE+'?page%5Bsize%5D=5&format=json',re:/data/},
+    {n:'bls',u:'https://api.bls.gov/publicAPI/v2/timeseries/data/LNS14000000?startyear='+new Date().getFullYear()+'&endyear='+new Date().getFullYear(),re:/Results|data/}];
+  const sc={};
+  await Promise.all(ROUTES.map(async rt=>{const rs=await Promise.all(PROBES.map(async p=>{
+      const t0=performance.now();
+      try{const txt=await fetchText(rt.to(p.u),rt.tmo);
+        if(!p.re.test(txt))throw new Error('unusable: "'+p0(txt)+'"');
+        log('route '+rt.n.padEnd(11)+'\u00d7 '+p.n.padEnd(8)+'\u2192 200 · '+((performance.now()-t0)/1e3).toFixed(1)+'s','lok');return true;}
+      catch(e){log('route '+rt.n.padEnd(11)+'\u00d7 '+p.n.padEnd(8)+'\u2192 FAIL · '+esc(why(e))+(e.body?' · "'+esc(e.body)+'"':''),'lerr');return false;}}));
+    sc[rt.n]=rs.filter(Boolean).length;}));
+  const cust=ROUTES.filter(r=>r.n==='custom');
+  const rest=ROUTES.filter(r=>r.n!=='custom').sort((a,b)=>(sc[b.n]||0)-(sc[a.n]||0));
+  ROUTES=cust.concat(rest);
+  const good=ROUTES.filter(r=>(sc[r.n]||0)>0).map(r=>r.n);
+  log(good.length?'STAGE 1 done — usable: '+ROUTES.map(r=>r.n+'('+(sc[r.n]||0)+'/'+PROBES.length+')').join(', ')
+    :'STAGE 1 done — NO route reachable','lhi');
+  return good;}
+
+/* ============ state, derive, change basis ============ */
+let M={},state={},busy=false,plain=[],goodRoutes=[],BASIS='ww',BDATE='';
+try{BASIS=localStorage.getItem('mm_basis')||'ww';BDATE=localStorage.getItem('mm_bdate')||'';}catch(e){}
+if(!['ww','m1','m3','date'].includes(BASIS))BASIS='ww';
+function entry(id){const s=state[id];if(!s||!s.rows.length)return null;
+  const v=s.rows.filter(r=>r.v!=null);return v.length?{vals:v,last:v[v.length-1].v}:null;}
+function backE(e,n){const i=e.vals.length-1-n;return i>=0?e.vals[i].v:null;}
+function derive(){M={};FEEDS.forEach(c=>M[c.id]=entry(c.id));
+  if(M.DGS2&&M.DGS10){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
+    M.sp=M.DGS10.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
+    M.spNow=M.sp.length?M.sp[M.sp.length-1].v:null;
+    M.inv=0;for(let i=M.sp.length-1;i>=0&&M.sp[i].v<0;i--)M.inv++;}
+  if(M.DGS2&&M.DGS30){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
+    M.sp2=M.DGS30.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
+    M.sp2Now=M.sp2.length?M.sp2[M.sp2.length-1].v:null;}
+  if(M.DGS10&&M.T10YIE)M.real10=M.DGS10.last-M.T10YIE.last;
+  M.cpiY=yoy(M.CPIAUCSL);M.coreY=yoy(M.CPILFESL);
+  if(M.CPIAUCSL&&M.CPIAUCSL.vals.length>1)M.cpiMM=(M.CPIAUCSL.last/backE(M.CPIAUCSL,1)-1)*100;
+  if(M.ICSA)M.claimsMA=M.ICSA.vals.slice(-4).reduce((a,r)=>a+r.v,0)/4;}
+function yoy(e){if(!e||e.vals.length<13)return null;const o=[];
+  for(let i=12;i<e.vals.length;i++)o.push((e.vals[i].v/e.vals[i-12].v-1)*100);return o;}
+const STEPS={ww:{daily:5,weekly:1,monthly:1,jolts:1,intraday:5,crypto:5},
+  m1:{daily:21,weekly:4,monthly:1,jolts:1,intraday:21,crypto:21},
+  m3:{daily:63,weekly:13,monthly:3,jolts:3,intraday:63,crypto:63}};
+function steps(c,b){return STEPS[b][c.freq]||5;}
+function idxAt(vals,dstr){let idx=-1;
+  for(let i=0;i<vals.length;i++){if(vals[i].d<=dstr)idx=i;else break;}return idx;}
+function deltaRaw(id,base){
+  if(id==='SPREAD'||id==='SP2S30'){const s=id==='SPREAD'?M.sp:M.sp2;if(!s||!s.length)return null;
+    let i;if(base.d!=null){i=idxAt(s,base.d);}else{i=s.length-1-base.n;}
+    return i>=0&&i<s.length?s[s.length-1].v-s[i].v:null;}
+  const c=cfgOf(id),e=M[id];if(!c||!e)return null;
+  let i;if(base.d!=null){i=idxAt(e.vals,base.d);if(i<0)return null;}
+  else{i=e.vals.length-1-base.n;if(i<0)return null;}
+  const p=e.vals[i].v;
+  if(c.du==='%')return p?(e.last/p-1)*100:null;
+  if(c.du==='bp')return(e.last-p)*100;
+  if(c.du==='k')return(e.last-p)/1e3;
+  return e.last-p;}
+function baseDateFor(id){
+  const dstr=BDATE;
+  if(id==='SPREAD'||id==='SP2S30'){const s=id==='SPREAD'?M.sp:M.sp2;
+    if(!s||!s.length||!dstr)return null;const i=idxAt(s,dstr);return i>=0?s[i].d:null;}
+  const e=M[id];if(!e||!dstr)return null;const i=idxAt(e.vals,dstr);return i>=0?e.vals[i].d:null;}
+function deltaFor(id,b){
+  if(b==='date'){if(!BDATE)return null;return deltaRaw(id,{d:BDATE});}
+  return deltaRaw(id,{n:steps(cfgOf(id)||{freq:'daily'},b)});}
+function valueFor(id){
+  if(id==='SPREAD')return M.spNow!=null?nf(M.spNow,1)+'bp':null;
+  if(id==='SP2S30')return M.sp2Now!=null?nf(M.sp2Now,1)+'bp':null;
+  if(id==='CPI_YOY')return M.cpiY&&M.cpiY.length?nf(M.cpiY[M.cpiY.length-1],1)+'%':null;
+  const c=cfgOf(id),e=M[id];if(!c||!e)return null;
+  if(id==='ICSA'||id==='JTSJOL')return nf(e.last/1e3,0)+'k';
+  if(id==='RSAFS')return'$'+nf(e.last/1e3,0)+'B';
+  if(id==='INDPRO')return nf(e.last,1);
+  if(id==='WHEAT')return nf(e.last,1);
+  if(['BTC','GOLD','SILVER','WTI','BRENT','NATGAS'].includes(id))return'$'+nf(e.last,c.dp);
+  if(c.du==='bp')return nf(e.last,c.dp)+'%';
+  return nf(e.last,c.dp);}
+const goodFor=id=>id==='SPREAD'||id==='SP2S30'?0:(cfgOf(id)?cfgOf(id).good:0);
+const duFor=id=>{if(id==='SPREAD'||id==='SP2S30')return'bp';const c=cfgOf(id);return c&&c.du==='%'?'pct':(c?c.du:'pct');};
+function labFor(id){return id==='SPREAD'?'2s10s':id==='SP2S30'?'2s30s':(cfgOf(id)?cfgOf(id).label:id);}
+function asOf(id){if(DERIVED[id]){const ds=DERIVED[id].comps.map(c=>state[c]&&state[c].rows.length?state[c].rows[state[c].rows.length-1].d:null).filter(Boolean);
+    if(!ds.length)return null;return'as of '+ds.sort().pop()+' · '+[...new Set(DERIVED[id].comps.map(c=>SRC[state[c]&&state[c].src]||'?'))].join(' + ');}
+  const s=state[id],c=cfgOf(id);if(!s||!s.rows||!s.rows.length)return null;
+  const d=s.rows[s.rows.length-1].d,src=SRC[s.src]||s.src,dt=new Date(d+'T12:00:00');
+  if(c.src==='yahoo'||c.src==='crypto'){const dn=new Date().getDay();
+    return(dn===0||dn===6)&&dt.getDay()===5?'Fri close · '+src:'as of '+d+' · '+src;}
+  if(c.freq==='monthly'||c.freq==='jolts')return'month of '+MOSF[dt.getMonth()]+' '+dt.getFullYear()+' · '+src;
+  if(c.freq==='weekly')return'week of '+d+' · '+src;
+  return'as of '+d+' · '+src;}
+function staleAge(id){const c=cfgOf(id),s=state[id];if(!c||!s||!s.rows.length)return null;
+  const a=Math.round((Date.now()-Date.parse(s.rows[s.rows.length-1].d+'T12:00:00'))/864e5);
+  return a>(STALE[c.freq]||5)?a:null;}
+
+/* ============ integrity ============ */
+function integReport(){const o=[];
+  FEEDS.forEach(c=>{const s=state[c.id];
+    if(!s||!s.rows||!s.rows.length){o.push({lvl:'err',id:c.id,msg:c.label+' — no data; omitted'});return;}
+    if(s.stage==='CACHE'){const h=s.at?Math.round((Date.now()-s.at)/36e5):null;
+      o.push({lvl:'warn',id:c.id,msg:c.label+' — cached'+(h!=null?' from '+h+'h ago':'')+'; live failed'});}
+    else{const st=staleAge(c.id);
+      if(st!=null)o.push({lvl:'warn',id:c.id,msg:c.label+' — last obs '+s.rows[s.rows.length-1].d+' ('+st+'d old)'});}
+    const rn=s.rows.slice(-10).filter(r=>r.v==null).length;
+    if(rn)o.push({lvl:'warn',id:c.id,msg:c.label+' — '+rn+' missing value(s) in recent obs'});});
+  return o;}
+function renderInteg(){const r=integReport(),h=document.getElementById('integ');
+  h.innerHTML=r.length?r.map(x=>'<div class="di '+x.lvl+'"><span>'+(x.lvl==='err'?'\u2717':'\u26a0')+'</span><span>'+esc(x.msg)+' — <u class="clk" data-fig="'+x.id+'">details</u></span></div>').join('')
+    :'<div class="di ok">\u2713 All '+FEEDS.length+' feeds current — every figure live-sourced and within its release window</div>';}
+
+/* ============ render ============ */
+const GROUPS=[['RATES',['DGS2','DGS10','DGS30','T10YIE']],
+  ['COMMODITIES · FX',['WTI','BRENT','NATGAS','WHEAT','GOLD','SILVER','DXY']],
+  ['EQUITIES · CRYPTO',['SP500','NAS','DOW','VIX','BTC']]];
+function spark(vals,w,h){const v=(vals||[]).filter(x=>x!=null);if(v.length<2)return'';
+  const mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
+  const pts=v.map((x,i)=>[(1+i/(v.length-1))*(w-3)+1.5,h-3-((x-mn)/rg)*(h-7)]);
+  const L=pts[pts.length-1];
+  return'<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><polyline points="'+
+    pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+
+    '" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="2" fill="#A63B2A"/></svg>';}
+function basisLabel(){return BASIS==='date'?(BDATE?'vs '+BDATE:'vs date — pick one'):BLAB[BASIS];}
+const BLAB={ww:'W/W',m1:'vs 1M',m3:'vs 3M'};
+function renderGroups(){document.getElementById('groups').innerHTML=GROUPS.map(g=>{
+    const rows=g[1].map(id=>{const v=valueFor(id);if(!v)return'';
+      const d=deltaFor(id,BASIS);const e=M[id];
+      const sp=(e&&e.vals)?spark(e.vals.slice(-40),52,14):'';
+      return'<div class="gi clk" data-fig="'+id+'"><span class="l">'+labFor(id)+'</span><span class="v">'+v+'</span>'+
+        (d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+'</span>':'')+sp+'</div>';}).join('');
+    return'<div class="grp"><div class="gk">'+g[0]+'</div>'+(rows||'<span class="ph">no data</span>')+'</div>';}).join('');
+  const bn=document.getElementById('basisNote');
+  if(bn)bn.textContent='every change follows: '+basisLabel();}
+function renderPrints(){const rows=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts'))
+    .map(c=>{const s=state[c.id];if(!s||!s.rows||!s.rows.length)return null;
+      const last=s.rows[s.rows.length-1];
+      const age=Math.round((Date.now()-Date.parse(last.d+'T12:00:00'))/864e5);
+      const e=M[c.id];let d=null;
+      if(e&&e.vals.length>1){
+        if(c.du==='%')d=(e.last/backE(e,1)-1)*100;else if(c.du==='bp')d=(e.last-backE(e,1))*100;
+        else if(c.du==='k')d=(e.last-backE(e,1))/1e3;else d=e.last-backE(e,1);}
+      return{c:c,age:age,fresh:age<=FRESH[c.freq],obs:last.d,d:d,
+        v:(c.id==='ICSA'||c.id==='JTSJOL')?nf(e.last/1e3,0)+'k':(c.id==='RSAFS')?'$'+nf(e.last/1e3,0)+'B':nf(e.last,c.dp)};})
+    .filter(Boolean).sort((a,b)=>a.age-b.age).slice(0,8);
+  document.getElementById('prints').innerHTML=rows.length?rows.map(r=>
+    '<div class="pr clk" data-fig="'+r.c.id+'"><span class="badge '+(r.fresh?'':'old')+'">'+(r.fresh?'NEW':r.age+'d')+'</span>'+
+    '<span class="l">'+r.c.label+'</span><span class="v">'+r.v+'</span>'+
+    (r.d!=null?'<span class="d '+cl(r.d,goodFor(r.c.id))+'">'+fmtD(r.d,duFor(r.c.id))+' vs prior release</span>':'')+
+    '<span class="m">reflects: '+(MEANS[r.c.id]||'')+'</span><span class="dt">'+r.obs+'</span></div>').join('')
+    :'<span class="ph">no prints available</span>';}
+function renderCurve(){const host=document.getElementById('curve'),read=document.getElementById('curveRead');
+  if(!M.curve||!M.curve.length){host.innerHTML='<span class="ph">curve unavailable — see log</span>';read.innerHTML='<span class="ph">—</span>';return;}
+  const L=M.curve[0];let P=null;
+  for(const r of M.curve){if(Date.parse(L.d)-Date.parse(r.d)>=25*864e5){P=r;break;}}
+  const ts=TENORS.map(x=>x[0]).filter(t=>L.y[t]!=null);
+  const W=680,H=232,La=44,Ra=54,T=14,B=26;
+  const vs=ts.map(t=>L.y[t]);if(P)ts.forEach(t=>{if(P.y[t]!=null)vs.push(P.y[t]);});
+  let mn=Math.min(...vs),mx=Math.max(...vs);const pad=Math.max((mx-mn)*.18,.15);mn-=pad;mx+=pad;
+  const X=i=>La+i/(ts.length-1)*(W-La-Ra),Y=v=>T+(mx-v)/(mx-mn)*(H-T-B);
+  let pL='';ts.forEach((t,i)=>pL+=(i?'L':'M')+X(i).toFixed(1)+','+Y(L.y[t]).toFixed(1));
+  let pP='';if(P)ts.forEach((t,i)=>{if(P.y[t]!=null)pP+=(pP?'L':'M')+X(i).toFixed(1)+','+Y(P.y[t]).toFixed(1);});
+  let dots='';ts.forEach((t,i)=>dots+='<circle class="dt2" cx="'+X(i).toFixed(1)+'" cy="'+Y(L.y[t]).toFixed(1)+'" r="2.6"/>');
+  const lt=ts[ts.length-1];
+  dots+='<circle class="dl" cx="'+X(ts.length-1).toFixed(1)+'" cy="'+Y(L.y[lt]).toFixed(1)+'" r="3.4"/>';
+  host.innerHTML='<svg viewBox="0 0 '+W+' '+H+'">'+
+    '<line class="gd" x1="'+La+'" x2="'+(W-Ra)+'" y1="'+Y(mx-pad).toFixed(1)+'" y2="'+Y(mx-pad).toFixed(1)+'"/>'+
+    '<line class="gd" x1="'+La+'" x2="'+(W-Ra)+'" y1="'+Y(mn+pad).toFixed(1)+'" y2="'+Y(mn+pad).toFixed(1)+'"/>'+
+    (pP?'<path class="pv" d="'+pP+'"/>':'')+'<path class="ln" d="'+pL+'"/>'+dots+
+    ts.map((t,i)=>'<text x="'+X(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+t+'</text>').join('')+
+    '<text x="'+La+'" y="'+Y(mx-pad).toFixed(1)+'" dy="-4">'+nf(mx-pad,1)+'%</text>'+
+    '<text x="'+La+'" y="'+Y(mn+pad).toFixed(1)+'" dy="12">'+nf(mn+pad,1)+'%</text>'+
+    '<text class="vl" x="'+X(ts.length-1).toFixed(1)+'" y="'+Y(L.y[lt]).toFixed(1)+'" dx="8" dy="4">'+nf(L.y[lt],2)+'</text></svg>';
+  const row=(l,v)=>'<div class="cn"><span class="l">'+l+'</span><span class="v">'+v+'</span></div>';
+  let h='';if(M.spNow!=null)h+=row('2s10s',nf(M.spNow,1)+'bp'+(M.spNow<0?' (inverted)':''));
+  if(M.sp2Now!=null)h+=row('2s30s',nf(M.sp2Now,1)+'bp');
+  if(L.y['10Y']!=null)h+=row('10Y level',nf(L.y['10Y'],2)+'%');
+  if(P&&L.y['10Y']!=null&&P.y['10Y']!=null)h+=row('10Y vs 1M',fmtD((L.y['10Y']-P.y['10Y'])*100,'bp'));
+  h+=row('As of',L.d);
+  read.innerHTML='<div class="clk" data-fig="SPREAD">'+h+'</div><div style="font-size:15px;line-height:1.5;margin-top:12px">'+
+    (M.spNow<0?'Curve inverted for <b>'+M.inv+'</b> sessions — market pricing an easing path.'
+             :'Curve positively sloped at '+nf(M.spNow,1)+'bp; spreads detailed below.')+'</div>';}
+function subRow(id,l,v,d,du,g){return'<div class="sub clk" data-fig="'+id+'"><span class="lbl">'+l+'</span><span class="dots"></span>'+
+  '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cl(d,g)+'">'+fmtD(d,du)+'</span>':'')+'</div>';}
+function hDelta(id){const d=deltaFor(id,BASIS);
+  return'<span><span class="lb">'+basisLabel()+'</span><span class="'+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+'</span></span>';}
+function renderBlocks(){
+  if(M.spNow!=null){const a=[];
+    if(M.BAMLC0A0CM)a.push(subRow('BAMLC0A0CM','IG corp spread (OAS)',nf(M.BAMLC0A0CM.last,2)+'%',deltaFor('BAMLC0A0CM',BASIS),'bp',-1));
+    if(M.BAMLH0A0HYM2)a.push(subRow('BAMLH0A0HYM2','HY corp spread (OAS)',nf(M.BAMLH0A0HYM2.last,2)+'%',deltaFor('BAMLH0A0HYM2',BASIS),'bp',-1));
+    if(M.T10YIE)a.push(subRow('T10YIE','10Y breakeven (mkt infl.)',nf(M.T10YIE.last,2)+'%',deltaFor('T10YIE',BASIS),'bp',0));
+    if(M.T5YIFR)a.push(subRow('T5YIFR','5y5y infl. expectations',nf(M.T5YIFR.last,2)+'%',deltaFor('T5YIFR',BASIS),'bp',0));
+    if(M.T5YIE)a.push(subRow('T5YIE','5Y breakeven',nf(M.T5YIE.last,2)+'%',deltaFor('T5YIE',BASIS),'bp',0));
+    if(M.real10!=null)a.push(subRow('REAL10','10Y real (est.)',nf(M.real10,2)+'%'));
+    if(M.DGS2)a.push(subRow('DGS2','US 2Y level',nf(M.DGS2.last,2)+'%',deltaFor('DGS2',BASIS),'bp',-1));
+    if(M.DGS10)a.push(subRow('DGS10','US 10Y level',nf(M.DGS10.last,2)+'%',deltaFor('DGS10',BASIS),'bp',-1));
+    if(M.DGS30)a.push(subRow('DGS30','US 30Y level',nf(M.DGS30.last,2)+'%',deltaFor('DGS30',BASIS),'bp',-1));
+    if(M.DFEDTARU)a.push(subRow('DFEDTARU','FF target upper',nf(M.DFEDTARU.last,2)+'%'));
+    document.getElementById('bRates').innerHTML='<div class="kick">Rates &amp; spreads — detail</div>'+
+      '<div class="hrow clk" data-fig="SPREAD"><div><div class="hv">'+nf(M.spNow,1)+'<span class="hu">bp</span></div>'+
+      '<div class="hd">'+hDelta('SPREAD')+'<span><span class="lb">2s30s</span><span>'+(M.sp2Now!=null?nf(M.sp2Now,1)+'bp':'—')+'</span></span></div></div>'+
+      (M.sp?spark(M.sp.slice(-60),110,30):'')+'</div>'+
+      '<div class="asof"><b>2s10s · '+esc(asOf('SPREAD')||'')+'</b> — '+(M.inv>0?'inverted '+M.inv+' sessions':'positive slope')+'</div>'+
+      a.join('')+
+      '<details class="more"><summary>Notes</summary>'+
+      subRow('BAMLC0A0CM','Definition','ICE BofA Corporate Index OAS (IG)')+
+      subRow('BAMLH0A0HYM2','Definition','ICE BofA High Yield Index OAS')+
+      subRow('SPREAD','Derived','DGS10 \u2212 DGS2, matched by date')+
+      '</details>';}
+  else document.getElementById('bRates').innerHTML='<div class="kick">Rates &amp; spreads — detail</div><span class="ph">unreachable — see integrity</span>';
+  if(M.cpiY&&M.cpiY.length){const y=M.cpiY,now=y[y.length-1];
+    const co=M.coreY?M.coreY[M.coreY.length-1]:null,cop=M.coreY&&M.coreY.length>1?M.coreY[M.coreY.length-2]:null;
+    const a=[];a.push(subRow('CPIAUCSL','CPI M/M (NSA)',M.cpiMM!=null?nf(M.cpiMM,1)+'%':'—'));
+    if(M.RSAFS)a.push(subRow('RSAFS','Retail sales','$'+nf(M.RSAFS.last/1e3,0)+'B',deltaFor('RSAFS',BASIS),'%',1));
+    if(M.INDPRO)a.push(subRow('INDPRO','Industrial production',nf(M.INDPRO.last,1),deltaFor('INDPRO',BASIS),'%',1));
+    a.push(subRow('CPIAUCSL','Measure note','PCE is BEA-keyed — not in this brief'));
+    document.getElementById('bInfl').innerHTML='<div class="kick">Inflation — detail</div>'+
+      '<div class="hrow clk" data-fig="CPI_YOY"><div><div class="hv">'+nf(now,1)+'<span class="hu">%</span></div>'+
+      '<div class="hd"><span><span class="lb">HEADLINE CPI (NSA) · Y/Y</span></span></div></div>'+spark(y,110,30)+'</div>'+
+      '<div class="asof"><b>'+esc(asOf('CPIAUCSL')||'')+'</b> — all items, not seasonally adjusted; Y/Y standard</div>'+
+      subRow('CORE_YOY','Core CPI (NSA) Y/Y',co!=null?nf(co,1)+'%':'—',co!=null&&cop!=null?co-cop:null,'pp',0)+
+      '<details class="more"><summary>More metrics</summary>'+a.join('')+'</details>';}
+  else document.getElementById('bInfl').innerHTML='<div class="kick">Inflation — detail</div><span class="ph">unreachable — see integrity</span>';
+  if(M.UNRATE||M.ICSA){const u=M.UNRATE,a=[];
+    if(M.ICSA)a.push(subRow('ICSA','Initial claims',nf(M.ICSA.last/1e3,0)+'k',deltaFor('ICSA',BASIS),'k',-1));
+    if(M.claimsMA)a.push(subRow('ICSA','4-week average',nf(M.claimsMA/1e3,0)+'k'));
+    if(M.JTSJOL)a.push(subRow('JTSJOL','Job openings',nf(M.JTSJOL.last/1e3,0)+'k',deltaFor('JTSJOL',BASIS),'k',-1));
+    if(M.ICSA&&M.claimsMA)a.push(subRow('ICSA','Claims vs avg',fmtD((M.ICSA.last-M.claimsMA)/1e3,'k')));
+    a.push(subRow('ICSA','Claims release','Thu 8:30 ET'),subRow('JTSJOL','JOLTS release','~7 weeks after month'));
+    document.getElementById('bLabor').innerHTML='<div class="kick">Labor &amp; activity — detail</div>'+
+      (u?'<div class="hrow clk" data-fig="UNRATE"><div><div class="hv">'+nf(u.last,1)+'<span class="hu">%</span></div>'+
+      '<div class="hd"><span><span class="lb">M/M</span><span class="'+cl(backE(u,1)!=null?u.last-backE(u,1):null,-1)+'">'+
+      fmtD(backE(u,1)!=null?u.last-backE(u,1):null,'pp')+'</span></span></div></div>'+spark(u.vals.slice(-60),110,30)+'</div>'+
+      '<div class="asof"><b>'+esc(asOf('UNRATE')||'')+'</b> — monthly release</div>':'')+
+      '<details class="more"><summary>More metrics</summary>'+a.join('')+'</details>';}
+  else document.getElementById('bLabor').innerHTML='<div class="kick">Labor &amp; activity — detail</div><span class="ph">unreachable — see integrity</span>';}
+const vixWord=v=>v<13?'a complacent tone':v<18?'a calm tape':v<24?'mild hedging demand':v<32?'elevated stress':'genuine stress';
+function stance(){let t=0;const s5=M.SP500?deltaRaw('SP500',{n:5}):null;
+  if(s5!=null)t+=s5>0.8?2:s5<-0.8?-2:0;
+  if(M.VIX){const v=M.VIX.last;t+=v<15?1.5:v>25?-2:v>20?-0.5:0.5;}
+  if(M.sp&&M.sp.length>5){const d=M.sp[M.sp.length-1].v-M.sp[M.sp.length-6].v;t+=d>3?.5:d<-3?-.5:0;}
+  return t>=2?['RISK-ON','s-on']:t<=-2?['RISK-OFF','s-off']:['MIXED','s-mix'];}
+const fId=(id,t)=>'<span class="fig clk" data-fig="'+id+'">'+t+'</span>';
+function narrative(){plain=[];const p=[];
+  if(M.SP500){const d5=deltaRaw('SP500',{n:5});
+    let s='Markets: the S&P 500 at '+fId('SP500',nf(M.SP500.last,2));
+    if(d5!=null)s+=' ('+(d5>=0?'+':'')+nf(d5,1)+'% w/w)';
+    if(M.VIX)s+=', VIX '+fId('VIX',nf(M.VIX.last,2))+' — '+vixWord(M.VIX.last);
+    if(M.DGS10)s+='; 10Y '+fId('DGS10',nf(M.DGS10.last,2))+'%';
+    if(M.spNow!=null)s+=', 2s10s '+fId('SPREAD',nf(M.spNow,1)+'bp');
+    s+='.';p.push(s);}
+  const m=[];
+  if(M.cpiY&&M.cpiY.length)m.push('headline CPI (NSA) '+fId('CPI_YOY',nf(M.cpiY[M.cpiY.length-1],1))+'% y/y');
+  if(M.coreY&&M.coreY.length)m.push('core CPI (NSA) '+fId('CORE_YOY',nf(M.coreY[M.coreY.length-1],1))+'% y/y');
+  if(M.UNRATE)m.push('unemployment '+fId('UNRATE',nf(M.UNRATE.last,1))+'%');
+  if(M.ICSA)m.push('claims '+fId('ICSA',nf(M.ICSA.last/1e3,0))+'k');
+  if(m.length)p.push('Macro: '+m.join(', ')+'.');
+  const nw=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts')&&state[c.id]&&state[c.id].rows.length)
+    .map(c=>({c:c,age:Math.round((Date.now()-Date.parse(state[c.id].rows[state[c.id].rows.length-1].d+'T12:00:00'))/864e5)}))
+    .sort((a,b)=>a.age-b.age)[0];
+  if(nw&&nw.age<=FRESH[nw.c.freq]&&MEANS[nw.c.id]){const v=valueFor(nw.c.id);
+    if(v)p.push('Newest print: '+nw.c.label.toLowerCase()+' at '+fId(nw.c.id,v)+' — reflects '+MEANS[nw.c.id]+'.');}
+  plain=p.map(x=>x.replace(/<span class="fig clk" data-fig="[^"]*">/g,'').replace(/<\/?span[^>]*>/g,'').replace(/&amp;/g,'&'));
+  document.getElementById('narr').innerHTML=p.length?'<p>'+p.join('</p><p>')+'</p>'
+    :'<span class="ph">insufficient data — see pipeline log</span>';
+  const st=stance(),el=document.getElementById('stance');
+  el.style.display='inline-block';el.textContent=st[0];el.className='stamp '+st[1];return st[0];}
+const FOMC=['2025-01-29','2025-03-19','2025-05-07','2025-06-18','2025-07-30','2025-09-17','2025-10-29','2025-12-10',
+ '2026-01-28','2026-03-18','2026-04-29','2026-06-17','2026-07-29','2026-09-16','2026-10-28','2026-12-09'];
+function renderAgenda(){const t=new Date(),items=[];
+  for(let i=0;i<8;i++){const d=new Date(t);d.setDate(t.getDate()+i);if(d.getDay()===4){items.push({d:d,t:'Initial jobless claims',s:'8:30 ET · DOL · weekly'});break;}}
+  const cpi=new Date(t);if(t.getDate()>9)cpi.setMonth(cpi.getMonth()+1);cpi.setDate(11);
+  items.push({d:cpi,t:'CPI print (≈ est. date)',s:'8:30 ET · BLS · headline + core'});
+  for(let i=0;i<40;i++){const d=new Date(t);d.setDate(t.getDate()+i);
+    if(d.getDay()===5&&d.getDate()<=7){items.push({d:d,t:'Employment situation (NFP)',s:'8:30 ET · BLS · first Friday'});break;}}
+  const fc=FOMC.find(x=>x>=isoDay(Date.now()));
+  if(fc)items.push({d:new Date(fc+'T12:00:00'),t:'FOMC decision',s:'2:00 PM ET · presser 2:30'});
+  items.sort((a,b)=>a.d-b.d);
+  document.getElementById('agenda').innerHTML=items.slice(0,4).map(i=>
+    '<div class="ag"><span class="d">'+DOWS[i.d.getDay()]+' '+MOSF[i.d.getMonth()]+' '+i.d.getDate()+'</span>'+
+    '<span><div class="t">'+i.t+'</div><div class="s">'+i.s+'</div></span></div>').join('');}
+
+/* ============ drawer ============ */
+function drow(k,v,c){return v==null?'':'<div class="dr2"><span class="k">'+k+'</span><span class="v '+(c||'')+'">'+v+'</span></div>';}
+function cardSpark(vals){const v=(vals||[]).filter(x=>x!=null).slice(-90);if(v.length<2)return'';
+  const w=330,h=64,mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
+  const pts=v.map((x,i)=>[(1+i/(v.length-1))*(w-6)+3,h-6-((x-mn)/rg)*(h-14)]);
+  const L=pts[pts.length-1];
+  return'<svg class="dc" viewBox="0 0 '+w+' '+h+'"><polyline points="'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+'"/><circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="3"/></svg>';}
+function openCard(id){const s=state[id],drv=DERIVED[id];let label,unit,val,dp;
+  if(drv){label=drv.label;unit=drv.unit;dp=drv.dp;
+    val=id==='SPREAD'?M.spNow:id==='SP2S30'?M.sp2Now:id==='CPI_YOY'?(M.cpiY&&M.cpiY.length?M.cpiY[M.cpiY.length-1]:null)
+      :id==='CORE_YOY'?(M.coreY&&M.coreY.length?M.coreY[M.coreY.length-1]:null):M.real10;}
+  else{const c=cfgOf(id);if(!c)return;label=c.label;dp=c.dp;
+    if(s&&s.rows&&s.rows.length){val=s.rows[s.rows.length-1].v;unit=c.du==='bp'?'%':c.du==='pt'?'':c.du;
+      if(id==='ICSA'||id==='JTSJOL'){val=val/1e3;unit='k';}
+      else if(id==='RSAFS'){val=val/1e3;unit='bn USD';}
+      else if(id==='INDPRO')unit='idx';
+      else if(id==='WHEAT')unit='cents/bu';
+      else if(id==='NATGAS')unit='$/MMBtu';else if(id==='BRENT'||id==='WTI')unit='$/bbl';
+      else if(id==='SILVER'||id==='GOLD')unit='$/oz';}
+    else val=null;}
+  $('dwT').textContent=label;
+  let h='<div class="dv">'+(val==null?'—':nf(val,dp))+'<small> '+esc(unit)+'</small></div>';
+  h+='<div class="asof"><b>'+esc(asOf(id)||'no data')+'</b></div>';
+  if(MEANS[id])h+=drow('Reflects',esc(MEANS[id]));
+  let ser=drv?(id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:(id==='CPI_YOY'?(M.cpiY||[]).map(v=>({v:v})):id==='CORE_YOY'?(M.coreY||[]).map(v=>({v:v})):null)):(s&&s.rows);
+  if(ser&&ser.length>2)h+='<div class="dsec">Recent path</div>'+cardSpark(ser.map(r=>r.v));
+  const c0=cfgOf(id);
+  if(c0){const d=deltaFor(id,BASIS);
+    if(d!=null){let dl='';if(BASIS==='date'){const bd=baseDateFor(id);if(bd)dl=' · base '+bd;}
+      h+=drow('Change ('+basisLabel()+')',esc(fmtD(d,duFor(id)))+' · '+steps(c0,BASIS)+' obs back'+dl);}}
+  h+='<div class="dsec">Source &amp; method</div>';
+  if(drv){h+=drow('Type','derived');
+    h+=drow('Components',drv.comps.map(c=>labFor(c)+' ('+(SRC[state[c]?state[c].src:'?']||'?')+')').join(' + '));
+    h+=drow('Method',esc(drv.note));}
+  else{const c=cfgOf(id),sk=s?s.src:'?';
+    h+=drow('Publisher',SRC[sk]||sk||'?');
+    let sid=c.id;
+    if(sk==='treasury')sid=UST_MAP[id]+' · Treasury par yield curve';
+    else if(sk==='bls')sid=BLS_MAP[id];
+    else if(sk==='yahoo')sid=c.sid+' · Yahoo v8/chart';
+    else if(sk==='stooq')sid=c.s+' · Stooq CSV';
+    else if(sk==='fred')sid='fred.stlouisfed.org/data/'+c.id+'.txt';
+    h+=drow('Series / endpoint',esc(sid));
+    h+=drow('Cadence',CAD[c.freq]||c.freq);
+    if(id==='CPIAUCSL'||id==='CPILFESL')h+=drow('Adjustment','NSA — Y/Y standard; M/M seasonal. PCE is BEA-keyed, not covered.');
+    if(id==='BAMLC0A0CM')h+=drow('Definition','ICE BofA Corporate Index OAS (IG)');
+    if(id==='BAMLH0A0HYM2')h+=drow('Definition','ICE BofA High Yield Index OAS');
+    if(id==='INDPRO')h+=drow('Unit','index (2017=100)');
+    if(id==='RSAFS')h+=drow('Unit','millions USD/month — shown as $bn');
+    if(id==='JTSJOL')h+=drow('Unit','thousands of openings, month-end');}
+  h+='<div class="dsec">This value</div>';
+  if(s&&s.rows&&s.rows.length){
+    h+=drow('Observation date',s.rows[s.rows.length-1].d);
+    if(s.rows.length>1&&!drv)h+=drow('\u0394 base (prior obs)',s.rows[s.rows.length-2].d);
+    h+=drow('Observations',s.rows.length+(s.meta?' · '+s.meta.first+' → '+s.meta.last:''));
+    if(s.meta&&s.meta.nul)h+=drow('Missing dropped',s.meta.nul,s.rows.slice(-10).some(r=>r.v==null)?'warn':'');
+    const sa=staleAge(id);
+    h+=sa!=null?drow('Freshness',sa+'d past window','warn'):drow('Freshness','within release window','ok');
+    if(s.stage==='CACHE'){const hh=s.at?Math.round((Date.now()-s.at)/36e5):null;
+      h+=drow('Serving from','cache'+(hh!=null?' ('+hh+'h)':''),'warn');}
+    if(s.meta)h+=drow('Fetch',nf(s.meta.ms,1)+'s · '+nf(s.meta.kb/1024,1)+'KB · via '+s.via);}
+  else h+=drow('Status','NO DATA — omitted','err');
+  if(cfgOf(id)&&!drv){const ch=chainOf(cfgOf(id));
+    h+='<div class="dsec">Fallback chain</div>';
+    if(ch.length===1)h+=drow('Fallback','none — FRED-only series','warn');
+    h+=ch.map(x=>drow(x,(s&&s.src===x)?'\u25c0 served this build':'standby',(s&&s.src===x)?'ok':'')).join('');}
+  h+='<div class="dnote">If the integrity line is silent, all feeds are current. CACHED / STALE / NSA values are context, not live prints.</div>';
+  $('dwB').innerHTML=h;$('drawer').classList.add('on');$('scrim').classList.add('on');}
+function closeCard(){$('drawer').classList.remove('on');$('scrim').classList.remove('on');}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-fig]');
+  if(t){openCard(t.getAttribute('data-fig'));return;}
+  if(e.target.id==='scrim'||e.target.id==='dwX')closeCard();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCard();});
+
+/* ============ health / masthead / copy ============ */
+function renderHealth(){let ok=0,ca=0,dd=0;
+  $('hlth').innerHTML=FEEDS.map(c=>{const s=state[c.id]||{stage:'PEND',via:'—',src:'?'};
+    let dc,tx;if(s.stage==='OK'){dc=s.via==='direct'?'dg':'da';tx='OK·'+s.via;ok++;}
+    else if(s.stage==='CACHE'){dc='da';tx='CACHE';ca++;}
+    else if(s.stage==='PEND'){dc='dr';tx='PEND';dd++;}
+    else{dc='dr';tx='\u2717'+s.stage;dd++;}
+    return'<div class="chip" title="'+c.id+' · '+(s.src||'?')+' via '+(s.via||'?')+'"><span class="dot '+dc+'"></span><b>'+c.id+'</b>·'+tx+'</div>';}).join('');
+  $('pstats').textContent=FEEDS.length+' FEEDS + CURVE · '+ok+' OK · '+ca+' CACHE · '+dd+' STUCK';return dd;}
+function mast(st){const o=document.querySelector('.mmeta');if(o)o.remove();
+  const m=document.createElement('div');m.className='mmeta';
+  m.innerHTML='<div class="dt">'+etDate()+'</div><div class="bt">BUILT '+etTime()+' ET · TAPE '+st+'</div>';
+  document.querySelector('.mast-top').insertBefore(m,document.querySelector('.acts'));}
+const KEY=['SP500','DGS10','SPREAD','SP2S30','BAMLH0A0HYM2','WTI','GOLD','DXY','CPI_YOY','CORE_YOY','UNRATE','ICSA'];
+async function copyBrief(){const st=$('stance').textContent||'N/A';
+  const key=KEY.map(id=>{const v=valueFor(id);if(!v)return null;const d=deltaFor(id,BASIS);
+    return id.padEnd(14)+' '+v+(d!=null?'  ('+fmtD(d,duFor(id))+' '+basisLabel()+')':'');}).filter(Boolean).join('\n');
+  const ag=[...document.querySelectorAll('.ag')].map(e=>e.innerText.replace(/\n/g,' — ')).join('\n');
+  const rep=integReport();
+  const notes=rep.length?rep.map(r=>'- ['+r.lvl.toUpperCase()+'] '+r.msg).join('\n')
+    :'- All '+FEEDS.length+' feeds live and within release windows.';
+  const txt='MORNING MACRO — '+etDate()+' · built '+etTime()+' ET\nTAPE: '+st+'\n\n'+plain.join('\n\n')+
+    '\n\nKEY FIGURES (basis: '+basisLabel()+')\n'+key+'\n\nAGENDA\n'+ag+'\n\nDATA NOTES\n'+notes+
+    '\n\nSources: FRED, U.S. Treasury Fiscal Data, BLS, Yahoo Finance, Stooq (last resort). Inflation = headline/core CPI (NSA) y/y; PCE excluded (BEA-keyed). Quotes ~15-min delayed; JOLTS ~7-week lag. Not investment advice.';
+  try{await navigator.clipboard.writeText(txt);}
+  catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
+  toast('Brief copied · '+txt.length.toLocaleString()+' chars');}
+
+/* ============ boot ============ */
+function setStage(n,txt){for(let i=0;i<4;i++){const s=$('sg'+i);s.classList.toggle('on',i<=n);s.classList.toggle('cur',i===n);}
+  $('stg').textContent=txt;status('STAGE '+(n+1)+' · '+txt);}
+function renderAll(st){derive();const s=st||narrative();
+  renderAgenda();renderCurve();renderGroups();renderPrints();renderBlocks();
+  const dead=renderHealth();renderInteg();return{s,dead};}
+async function boot(matrix){if(busy)return;busy=true;
+  $('bRun').disabled=true;$('bDiag').disabled=true;
+  ROUTES=routes();for(const k in QZ)delete QZ[k];
+  log('\u2500\u2500 BOOT v13.4 · ladder: '+ROUTES.map(r=>r.n).join(' → ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
+  if(restore()){document.getElementById('snap').classList.add('on');renderAll();}
+  setStage(0,'probing routes…');
+  if(matrix||!goodRoutes.length)goodRoutes=await diagnose();
+  else log('STAGE 1 skipped — known good: '+goodRoutes.join(', '),'ldim');
+  if(!goodRoutes.length){setStage(0,'halted — no route');document.getElementById('halt').classList.add('on');
+    log('HALTED at STAGE 1 — see panel above','lerr');
+    busy=false;$('bRun').disabled=false;$('bDiag').disabled=false;return;}
+  if(goodRoutes.length<ROUTES.length){log('pruning dead routes — keeping: '+goodRoutes.join(', '),'ldim');
+    ROUTES=ROUTES.filter(r=>goodRoutes.includes(r.n));}
+  setStage(1,'pilot: FRED:DGS10');
+  log('\u2500\u2500 STAGE 2 · PILOT \u2500\u2500','lhi');
+  let ok=await runFeed(cfgOf('DGS10'));
+  if(!ok){log('FRED pilot failed — YAHOO pilot next','lwarn');ok=await runFeed(cfgOf('SP500'));}
+  if(!ok){setStage(1,'halted — pilot failed');document.getElementById('halt').classList.add('on');
+    log('HALTED at STAGE 2','lerr');busy=false;$('bRun').disabled=false;$('bDiag').disabled=false;return;}
+  log('pilot GREEN — unlocking full build','lok');
+  setStage(2,'fetching remaining feeds · paced');
+  log('\u2500\u2500 STAGE 3 · FULL BUILD \u2500\u2500','lhi');
+  const rest=FEEDS.filter(f=>!(state[f.id]&&state[f.id].stage==='OK'));
+  await Promise.all(rest.map(c=>q2(()=>runFeed(c))));
+  await fetchCurve();
+  const out=renderAll();
+  const bySrc={};FEEDS.forEach(c=>{const s=state[c.id];if(s&&s.rows.length)bySrc[s.src||c.src]=(bySrc[s.src||c.src]||0)+1;});
+  log('provenance: '+Object.entries(bySrc).map(e=>e[0]+'\u00d7'+e[1]).join(' · ')+' · ust-curve\u00d71','lhi');
+  snapshot();document.getElementById('snap').classList.remove('on');
+  setStage(3,'built '+etTime()+' ET');
+  log('\u2500\u2500 BUILD COMPLETE · '+out.dead+' feed(s) stuck · snapshot saved \u2500\u2500','lok');
+  mast(out.s);
+  busy=false;$('bRun').disabled=false;$('bDiag').disabled=false;}
+
+/* ============ controls ============ */
+const AUTO=12*36e5;let auto=true;
+setInterval(()=>{if(auto&&!busy)boot(false)},AUTO);
+ $('bRun').addEventListener('click',()=>boot(false));
+ $('bDiag').addEventListener('click',()=>boot(true));
+ $('bCopy').addEventListener('click',copyBrief);
+ $('bAuto').addEventListener('click',()=>{auto=!auto;$('bAuto').classList.toggle('on',auto);
+  $('autoL').textContent=auto?'Auto · 12h':'Auto off';toast(auto?'Auto every 12h':'Auto off');});
+ $('relayIn').value=CUSTOM;
+ $('relaySave').addEventListener('click',()=>{CUSTOM=$('relayIn').value.trim();
+  try{CUSTOM?localStorage.setItem('mm_relay',CUSTOM):localStorage.removeItem('mm_relay')}catch(e){}
+  goodRoutes=[];log(CUSTOM?'custom relay saved — tried first':'custom relay cleared','lhi');boot(true);});
+function setBasis(b){BASIS=BLAB[b]||b==='date'?b:'ww';
+  try{localStorage.setItem('mm_basis',BASIS)}catch(e){}
+  document.querySelectorAll('.bbtn[data-b]').forEach(x=>x.classList.toggle('on',x.dataset.b===BASIS));
+  if(Object.keys(state).length){renderGroups();renderBlocks();renderPrints();}}
+document.querySelectorAll('.bbtn[data-b]').forEach(x=>x.addEventListener('click',()=>{$('bDate').value='';BDATE='';setBasis(x.dataset.b);}));
+ $('bDate').addEventListener('change',()=>{const v=$('bDate').value;
+  if(!v){BDATE='';BASIS='ww';}else{BDATE=v;BASIS='date';}
+  try{localStorage.setItem('mm_basis',BASIS);localStorage.setItem('mm_bdate',BDATE)}catch(e){}
+  document.querySelectorAll('.bbtn[data-b]').forEach(x=>x.classList.toggle('on',false));
+  if(Object.keys(state).length){renderGroups();renderBlocks();renderPrints();}});
+ $('bDateClr').addEventListener('click',()=>{$('bDate').value='';BDATE='';setBasis('ww');});
+document.querySelectorAll('.rv').forEach((el,i)=>el.style.animationDelay=(i*60)+'ms');
+setBasis(BASIS);if(BASIS==='date'&&BDATE)$('bDate').value=BDATE;
+log('morning macro v13.4 — curve fetch now a 4-variant ladder mirroring proven-working Treasury URL shapes','lhi');
+log('parse-failure body head widened to 240 chars — a stubborn 404 will log Treasury\u2019s own explanation','ldim');
+log('matrix denominator fixed (was hardcoded /2) \u00b7 fallback chain intact: variants → 3-point DGS2/10/30 curve','ldim');
+boot(true);
+</script>
+</body>
+</html>

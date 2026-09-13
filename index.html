@@ -239,6 +239,22 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
 <aside id="drawer"><div class="dwh"><span class="t" id="dwT">—</span><button id="dwX" style="font-size:15px;border:1px solid var(--ink);background:none;color:var(--ink);width:28px;height:28px;cursor:pointer">×</button></div><div id="dwB"></div></aside>
 <div id="toast"></div>
 
+<!-- v14.1 fix: hidden stance element + mirror into Summary mood -->
+<span id="stance" style="display:none"></span>
+<script>
+(function(){
+  var el=document.getElementById('stance'),md=document.getElementById('mood');
+  if(!el||!md)return;
+  var sync=function(){var t=el.textContent;if(t)md.innerHTML='Risk mood: <b>'+t+'</b>';};
+  new MutationObserver(sync).observe(el,{childList:true,subtree:true});
+  sync();
+})();
+</script>
+
+<script>
+/* watchdog — independent block */
+...
+
 <script>
 /* watchdog — independent block */
 window.__mm=false;
@@ -951,17 +967,6 @@ log('morning briefing v14 — presentation rebuild per spec: 43 feeds (8 FX pair
 log('page 1: groups + basis(1D/1W/1M) + curve w/ FF target + agenda + releases + summary w/ risk mood','ldim');
 log('page 2 via curve card: segmented spreads (steepening/inflation/credit) · no levels strip · sources via drawers + diagnostics table','ldim');
 boot(true);
-</script>
-  <!-- v14.1 fix: restore hidden stance element + mirror into Summary mood line -->
-<span id="stance" style="display:none"></span>
-<script>
-(function(){
-  var el=document.getElementById('stance'),md=document.getElementById('mood');
-  if(!el||!md)return;
-  var sync=function(){var t=el.textContent;if(t)md.innerHTML='Risk mood: <b>'+t+'</b>';};
-  new MutationObserver(sync).observe(el,{childList:true});
-  sync();
-})();
 </script>
 </body>
 </html>

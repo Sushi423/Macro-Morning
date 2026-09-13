@@ -30,12 +30,10 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .kick{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.17em;text-transform:uppercase;color:var(--ink2);display:flex;align-items:center;gap:12px;margin-bottom:9px}
 .kick::after{content:'';flex:1;height:1px;background:var(--hr)}
 .ph{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink2)}
-/* basis bar */
 .basis{display:flex;align-items:center;gap:8px;padding:13px 0 4px}
 .basis .bl{font-family:'IBM Plex Mono',monospace;font-size:9.5px;letter-spacing:.15em;color:var(--ink2);text-transform:uppercase;margin-right:5px}
 .bbtn{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;padding:5px 12px;cursor:pointer;border:1px solid var(--hr);background:none;color:var(--ink2)}
 .bbtn:hover{border-color:var(--ink);color:var(--ink)}.bbtn.on{background:var(--ink);color:var(--pp);border-color:var(--ink)}
-/* groups */
 .groups{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--hr);margin:8px 0 18px}
 .grp{padding:12px 14px;border-right:1px solid var(--hr)}.grp:last-child{border-right:none}
 .gk{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.17em;color:var(--ink2);margin-bottom:3px}
@@ -47,7 +45,6 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .gi .d{font-family:'IBM Plex Mono',monospace;font-size:10.5px;white-space:nowrap}
 .gi svg{width:48px;height:13px;flex:none;align-self:center}
 .up{color:var(--grn)}.dn{color:var(--red)}.fl{color:var(--ink2)}
-/* curve row */
 .rowcurve{display:grid;grid-template-columns:1fr 300px;gap:28px;padding:20px 0;border-top:1px solid var(--hr);border-bottom:1px solid var(--hr)}
 #curve svg{width:100%;height:auto;display:block;cursor:pointer}
 #curve .ln{fill:none;stroke:var(--ink);stroke-width:1.8}#curve .pv{fill:none;stroke:var(--ink2);stroke-width:1.2;stroke-dasharray:4 4;opacity:.7}
@@ -61,12 +58,10 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .door{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;border:1px solid var(--ink);padding:8px 12px;display:inline-block;margin-top:14px}
 .door:hover{background:var(--ink);color:var(--pp)}
 .cfoot{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink2);margin-top:10px}
-/* agenda */
 .ag{display:flex;gap:12px;padding:7px 0;border-bottom:1px dotted var(--hr2);font-family:'IBM Plex Mono',monospace}
 .ag:last-child{border-bottom:none}
 .ag .d{font-size:10.5px;font-weight:600;min-width:92px;white-space:nowrap}
 .ag .t{font-size:15px;font-weight:500;font-family:'Newsreader',Georgia,serif}.ag .s{font-size:9.5px;letter-spacing:.1em;color:var(--ink2);margin-top:1px;text-transform:uppercase}
-/* prints */
 .prints{padding:16px 0 18px;border-bottom:1px solid var(--hr)}
 .pr{display:flex;gap:12px;align-items:baseline;padding:6px 3px;border-bottom:1px dotted var(--hr2);cursor:pointer}
 .pr:hover{background:rgba(25,21,16,.05)}
@@ -77,14 +72,12 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .pr .d{font-family:'IBM Plex Mono',monospace;font-size:11px;white-space:nowrap}
 .pr .m{font-style:italic;font-size:15px;color:var(--ink2);flex:1;min-width:0}
 .pr .dt{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--ink2);white-space:nowrap}
-/* summary */
 .summ{padding:18px 0 22px;border-bottom:1px solid var(--hr)}
 .summ .narr{font-size:20px;line-height:1.6;max-width:76ch}
 .summ .mood{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink2);margin-bottom:8px}
 .summ .mood b{color:var(--ink)}
 .fig{font-weight:600;border-bottom:1px solid rgba(25,21,16,.35);white-space:nowrap}
-/* diagnostics */
-.pipe{background:var(--pan);color:var(--pi);margin-top:0}
+.pipe{background:var(--pan);color:var(--pi)}
 .pipe .kick{color:#8B8371}.pipe .kick::after{background:rgba(231,224,207,.18)}
 .pipe details{padding:18px 0}
 .pipe summary{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;color:#8B8371;list-style:none}
@@ -92,7 +85,7 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .pipe summary::before{content:'▸ '}
 .pipe details[open] summary::before{content:'▾ '}
 .pipe .inner{display:grid;grid-template-columns:1fr 320px;gap:34px;padding:14px 0 20px}
-.log{font-family:'IBM Plex Mono',monospace;font-size:11.5px;line-height:1.8;max-height:300px;overflow-y:auto;color:#C8C0AC}
+.log{font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;max-height:340px;overflow-y:auto;color:#C8C0AC}
 .log .t{color:#71695A;margin-right:10px}
 .lok{color:#93C4A4}.lwarn{color:#D8B36A}.lerr{color:#D0705C}.lhi{color:#EFE8D6}.ldim{color:#71695A}
 .hlth{display:grid;grid-template-columns:1fr 1fr;gap:6px;align-content:start}
@@ -103,7 +96,6 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .srcall table{width:100%;border-collapse:collapse;font-size:10.5px;color:#C8C0AC}
 .srcall td,.srcall th{padding:5px 8px;border-bottom:1px solid rgba(231,224,207,.12);text-align:left}
 .srcall th{color:#8B8371;text-transform:uppercase;letter-spacing:.08em;font-weight:500}
-/* halt */
 #halt{display:none;border:1px solid #D0705C;background:rgba(208,112,92,.08);padding:14px 16px;margin:12px 0 4px;font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.9;color:#E7E0CF}
 #halt.on{display:block}#halt b{color:#D0705C}
 .relay{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
@@ -111,7 +103,6 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .relay input{background:#0F0C08;border:1px solid rgba(231,224,207,.25);color:#E7E0CF;font-family:'IBM Plex Mono',monospace;font-size:11px;padding:8px 10px;width:340px;max-width:70vw}
 .rbtn{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;border:1px solid rgba(231,224,207,.4);background:none;color:#E7E0CF;padding:8px 12px;cursor:pointer}
 .hint{font-family:'IBM Plex Mono',monospace;font-size:9px;color:#71695A;width:100%}
-/* drawer */
 #scrim{position:fixed;inset:0;background:rgba(25,21,16,.35);opacity:0;pointer-events:none;transition:.25s;z-index:90}
 #scrim.on{opacity:1;pointer-events:auto}
 #drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:94vw;background:var(--pp);border-left:1px solid var(--ink);box-shadow:-14px 0 40px rgba(25,21,16,.18);z-index:95;transform:translateX(103%);transition:transform .28s;display:flex;flex-direction:column}
@@ -133,9 +124,7 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;color:var(--ink2);padding:22px 0 56px}footer b{color:var(--ink)}
 #toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);background:var(--ink);color:var(--pp);font-family:'IBM Plex Mono',monospace;font-size:12px;padding:11px 18px;opacity:0;pointer-events:none;transition:.28s;z-index:99}
 #toast.on{opacity:1;transform:translate(-50%,0)}
-/* page 2 */
-#pg2{display:none}
-#pg2.on{display:block}
+#pg2{display:none}#pg2.on{display:block}
 .spseg{border:1px solid var(--hr);margin:14px 0 18px}
 .spseg .sk{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.17em;text-transform:uppercase;color:var(--ink2);padding:9px 16px;border-bottom:1px solid var(--hr);background:rgba(25,21,16,.03)}
 .spseg .body{padding:8px 16px 12px}
@@ -143,13 +132,12 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
 .sub:last-child{border-bottom:none}
 .sub .lbl{color:var(--ink2);font-size:11px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap}
 .sub .dots{flex:1;border-bottom:1px dotted var(--hr2);transform:translateY(-3px);min-width:12px}
-.sub .val{font-weight:600;white-space:nowrap}
-.sub .d{font-size:11px;white-space:nowrap}
+.sub .val{font-weight:600;white-space:nowrap}.sub .d{font-size:11px;white-space:nowrap}
 .sub .p30{font-family:'IBM Plex Mono',monospace;font-size:12px;letter-spacing:2px;color:var(--ink2)}
 .back{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;border:1px solid var(--ink);padding:7px 12px;display:inline-block;margin:18px 0 6px}
 .back:hover{background:var(--ink);color:var(--pp)}
 @media(max-width:1000px){.rowcurve,.pipe .inner{grid-template-columns:1fr}.groups{grid-template-columns:1fr}
-.grp{border-right:none;border-bottom:1px solid var(--hr)}.pr .m{display:none}.mmeta{text-align:left}#drawer{width:100vw}.agenda{padding-top:16px}}
+.grp{border-right:none;border-bottom:1px solid var(--hr)}.pr .m{display:none}.mmeta{text-align:left}#drawer{width:100vw}}
 </style>
 </head>
 <body>
@@ -168,7 +156,6 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
 
 <div id="snap" class="wrap">Showing last saved build — refreshing in background</div>
 
-<!-- ==================== PAGE 1 ==================== -->
 <main class="wrap" id="pg1">
   <section class="rv">
     <div class="basis"><span class="bl">Change basis</span>
@@ -190,7 +177,7 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
     </div>
   </section>
 
-  <section class="rowcurve rv" style="grid-template-columns:1fr 300px" id="secCurveRow">
+  <section class="rowcurve rv" style="grid-template-columns:1fr 300px">
     <div class="agenda" style="border:none;padding:0"><div class="kick">Upcoming data</div><div id="agenda"><span class="ph">computing…</span></div></div>
   </section>
 
@@ -204,19 +191,16 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
   </section>
 </main>
 
-<!-- ==================== PAGE 2 ==================== -->
 <main class="wrap" id="pg2">
   <div class="back" id="backBtn">← Back to briefing</div>
   <div class="kick">Rates &amp; spreads — detail</div>
   <div id="integ2"></div>
-
   <div class="spseg"><div class="sk">Steepening / policy-path view</div><div class="body" id="segSteep"><span class="ph">feed pending…</span></div></div>
   <div class="spseg"><div class="sk">Inflation view</div><div class="body" id="segInfl"><span class="ph">feed pending…</span></div></div>
   <div class="spseg"><div class="sk">Credit view</div><div class="body" id="segCred"><span class="ph">feed pending…</span></div></div>
-  <div class="ph" style="padding:4px 0 60px">Levels reference removed — tenor levels live on the curve chart; FF target on the curve card. Every figure opens its source drawer on click.</div>
+  <div class="ph" style="padding:4px 0 60px">Levels live on the curve chart; FF target on the curve card. Every figure opens its source drawer on click.</div>
 </main>
 
-<!-- ==================== diagnostics ==================== -->
 <section class="pipe" id="secPipe"><div class="wrap">
   <details id="pipeD">
     <summary>Diagnostics — pipeline log · feed health · all sources</summary>
@@ -227,59 +211,64 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
     <div class="relay"><label for="relayIn">CUSTOM RELAY</label>
       <input id="relayIn" spellcheck="false" placeholder="https://your-worker.workers.dev/?url={url}">
       <button class="rbtn" id="relaySave">Save + re-run</button>
-      <span class="hint">supports {url} (encoded) or {raw}. Stored locally. ⋯ hidden controls: Re-run stages = save relay or clear it; auto-build runs every 12h.</span></div>
+      <span class="hint">supports {url} (encoded) or {raw}. Stored locally.</span></div>
     <div class="inner"><div class="log" id="log"></div><div class="hlth" id="hlth"></div></div>
     <div class="srcall" id="srcAll"></div>
   </details>
 </div></section>
 
-<footer class="wrap"><b>READING THIS BRIEF</b> — changes follow the basis you choose (1D · 1W · 1M; frequency-aware per series). The curve card opens the rates &amp; spreads detail page. "Recent releases" lists announced government data only. Every figure opens a source card on click: publisher, series ID, cadence, contract, freshness. Inflation = headline &amp; core CPI (NSA) y/y; PCE is BEA-keyed, hence absent. Futures are front-month contracts. Not investment advice.</footer>
+<footer class="wrap"><b>READING THIS BRIEF</b> — changes follow the basis you choose (1D · 1W · 1M; frequency-aware per series). The curve card opens the rates &amp; spreads detail page. "Recent releases" lists announced government data only. Every figure opens a source card on click: publisher, series ID, cadence, contract, freshness. Inflation = headline &amp; core CPI (NSA) y/y. Futures are front-month contracts. Not investment advice.</footer>
 
 <div id="scrim"></div>
 <aside id="drawer"><div class="dwh"><span class="t" id="dwT">—</span><button id="dwX" style="font-size:15px;border:1px solid var(--ink);background:none;color:var(--ink);width:28px;height:28px;cursor:pointer">×</button></div><div id="dwB"></div></aside>
 <div id="toast"></div>
 
-<!-- v14.1 fix: hidden stance element + mirror into Summary mood -->
-<span id="stance" style="display:none"></span>
 <script>
-(function(){
-  var el=document.getElementById('stance'),md=document.getElementById('mood');
-  if(!el||!md)return;
-  var sync=function(){var t=el.textContent;if(t)md.innerHTML='Risk mood: <b>'+t+'</b>';};
-  new MutationObserver(sync).observe(el,{childList:true,subtree:true});
-  sync();
-})();
-</script>
-
-<script>
-/* watchdog — independent block */
-...
-
-<script>
-/* watchdog — independent block */
+/* watchdog — reports parse failure of the MAIN script. Runs before it. */
 window.__mm=false;
 window.addEventListener('error',function(e){try{var el=document.getElementById('log');
   var m='BOOT FAIL · '+(e.message||'?')+' · near line '+(e.lineno||'?');
   if(el)el.innerHTML='<div class="lerr">'+m+'</div>';else{document.title='MM FAIL';alert(m);}}catch(_){}});
 setTimeout(function(){if(window.__mm)return;var el=document.getElementById('log');
   var m='WATCHDOG · main script never executed — parse error or truncated file.';
-  if(el)el.innerHTML='<div class="lerr">'+m+'</div>';else{document.title='MM FAIL';alert(m);}},6000);
+  if(el)el.innerHTML='<div class="lerr">'+m+'</div>';else{document.title='MM FAIL';alert(m);}},8000);
 </script>
 
 <script>
 'use strict';
 window.__mm=true;
 
-/* ============ logging ============ */
-function log(msg,c){var el=document.getElementById('log'),d=document.createElement('div');
-  d.className=c||'';d.innerHTML='<span class="t">'+etTime()+'</span>'+msg;el.appendChild(d);
-  while(el.children.length>240)el.removeChild(el.firstChild);el.scrollTop=el.scrollHeight;}
+/* ============ LOGGING — declared FIRST so every trap works ============ */
+var LOGL=[];
+function log(msg,c){try{
+  var el=document.getElementById('log');if(!el){LOGL.push(msg);return;}
+  var d=document.createElement('div');d.className=c||'';
+  d.innerHTML='<span class="t">'+etTime()+'</span>'+msg;el.appendChild(d);
+  while(el.children.length>260)el.removeChild(el.firstChild);
+  el.scrollTop=el.scrollHeight;}catch(e){}}
+function flushEarly(){var el=document.getElementById('log');if(!el)return;
+  LOGL.splice(0).forEach(function(m){var d=document.createElement('div');
+    d.className='lerr';d.innerHTML=m;el.appendChild(d);});}
 function flog(tag,msg,c){log('<span style="color:#8B8371">['+esc(tag)+']</span> '+msg,c);}
-function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');
+function toast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('on');
   clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},2400);}
-function status(t){document.getElementById('fs').textContent=t;}
-window.addEventListener('error',e=>{try{log('JS ERROR · '+(e.message||'?')+' @ '+(e.lineno||'?'),'lerr')}catch(_){}});
-window.addEventListener('unhandledrejection',e=>{try{log('REJECT · '+((e.reason&&e.reason.message)||e.reason||'?'),'lerr')}catch(_){}});
+function status(t){var el=document.getElementById('fs');if(el)el.textContent=t;}
+window.addEventListener('error',e=>{try{log('JS ERROR · '+(e.message||'?')+' @ '+(e.lineno||'?')+':'+(e.colno||'?'),'lerr');flushEarly();}catch(_){}});
+window.addEventListener('unhandledrejection',e=>{try{log('REJECT · '+((e.reason&&e.reason.message)||e.reason||'?'),'lerr');flushEarly();}catch(_){}});
+
+/* ============ safe() — every render call is wrapped and traced ============
+   If a render function throws, the log names the function AND the error
+   with stack, and the page continues with the other sections. */
+function safe(name,fn){
+  try{
+    log('render ▸ '+name,'ldim');
+    var r=fn();
+    log('render ✓ '+name,'ldim');
+    return r;
+  }catch(e){
+    log('render ✗ <b>'+name+'</b> — '+(e&&e.message||e)+'<br>'+(e&&e.stack?esc(String(e.stack).split('\n').slice(0,4).join('<br>')):''),'lerr');
+    return null;
+  }}
 
 /* ============ helpers ============ */
 const $=id=>document.getElementById(id);
@@ -307,14 +296,13 @@ const CAD={daily:'daily · ~1-day lag',weekly:'weekly · Thu 8:30 ET',monthly:'m
   jolts:'monthly (JOLTS) · ~7-week lag',intraday:'quote · ~15-min delayed',crypto:'24/7 quote · ~15-min delayed'};
 const STALE={intraday:4,daily:5,weekly:12,monthly:70,jolts:100,crypto:4};
 const FRESH={weekly:8,monthly:35,jolts:55};
-/* v14: contract specificity for traded instruments */
-const CONTRACT={WTI:'front-month futures (CL=F) — nearest expiry, auto-rolls on delivery approach',
+const CONTRACT={WTI:'front-month futures (CL=F) — nearest expiry, auto-rolls',
   BRENT:'front-month futures (BZ=F) — nearest expiry, auto-rolls',
   NATGAS:'front-month futures (NG=F) — nearest expiry, auto-rolls',
   WHEAT:'front-month futures (ZW=F) — nearest expiry, auto-rolls',
   GOLD:'front-month futures (GC=F) — nearest expiry, auto-rolls',
   SILVER:'front-month futures (SI=F) — nearest expiry, auto-rolls',
-  BTC:'spot crypto pair (BTC-USD), continuous 24/7 market',
+  BTC:'spot crypto pair (BTC-USD), continuous 24/7',
   SP500:'index level (^GSPC), not a tradable instrument',
   NAS:'index level (^IXIC)',DOW:'index level (^DJI)',VIX:'index level (^VIX), S&P 30-day implied vol'};
 const MEANS={UNRATE:'labor-market slack',JTSJOL:'labor demand — workers employers want',
@@ -327,7 +315,6 @@ const MEANS={UNRATE:'labor-market slack',JTSJOL:'labor demand — workers employ
 
 /* ============ feed config — 43 feeds ============ */
 const FEEDS=[
- /* curve tenors */
  {id:'DGS1MO',src:'fred',freq:'daily',sid:'DGS1MO',label:'US 1M',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS3MO',src:'fred',freq:'daily',sid:'DGS3MO',label:'US 3M',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS6MO',src:'fred',freq:'daily',sid:'DGS6MO',label:'US 6M',dp:2,span:210,du:'bp',good:-1},
@@ -338,14 +325,12 @@ const FEEDS=[
  {id:'DGS10',src:'fred',freq:'daily',sid:'DGS10',label:'US 10Y',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS20',src:'fred',freq:'daily',sid:'DGS20',label:'US 20Y',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS30',src:'fred',freq:'daily',sid:'DGS30',label:'US 30Y',dp:2,span:210,du:'bp',good:-1},
- /* rates detail */
  {id:'T10YIE',src:'fred',freq:'daily',sid:'T10YIE',label:'10Y BREAKEVEN',dp:2,span:210,du:'bp',good:0},
  {id:'T5YIE',src:'fred',freq:'daily',sid:'T5YIE',label:'5Y BREAKEVEN',dp:2,span:210,du:'bp',good:0},
  {id:'T5YIFR',src:'fred',freq:'daily',sid:'T5YIFR',label:'5Y5Y INFL EXP',dp:2,span:210,du:'bp',good:0},
  {id:'BAMLC0A0CM',src:'fred',freq:'daily',sid:'BAMLC0A0CM',label:'IG CREDIT SPREAD',dp:2,span:210,du:'bp',good:-1},
  {id:'BAMLH0A0HYM2',src:'fred',freq:'daily',sid:'BAMLH0A0HYM2',label:'HY CREDIT SPREAD',dp:2,span:210,du:'bp',good:-1},
  {id:'DFEDTARU',src:'fred',freq:'daily',sid:'DFEDTARU',label:'FF TARGET (UP)',dp:2,span:200,du:'pp',good:0},
- /* macro */
  {id:'UNRATE',src:'fred',freq:'monthly',sid:'UNRATE',label:'UNEMPLOYMENT',dp:1,span:1200,du:'pp',good:-1},
  {id:'JTSJOL',src:'fred',freq:'jolts',sid:'JTSJOL',label:'JOB OPENINGS',dp:0,span:3000,du:'k',good:-1},
  {id:'ICSA',src:'fred',freq:'weekly',sid:'ICSA',label:'INITIAL CLAIMS',dp:0,span:210,du:'k',good:-1},
@@ -353,21 +338,17 @@ const FEEDS=[
  {id:'CPILFESL',src:'fred',freq:'monthly',sid:'CPILFESL',label:'CORE CPI (idx)',dp:3,span:1500,du:'pp',good:0},
  {id:'RSAFS',src:'fred',freq:'monthly',sid:'RSAFS',label:'RETAIL SALES',dp:1,span:3000,du:'%',good:1},
  {id:'INDPRO',src:'fred',freq:'monthly',sid:'INDPRO',label:'IND PRODUCTION',dp:1,span:3000,du:'%',good:1},
- /* equities & crypto */
  {id:'SP500',src:'yahoo',freq:'intraday',sid:'^GSPC',s:'^spx',range:'6mo',label:'S&P 500',dp:2,du:'%',good:1},
  {id:'NAS',src:'yahoo',freq:'intraday',sid:'^IXIC',s:'^ndq',range:'6mo',label:'NASDAQ',dp:2,du:'%',good:1},
  {id:'DOW',src:'yahoo',freq:'intraday',sid:'^DJI',s:'^dji',range:'6mo',label:'DOW',dp:2,du:'%',good:1},
  {id:'VIX',src:'yahoo',freq:'intraday',sid:'^VIX',range:'6mo',label:'VIX',dp:2,du:'pt',good:-1},
  {id:'BTC',src:'yahoo',freq:'crypto',sid:'BTC-USD',s:'btcusd',range:'1mo',label:'BITCOIN',dp:0,du:'%',good:1},
- /* commodities — hard */
  {id:'WTI',src:'yahoo',freq:'intraday',sid:'CL=F',s:'cl.f',range:'6mo',label:'WTI CRUDE',dp:2,du:'%',good:1},
  {id:'BRENT',src:'yahoo',freq:'intraday',sid:'BZ=F',s:'cb.f',range:'6mo',label:'BRENT',dp:2,du:'%',good:1},
  {id:'NATGAS',src:'yahoo',freq:'intraday',sid:'NG=F',s:'ng.f',range:'6mo',label:'NAT GAS',dp:2,du:'%',good:1},
  {id:'GOLD',src:'yahoo',freq:'intraday',sid:'GC=F',s:'gc.f',range:'6mo',label:'GOLD',dp:0,du:'%',good:0},
  {id:'SILVER',src:'yahoo',freq:'intraday',sid:'SI=F',s:'si.f',range:'6mo',label:'SILVER',dp:2,du:'%',good:0},
- /* commodities — soft */
  {id:'WHEAT',src:'yahoo',freq:'intraday',sid:'ZW=F',s:'zw.f',range:'6mo',label:'WHEAT',dp:1,du:'%',good:1},
- /* currencies vs USD — 8 pairs */
  {id:'EURUSD',src:'yahoo',freq:'intraday',sid:'EURUSD=X',s:'eurusd',range:'6mo',label:'EUR/USD',dp:4,du:'%',good:1},
  {id:'GBPUSD',src:'yahoo',freq:'intraday',sid:'GBPUSD=X',s:'gbpusd',range:'6mo',label:'GBP/USD',dp:4,du:'%',good:1},
  {id:'USDJPY',src:'yahoo',freq:'intraday',sid:'USDJPY=X',s:'usdjpy',range:'6mo',label:'USD/JPY',dp:2,du:'%',good:-1},
@@ -459,8 +440,8 @@ const SNAP='mm_snapshot';
 function snapshot(){const s={t:Date.now(),curve:M.curve||null};
   FEEDS.forEach(c=>{const st=state[c.id];if(st&&st.rows.length)s[c.id]={rows:st.rows.slice(-320),via:st.via,src:st.src,at:st.at,meta:st.meta};});
   try{localStorage.setItem(SNAP,JSON.stringify(s))}catch(e){}}
-function restore(){let s;try{s=JSON.parse(localStorage.getItem(SNAP))}catch(e){}
-  if(!s||!s.t)return 0;let n=0;
+function restore(){let s;try{s=JSON.parse(localStorage.getItem(SNAP))}catch(e){}return s&&s.t?s:null;}
+function restoreInto(){let s=restore();if(!s)return 0;let n=0;
   FEEDS.forEach(c=>{const e=s[c.id];if(e&&e.rows&&e.rows.length){
     state[c.id]={rows:e.rows,via:e.via,src:e.src,at:e.at||s.t,meta:e.meta,stage:'CACHE'};n++;}});
   if(s.curve&&s.curve.length)M.curve=s.curve;
@@ -536,11 +517,11 @@ function buildCurveFromFRED(){
 function fetchCurve(){return Promise.resolve(buildCurveFromFRED());}
 
 /* ============ stage 1 — connectivity matrix ============ */
-async function diagnose(){log('\u2500\u2500 STAGE 1 · CONNECTIVITY MATRIX (4 upstreams \u00d7 '+ROUTES.length+' routes, parallel) \u2500\u2500','lhi');
-  status('STAGE 1 · probing routes…');
+async function diagnose(){log('\u2500\u2500 STAGE 1 \u00b7 CONNECTIVITY MATRIX (4 upstreams \u00d7 '+ROUTES.length+' routes, parallel) \u2500\u2500','lhi');
+  status('STAGE 1 \u00b7 probing routes\u2026');
   try{const t0=performance.now();await fetchText('https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR',8e3);
-    log('control · CORS-native API \u2192 200 · '+((performance.now()-t0)/1e3).toFixed(1)+'s','lok');}
-  catch(e){log('control \u2192 FAIL: '+esc(why(e))+' — cross-origin blocked','lerr');}
+    log('control \u00b7 CORS-native API \u2192 200 \u00b7 '+((performance.now()-t0)/1e3).toFixed(1)+'s','lok');}
+  catch(e){log('control \u2192 FAIL: '+esc(why(e))+' \u2014 cross-origin blocked','lerr');}
   const PROBES=[
     {n:'fred',u:'https://fred.stlouisfed.org/data/DGS10.txt',re:/\d{4}-\d{2}-\d{2}/},
     {n:'yahoo',u:'https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?range=1d&interval=1d',re:/chart|meta/},
@@ -551,19 +532,19 @@ async function diagnose(){log('\u2500\u2500 STAGE 1 · CONNECTIVITY MATRIX (4 up
       const t0=performance.now();
       try{const txt=await fetchText(rt.to(p.u),rt.tmo);
         if(!p.re.test(txt))throw new Error('unusable: "'+p0(txt)+'"');
-        log('route '+rt.n.padEnd(11)+'\u00d7 '+p.n.padEnd(8)+'\u2192 200 · '+((performance.now()-t0)/1e3).toFixed(1)+'s','lok');return true;}
-      catch(e){log('route '+rt.n.padEnd(11)+'\u00d7 '+p.n.padEnd(8)+'\u2192 FAIL · '+esc(why(e))+(e.body?' · "'+esc(e.body)+'"':''),'lerr');return false;}}));
+        log('route '+rt.n.padEnd(11)+'\u00d7 '+p.n.padEnd(8)+'\u2192 200 \u00b7 '+((performance.now()-t0)/1e3).toFixed(1)+'s','lok');return true;}
+      catch(e){log('route '+rt.n.padEnd(11)+'\u00d7 '+p.n.padEnd(8)+'\u2192 FAIL \u00b7 '+esc(why(e))+(e.body?' \u00b7 "'+esc(e.body)+'"':''),'lerr');return false;}}));
     sc[rt.n]=rs.filter(Boolean).length;}));
   const cust=ROUTES.filter(r=>r.n==='custom');
   const rest=ROUTES.filter(r=>r.n!=='custom').sort((a,b)=>(sc[b.n]||0)-(sc[a.n]||0));
   ROUTES=cust.concat(rest);
   const good=ROUTES.filter(r=>(sc[r.n]||0)>0).map(r=>r.n);
-  log(good.length?'STAGE 1 done — usable: '+ROUTES.map(r=>r.n+'('+(sc[r.n]||0)+'/'+PROBES.length+')').join(', ')
-    :'STAGE 1 done — NO route reachable','lhi');
+  log(good.length?'STAGE 1 done \u2014 usable: '+ROUTES.map(r=>r.n+'('+(sc[r.n]||0)+'/'+PROBES.length+')').join(', ')
+    :'STAGE 1 done \u2014 NO route reachable','lhi');
   return good;}
 
-/* ============ state, derive, basis (1D/1W/1M) ============ */
-let M={},state={},busy=false,plain=[],goodRoutes=[],BASIS='ww';
+/* ============ state & basis ============ */
+var M={},state={},busy=false,plain=[],goodRoutes=[],BASIS='ww';
 try{BASIS=localStorage.getItem('mm_basis')||'ww';if(!['d1','ww','m1'].includes(BASIS))BASIS='ww';}catch(e){}
 const BLAB={d1:'1D',ww:'1W',m1:'1M'};
 const STEPS={d1:{daily:1,weekly:1,monthly:0,jolts:0,intraday:1,crypto:1},
@@ -573,7 +554,10 @@ function steps(c,b){const n=STEPS[b][c.freq];return n===0?null:n;}
 function entry(id){const s=state[id];if(!s||!s.rows.length)return null;
   const v=s.rows.filter(r=>r.v!=null);return v.length?{vals:v,last:v[v.length-1].v}:null;}
 function backE(e,n){const i=e.vals.length-1-n;return i>=0?e.vals[i].v:null;}
-function derive(){M={};FEEDS.forEach(c=>M[c.id]=entry(c.id));
+function yoy(e){if(!e||e.vals.length<13)return null;const o=[];
+  for(let i=12;i<e.vals.length;i++)o.push((e.vals[i].v/e.vals[i-12].v-1)*100);return o;}
+function derive(){safe('derive',function(){
+  M={};FEEDS.forEach(c=>M[c.id]=entry(c.id));
   if(M.DGS2&&M.DGS10){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
     M.sp=M.DGS10.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
     M.spNow=M.sp.length?M.sp[M.sp.length-1].v:null;
@@ -587,10 +571,8 @@ function derive(){M={};FEEDS.forEach(c=>M[c.id]=entry(c.id));
   if(M.DGS10&&M.T10YIE)M.real10=M.DGS10.last-M.T10YIE.last;
   M.cpiY=yoy(M.CPIAUCSL);M.coreY=yoy(M.CPILFESL);
   if(M.CPIAUCSL&&M.CPIAUCSL.vals.length>1)M.cpiMM=(M.CPIAUCSL.last/backE(M.CPIAUCSL,1)-1)*100;
-  if(M.ICSA)M.claimsMA=M.ICSA.vals.slice(-4).reduce((a,r)=>a+r.v,0)/4;}
-function yoy(e){if(!e||e.vals.length<13)return null;const o=[];
-  for(let i=12;i<e.vals.length;i++)o.push((e.vals[i].v/e.vals[i-12].v-1)*100);return o;}
-function deltaRaw(id,n){ /* n = obs back; null n → no basis exists (1D on monthly) */
+  if(M.ICSA)M.claimsMA=M.ICSA.vals.slice(-4).reduce((a,r)=>a+r.v,0)/4;});}
+function deltaRaw(id,n){
   if(id==='SPREAD'||id==='SP2S30'||id==='SP5S30'){const s=id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:M.sp3;
     if(!s||!s.length||n==null||s.length<=n)return null;return s[s.length-1].v-s[s.length-1-n].v;}
   const c=cfgOf(id),e=M[id];if(!c||!e||n==null||e.vals.length<=n)return null;
@@ -619,14 +601,14 @@ const goodFor=id=>id==='SPREAD'||id==='SP2S30'||id==='SP5S30'?0:(cfgOf(id)?cfgOf
 const duFor=id=>{if(id==='SPREAD'||id==='SP2S30'||id==='SP5S30')return'bp';const c=cfgOf(id);return c&&c.du==='%'?'pct':(c?c.du:'pct');};
 function labFor(id){return id==='SPREAD'?'2s10s':id==='SP2S30'?'2s30s':id==='SP5S30'?'5s30s':(cfgOf(id)?cfgOf(id).label:id);}
 function asOf(id){if(DERIVED[id]){const ds=DERIVED[id].comps.map(c=>state[c]&&state[c].rows.length?state[c].rows[state[c].rows.length-1].d:null).filter(Boolean);
-    if(!ds.length)return null;return'as of '+ds.sort().pop()+' · '+[...new Set(DERIVED[id].comps.map(c=>SRC[state[c]?state[c].src:'?']||'?'))].join(' + ');}
+    if(!ds.length)return null;return'as of '+ds.sort().pop()+' \u00b7 '+[...new Set(DERIVED[id].comps.map(c=>SRC[state[c]?state[c].src:'?']||'?'))].join(' + ');}
   const s=state[id],c=cfgOf(id);if(!s||!s.rows||!s.rows.length)return null;
   const d=s.rows[s.rows.length-1].d,src=SRC[s.src]||s.src,dt=new Date(d+'T12:00:00');
   if(c.src==='yahoo'||c.src==='crypto'){const dn=new Date().getDay();
-    return(dn===0||dn===6)&&dt.getDay()===5?'Fri close · '+src:'as of '+d+' · '+src;}
-  if(c.freq==='monthly'||c.freq==='jolts')return'month of '+MOSF[dt.getMonth()]+' '+dt.getFullYear()+' · '+src;
-  if(c.freq==='weekly')return'week of '+d+' · '+src;
-  return'as of '+d+' · '+src;}
+    return(dn===0||dn===6)&&dt.getDay()===5?'Fri close \u00b7 '+src:'as of '+d+' \u00b7 '+src;}
+  if(c.freq==='monthly'||c.freq==='jolts')return'month of '+MOSF[dt.getMonth()]+' '+dt.getFullYear()+' \u00b7 '+src;
+  if(c.freq==='weekly')return'week of '+d+' \u00b7 '+src;
+  return'as of '+d+' \u00b7 '+src;}
 function staleAge(id){const c=cfgOf(id),s=state[id];if(!c||!s||!s.rows.length)return null;
   const a=Math.round((Date.now()-Date.parse(s.rows[s.rows.length-1].d+'T12:00:00'))/864e5);
   return a>(STALE[c.freq]||5)?a:null;}
@@ -634,25 +616,26 @@ function staleAge(id){const c=cfgOf(id),s=state[id];if(!c||!s||!s.rows.length)re
 /* ============ integrity ============ */
 function integReport(){const o=[];
   FEEDS.forEach(c=>{const s=state[c.id];
-    if(!s||!s.rows||!s.rows.length){o.push({lvl:'err',id:c.id,msg:c.label+' — no data; omitted'});return;}
+    if(!s||!s.rows||!s.rows.length){o.push({lvl:'err',id:c.id,msg:c.label+' \u2014 no data; omitted'});return;}
     if(s.stage==='CACHE'){const h=s.at?Math.round((Date.now()-s.at)/36e5):null;
-      o.push({lvl:'warn',id:c.id,msg:c.label+' — cached'+(h!=null?' from '+h+'h ago':'')+'; live failed'});}
+      o.push({lvl:'warn',id:c.id,msg:c.label+' \u2014 cached'+(h!=null?' from '+h+'h ago':'')+'; live failed'});}
     else{const st=staleAge(c.id);
-      if(st!=null)o.push({lvl:'warn',id:c.id,msg:c.label+' — last obs '+s.rows[s.rows.length-1].d+' ('+st+'d old)'});}
+      if(st!=null)o.push({lvl:'warn',id:c.id,msg:c.label+' \u2014 last obs '+s.rows[s.rows.length-1].d+' ('+st+'d old)'});}
     const rn=s.rows.slice(-10).filter(r=>r.v==null).length;
-    if(rn)o.push({lvl:'warn',id:c.id,msg:c.label+' — '+rn+' missing value(s) in recent obs'});});
+    if(rn)o.push({lvl:'warn',id:c.id,msg:c.label+' \u2014 '+rn+' missing value(s) in recent obs'});});
   return o;}
-function renderInteg(){const r=integReport(),h1=document.getElementById('integBar'),h2=document.getElementById('integ2');
-  const html=r.length?r.map(x=>'<div class="di '+x.lvl+'"><span>'+(x.lvl==='err'?'\u2717':'\u26a0')+'</span><span>'+esc(x.msg)+' — <u class="clk" data-fig="'+x.id+'">details</u></span></div>').join(''):'';
-  h1.innerHTML=html;h2.innerHTML=html;}
+function renderInteg(){safe('integrity',function(){
+  const r=integReport(),h1=document.getElementById('integBar'),h2=document.getElementById('integ2');
+  const html=r.length?r.map(x=>'<div class="di '+x.lvl+'"><span>'+(x.lvl==='err'?'\u2717':'\u26a0')+'</span><span>'+esc(x.msg)+' \u2014 <u class="clk" data-fig="'+x.id+'">details</u></span></div>').join(''):'';
+  if(h1)h1.innerHTML=html;if(h2)h2.innerHTML=html;});}
 
-/* ============ render page 1 ============ */
+/* ============ page-1 renders — all traced via safe() ============ */
 const GROUPS=[
  {name:'COMMODITIES',sections:[
    {sk:'Hard',items:['WTI','BRENT','NATGAS','GOLD','SILVER']},
    {sk:'Soft',items:['WHEAT']}]},
  {name:'CURRENCIES (vs USD)',sections:[{sk:null,items:['EURUSD','GBPUSD','USDJPY','USDCNY','USDCHF','USDCAD','AUDUSD','NZDUSD']}]},
- {name:'EQUITIES · CRYPTO',sections:[{sk:null,items:['SP500','NAS','DOW','VIX','BTC']}]}];
+ {name:'EQUITIES \u00b7 CRYPTO',sections:[{sk:null,items:['SP500','NAS','DOW','VIX','BTC']}]}];
 function spark(vals,w,h){const v=(vals||[]).filter(x=>x!=null);if(v.length<2)return'';
   const mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
   const pts=v.map((x,i)=>[(1+i/(v.length-1))*(w-3)+1.5,h-3-((x-mn)/rg)*(h-7)]);
@@ -660,15 +643,19 @@ function spark(vals,w,h){const v=(vals||[]).filter(x=>x!=null);if(v.length<2)ret
   return'<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none"><polyline points="'+
     pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+
     '" fill="none" stroke="currentColor" stroke-width="1.3"/><circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="2" fill="#A63B2A"/></svg>';}
-function renderGroups(){document.getElementById('groups').innerHTML=GROUPS.map(g=>{
+function renderGroups(){safe('groups',function(){
+  const el=document.getElementById('groups');if(!el)return;
+  el.innerHTML=GROUPS.map(g=>{
     const body=g.sections.map(sec=>(sec.sk?'<div class="gsk">'+sec.sk+'</div>':'')+
       sec.items.map(id=>{const v=valueFor(id);if(!v)return'';
         const d=deltaFor(id),e=M[id];
         const sp=(e&&e.vals)?spark(e.vals.slice(-40),48,13):'';
         return'<div class="gi clk" data-fig="'+id+'"><span class="l">'+labFor(id)+'</span><span class="v">'+v+'</span>'+
-          (d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+'</span>':'<span class="d fl">—</span>')+sp+'</div>';}).join('')).join('');
-    return'<div class="grp"><div class="gk">'+g.name+'</div>'+body+'</div>';}).join('');}
-function renderPrints(){const rows=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts'))
+          (d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+'</span>':'<span class="d fl">\u2014</span>')+sp+'</div>';}).join('')).join('');
+    return'<div class="grp"><div class="gk">'+g.name+'</div>'+body+'</div>';}).join('');});}
+function renderPrints(){safe('prints',function(){
+  const el=document.getElementById('prints');if(!el)return;
+  const rows=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts'))
     .map(c=>{const s=state[c.id];if(!s||!s.rows||!s.rows.length)return null;
       const last=s.rows[s.rows.length-1];
       const age=Math.round((Date.now()-Date.parse(last.d+'T12:00:00'))/864e5);
@@ -679,21 +666,23 @@ function renderPrints(){const rows=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='mo
       return{c:c,age:age,fresh:age<=FRESH[c.freq],obs:last.d,d:d,
         v:(c.id==='ICSA'||c.id==='JTSJOL')?nf(e.last/1e3,0)+'k':(c.id==='RSAFS')?'$'+nf(e.last/1e3,0)+'B':nf(e.last,c.dp)};})
     .filter(Boolean).sort((a,b)=>a.age-b.age).slice(0,8);
-  document.getElementById('prints').innerHTML=rows.length?rows.map(r=>
+  el.innerHTML=rows.length?rows.map(r=>
     '<div class="pr clk" data-fig="'+r.c.id+'"><span class="badge '+(r.fresh?'':'old')+'">'+(r.fresh?'NEW':r.age+'d')+'</span>'+
     '<span class="l">'+r.c.label+'</span><span class="v">'+r.v+'</span>'+
     (r.d!=null?'<span class="d '+cl(r.d,goodFor(r.c.id))+'">'+fmtD(r.d,duFor(r.c.id))+' vs prior release</span>':'')+
     '<span class="m">reflects: '+(MEANS[r.c.id]||'')+'</span><span class="dt">'+r.obs+'</span></div>').join('')
-    :'<span class="ph">no prints available</span>';}
-function renderCurve(){const host=document.getElementById('curve'),read=document.getElementById('curveRead');
-  if(!M.curve||!M.curve.length){host.innerHTML='<span class="ph">curve unavailable — see diagnostics</span>';read.innerHTML='<span class="ph">—</span>';return;}
+    :'<span class="ph">no prints available</span>';});}
+function renderCurve(){safe('curve',function(){
+  const host=document.getElementById('curve'),read=document.getElementById('curveRead');
+  if(!host||!read)return;
+  if(!M.curve||!M.curve.length){host.innerHTML='<span class="ph">curve unavailable \u2014 see diagnostics</span>';read.innerHTML='<span class="ph">\u2014</span>';return;}
   const L=M.curve[0];let P=null;
   for(const r of M.curve){if(Date.parse(L.d)-Date.parse(r.d)>=25*864e5){P=r;break;}}
   const ts=CURVE_TENORS.map(x=>x[0]).filter(t=>L.y[t]!=null);
   const W=680,H=250,La=44,Ra=54,T=16,B=26;
   const vs=ts.map(t=>L.y[t]);if(P)ts.forEach(t=>{if(P.y[t]!=null)vs.push(P.y[t]);});
   const ff=M.DFEDTARU?M.DFEDTARU.last:null;
-  if(ff!=null){vs.push(ff);vs.push(ff);}
+  if(ff!=null){vs.push(ff);}
   let mn=Math.min(...vs),mx=Math.max(...vs);const pad=Math.max((mx-mn)*.14,.12);mn-=pad;mx+=pad;
   const X=i=>La+i/(ts.length-1)*(W-La-Ra),Y=v=>T+(mx-v)/(mx-mn)*(H-T-B);
   let pL='';ts.forEach((t,i)=>pL+=(i?'L':'M')+X(i).toFixed(1)+','+Y(L.y[t]).toFixed(1));
@@ -717,85 +706,87 @@ function renderCurve(){const host=document.getElementById('curve'),read=document
   if(M.sp2Now!=null)h+=row('2s30s',nf(M.sp2Now,1)+'bp');
   if(ff!=null)h+=row('FF target',nf(ff,2)+'%');
   h+=row('As of',L.d);
-  read.innerHTML='<div class="clk" data-fig="SPREAD">'+h+'</div>';}
-function renderAgenda(){const t=new Date(),items=[];const FOMC=['2025-09-17','2025-10-29','2025-12-10',
- '2026-01-28','2026-03-18','2026-04-29','2026-06-17','2026-07-29','2026-09-16','2026-10-28','2026-12-09'];
-  for(let i=0;i<8;i++){const d=new Date(t);d.setDate(t.getDate()+i);if(d.getDay()===4){items.push({d:d,t:'Initial jobless claims',s:'8:30 ET · DOL · weekly'});break;}}
+  read.innerHTML='<div class="clk" data-fig="SPREAD">'+h+'</div>';});}
+function renderAgenda(){safe('agenda',function(){
+  const el=document.getElementById('agenda');if(!el)return;
+  const t=new Date(),items=[];const FOMC=['2025-09-17','2025-10-29','2025-12-10',
+   '2026-01-28','2026-03-18','2026-04-29','2026-06-17','2026-07-29','2026-09-16','2026-10-28','2026-12-09'];
+  for(let i=0;i<8;i++){const d=new Date(t);d.setDate(t.getDate()+i);if(d.getDay()===4){items.push({d:d,t:'Initial jobless claims',s:'8:30 ET \u00b7 DOL \u00b7 weekly'});break;}}
   const cpi=new Date(t);if(t.getDate()>9)cpi.setMonth(cpi.getMonth()+1);cpi.setDate(11);
-  items.push({d:cpi,t:'CPI print (≈ est. date)',s:'8:30 ET · BLS'});
+  items.push({d:cpi,t:'CPI print (\u2248 est. date)',s:'8:30 ET \u00b7 BLS'});
   for(let i=0;i<40;i++){const d=new Date(t);d.setDate(t.getDate()+i);
-    if(d.getDay()===5&&d.getDate()<=7){items.push({d:d,t:'Employment situation (NFP)',s:'8:30 ET · BLS · first Friday'});break;}}
+    if(d.getDay()===5&&d.getDate()<=7){items.push({d:d,t:'Employment situation (NFP)',s:'8:30 ET \u00b7 BLS \u00b7 first Friday'});break;}}
   const fc=FOMC.find(x=>x>=isoDay(Date.now()));
-  if(fc)items.push({d:new Date(fc+'T12:00:00'),t:'FOMC decision',s:'2:00 PM ET · presser 2:30'});
+  if(fc)items.push({d:new Date(fc+'T12:00:00'),t:'FOMC decision',s:'2:00 PM ET \u00b7 presser 2:30'});
   items.sort((a,b)=>a.d-b.d);
-  document.getElementById('agenda').innerHTML=items.slice(0,4).map(i=>
+  el.innerHTML=items.slice(0,4).map(i=>
     '<div class="ag"><span class="d">'+DOWS[i.d.getDay()]+' '+MOSF[i.d.getMonth()]+' '+i.d.getDate()+'</span>'+
-    '<span><div class="t">'+i.t+'</div><div class="s">'+i.s+'</div></span></div>').join('');}
+    '<span><div class="t">'+i.t+'</div><div class="s">'+i.s+'</div></span></div>').join('');});}
 const vixWord=v=>v<13?'a complacent tone':v<18?'a calm tape':v<24?'mild hedging demand':v<32?'elevated stress':'genuine stress';
-function stance(){let t=0;const s5=M.SP500?deltaRaw('SP500',5):null;
+function computeStance(){let t=0;
+  const s5=(M.SP500&&M.SP500.vals.length>5)?(M.SP500.last/M.SP500.vals[M.SP500.vals.length-6].v-1)*100:null;
   if(s5!=null)t+=s5>0.8?2:s5<-0.8?-2:0;
   if(M.VIX){const v=M.VIX.last;t+=v<15?1.5:v>25?-2:v>20?-0.5:0.5;}
   if(M.sp&&M.sp.length>5){const d=M.sp[M.sp.length-1].v-M.sp[M.sp.length-6].v;t+=d>3?.5:d<-3?-.5:0;}
   return t>=2?['RISK-ON','risk appetite is firm']:t<=-2?['RISK-OFF','risk appetite is under strain']:['MIXED','risk mood is mixed'];}
 const fId=(id,t)=>'<span class="fig clk" data-fig="'+id+'">'+t+'</span>';
-function narrative(){plain=[];const p=[];
-  const st=stance();
-  let s='Markets: the tape is '+st[1];
+function narrative(){return safe('narrative',function(){
+  plain=[];const p=[];
+  const st=computeStance();
+  let s='Risk mood: <b>'+st[0]+'</b> \u2014 '+st[1];
   if(M.SP500){const d5=deltaRaw('SP500',5);
     s+=': the S&P 500 at '+fId('SP500',nf(M.SP500.last,2));
     if(d5!=null)s+=' ('+(d5>=0?'+':'')+nf(d5,1)+'% w/w)';
-    if(M.VIX)s+=', VIX '+fId('VIX',nf(M.VIX.last,2))+' — '+vixWord(M.VIX.last);}
-  if(M.DGS10)s+='; 10Y '+fId('DGS10',nf(M.DGS10.last,2))+'%';
-  if(M.spNow!=null)s+=', 2s10s '+fId('SPREAD',nf(M.spNow,1)+'bp');
-  s+='.';
-  if(M.cpiY&&M.cpiY.length)s+=' Headline CPI (NSA) runs '+fId('CPI_YOY',nf(M.cpiY[M.cpiY.length-1],1))+'% y/y';
-  if(M.coreY&&M.coreY.length)s+=', core (NSA) '+fId('CORE_YOY',nf(M.coreY[M.coreY.length-1],1))+'%';
-  if(M.UNRATE)s+='; unemployment '+fId('UNRATE',nf(M.UNRATE.last,1))+'%';
-  if(M.ICSA)s+=', claims '+fId('ICSA',nf(M.ICSA.last/1e3,0))+'k'+(M.claimsMA?' vs a '+fId('ICSA',nf(M.claimsMA/1e3,0))+'k average':'');
-  s+='.';
+    if(M.VIX)s+=', VIX '+fId('VIX',nf(M.VIX.last,2))+' \u2014 '+vixWord(M.VIX.last);
+    if(M.DGS10)s+='; 10Y '+fId('DGS10',nf(M.DGS10.last,2))+'%';
+    if(M.spNow!=null)s+=', 2s10s '+fId('SPREAD',nf(M.spNow,1)+'bp');
+    s+='.';}
+  const m=[];
+  if(M.cpiY&&M.cpiY.length)m.push('headline CPI (NSA) '+fId('CPI_YOY',nf(M.cpiY[M.cpiY.length-1],1))+'% y/y');
+  if(M.coreY&&M.coreY.length)m.push('core CPI (NSA) '+fId('CORE_YOY',nf(M.coreY[M.coreY.length-1],1))+'% y/y');
+  if(M.UNRATE)m.push('unemployment '+fId('UNRATE',nf(M.UNRATE.last,1))+'%');
+  if(M.ICSA)m.push('claims '+fId('ICSA',nf(M.ICSA.last/1e3,0))+'k');
+  if(m.length)p.push('Macro: '+m.join(', ')+'.');
   const nw=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts')&&state[c.id]&&state[c.id].rows.length)
     .map(c=>({c:c,age:Math.round((Date.now()-Date.parse(state[c.id].rows[state[c.id].rows.length-1].d+'T12:00:00'))/864e5)}))
     .sort((a,b)=>a.age-b.age)[0];
   if(nw&&nw.age<=FRESH[nw.c.freq]&&MEANS[nw.c.id]){const v=valueFor(nw.c.id);
-    if(v)p.push('Newest print: '+nw.c.label.toLowerCase()+' at '+fId(nw.c.id,v)+' — reflects '+MEANS[nw.c.id]+'.');}
-  p.unshift(s);
+    if(v)p.push('Newest print: '+nw.c.label.toLowerCase()+' at '+fId(nw.c.id,v)+' \u2014 reflects '+MEANS[nw.c.id]+'.');}
   plain=p.map(x=>x.replace(/<span class="fig clk" data-fig="[^"]*">/g,'').replace(/<\/?span[^>]*>/g,'').replace(/<b>|<\/b>/g,'').replace(/&amp;/g,'&'));
-  document.getElementById('narr').innerHTML=p.length?'<p>'+p.join('</p><p>')+'</p>'
-    :'<span class="ph">insufficient data — see diagnostics</span>';
-  return st[0];}
-
-/* ============ render page 2 ============ */
+  const nEl=document.getElementById('narr'),mEl=document.getElementById('mood');
+  if(nEl)nEl.innerHTML=p.length?'<p>'+p.join('</p><p>')+'</p>':'<span class="ph">insufficient data \u2014 see diagnostics</span>';
+  if(mEl)mEl.innerHTML='Risk mood: <b>'+esc(st[0])+'</b>';
+  return st[0];});}
 function subRow(id,l,extra){const v=valueFor(id);if(v==null)return'';
   const d=deltaFor(id);
   return'<div class="sub clk" data-fig="'+id+'"><span class="lbl">'+l+'</span><span class="dots"></span>'+
     '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+' '+BLAB[BASIS]+'</span>':'')+
     (extra||'')+'</div>';}
-function path30(id){const s=id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:(M[id]&&M[id].vals?M[id].vals.map(r=>r.v):null);
-  if(!s||s.length<30)return'';const block='▁▂▃▄▅▆▇';const v=s.slice(-30);
+function path30(id){const s=id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:null;
+  if(!s||s.length<30)return'';const block='\u2581\u2582\u2583\u2584\u2585\u2586\u2587';const v=s.slice(-30);
   const mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
   return'<span class="p30">'+[...v].map(x=>block[Math.min(6,Math.floor((x-mn)/rg*6.99))]).join('')+'</span>';}
-function renderBlocks(){
-  document.getElementById('segSteep').innerHTML=
-    subRow('SPREAD','2s10s spread',path30('SPREAD'))+
+function renderBlocks(){safe('blocks',function(){
+  const a=document.getElementById('segSteep'),b=document.getElementById('segInfl'),c=document.getElementById('segCred');
+  if(a)a.innerHTML=subRow('SPREAD','2s10s spread',path30('SPREAD'))+
     subRow('SP2S30','2s30s spread',path30('SP2S30'))+
     subRow('SP5S30','5s30s spread',path30('SP5S30'));
-  document.getElementById('segInfl').innerHTML=
-    subRow('T10YIE','10Y breakeven')+
+  if(b)b.innerHTML=subRow('T10YIE','10Y breakeven')+
     subRow('T5YIE','5Y breakeven')+
     subRow('T5YIFR','5y5y forward')+
     subRow('REAL10','10Y real (est.)');
-  document.getElementById('segCred').innerHTML=
-    subRow('BAMLC0A0CM','IG corp spread (OAS)')+
-    subRow('BAMLH0A0HYM2','HY corp spread (OAS)');}
+  if(c)c.innerHTML=subRow('BAMLC0A0CM','IG corp spread (OAS)')+
+    subRow('BAMLH0A0HYM2','HY corp spread (OAS)');});}
 
-/* ============ drawer (source cards, contract-explicit) ============ */
+/* ============ drawer ============ */
 function drow(k,v,c){return v==null?'':'<div class="dr2"><span class="k">'+k+'</span><span class="v '+(c||'')+'">'+v+'</span></div>';}
 function cardSpark(vals){const v=(vals||[]).filter(x=>x!=null).slice(-90);if(v.length<2)return'';
   const w=330,h=64,mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
   const pts=v.map((x,i)=>[(1+i/(v.length-1))*(w-6)+3,h-6-((x-mn)/rg)*(h-14)]);
   const L=pts[pts.length-1];
   return'<svg class="dc" viewBox="0 0 '+w+' '+h+'"><polyline points="'+pts.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+'"/><circle cx="'+L[0].toFixed(1)+'" cy="'+L[1].toFixed(1)+'" r="3"/></svg>';}
-function openCard(id){const s=state[id],drv=DERIVED[id];let label,unit,val,dp;
+function openCard(id){safe('card:'+id,function(){
+  const s=state[id],drv=DERIVED[id];let label,unit,val,dp;
   if(drv){label=drv.label;unit=drv.unit;dp=drv.dp;
     val=id==='SPREAD'?M.spNow:id==='SP2S30'?M.sp2Now:id==='SP5S30'?M.sp3Now
       :id==='CPI_YOY'?(M.cpiY&&M.cpiY.length?M.cpiY[M.cpiY.length-1]:null)
@@ -810,14 +801,14 @@ function openCard(id){const s=state[id],drv=DERIVED[id];let label,unit,val,dp;
       else if(id==='SILVER'||id==='GOLD')unit='$/oz';}
     else val=null;}
   $('dwT').textContent=label;
-  let h='<div class="dv">'+(val==null?'—':nf(val,dp))+'<small> '+esc(unit)+'</small></div>';
+  let h='<div class="dv">'+(val==null?'\u2014':nf(val,dp))+'<small> '+esc(unit)+'</small></div>';
   h+='<div class="asof" style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;color:var(--ink2);margin:2px 0 8px;text-transform:uppercase"><b>'+esc(asOf(id)||'no data')+'</b></div>';
   if(MEANS[id])h+=drow('Reflects',esc(MEANS[id]));
-  let ser=drv?(id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:(id==='CPI_YOY'?(M.cpiY||[]).map(v=>({v:v})):id==='CORE_YOY'?(M.coreY||[]).map(v=>({v:v})):null)):(s&&s.rows);
+  let ser=drv?(id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:null):(s&&s.rows);
   if(ser&&ser.length>2)h+='<div class="dsec">Recent path</div>'+cardSpark(ser.map(r=>r.v));
   const c0=cfgOf(id);
   if(c0){const d=deltaFor(id);
-    if(d!=null)h+=drow('Change ('+BLAB[BASIS]+')',esc(fmtD(d,duFor(id)))+' · '+steps(c0,BASIS)+' obs back');}
+    if(d!=null)h+=drow('Change ('+BLAB[BASIS]+')',esc(fmtD(d,duFor(id)))+' \u00b7 '+steps(c0,BASIS)+' obs back');}
   h+='<div class="dsec">Source &amp; method</div>';
   if(drv){h+=drow('Type','derived');
     h+=drow('Components',drv.comps.map(c=>labFor(c)+' ('+(SRC[state[c]?state[c].src:'?']||'?')+')').join(' + '));
@@ -825,134 +816,146 @@ function openCard(id){const s=state[id],drv=DERIVED[id];let label,unit,val,dp;
   else{const c=cfgOf(id),sk=s?s.src:'?';
     h+=drow('Publisher',SRC[sk]||sk||'?');
     let sid=c.id;
-    if(sk==='treasury')sid=UST_MAP[id]+' · Treasury par yield curve';
-    else if(sk==='bls')sid=BLS_MAP[id];
-    else if(sk==='yahoo')sid=c.sid+' · Yahoo v8/chart';
-    else if(sk==='stooq')sid=c.s+' · Stooq CSV';
+    if(sk==='bls')sid=BLS_MAP[id];
+    else if(sk==='yahoo')sid=c.sid+' \u00b7 Yahoo v8/chart';
+    else if(sk==='stooq')sid=c.s+' \u00b7 Stooq CSV';
     else if(sk==='fred')sid='fred.stlouisfed.org/data/'+c.id+'.txt';
     h+=drow('Series / endpoint',esc(sid));
     h+=drow('Cadence',CAD[c.freq]||c.freq);
     if(CONTRACT[id])h+=drow('Contract',esc(CONTRACT[id]));
-    if(c.freq==='monthly'&&(id==='CPIAUCSL'||id==='CPILFESL'))
-      h+=drow('Adjustment','NSA — Y/Y standard; M/M seasonal. PCE is BEA-keyed, not covered.');
-    if(id==='BAMLC0A0CM')h+=drow('Definition','ICE BofA Corporate Index OAS (investment grade)');
+    if(id==='CPIAUCSL'||id==='CPILFESL')h+=drow('Adjustment','NSA \u2014 Y/Y standard; M/M seasonal. PCE is BEA-keyed, not covered.');
+    if(id==='BAMLC0A0CM')h+=drow('Definition','ICE BofA Corporate Index OAS (IG)');
     if(id==='BAMLH0A0HYM2')h+=drow('Definition','ICE BofA High Yield Index OAS');
     if(id==='INDPRO')h+=drow('Unit','index (2017=100)');
-    if(id==='RSAFS')h+=drow('Unit','millions USD/month — shown as $bn');
+    if(id==='RSAFS')h+=drow('Unit','millions USD/month \u2014 shown as $bn');
     if(id==='JTSJOL')h+=drow('Unit','thousands of openings, month-end');
-    if(id&&id.endsWith('USD')&&c.src==='yahoo'&&(id.length===6))
-      h+=drow('Quote convention',id.slice(0,3)+'/'+id.slice(3)+' — green means '+id.slice(0,3)+' strengthened vs USD');}
+    if(c.src==='yahoo'&&id.length===6&&id.endsWith('USD'))
+      h+=drow('Quote convention',id.slice(0,3)+'/'+id.slice(3)+' \u2014 green means '+id.slice(0,3)+' strengthened vs USD');}
   h+='<div class="dsec">This value</div>';
   if(s&&s.rows&&s.rows.length){
     h+=drow('Observation date',s.rows[s.rows.length-1].d);
     if(s.rows.length>1&&!drv)h+=drow('\u0394 base (prior obs)',s.rows[s.rows.length-2].d);
-    h+=drow('Observations',s.rows.length+(s.meta?' · '+s.meta.first+' → '+s.meta.last:''));
+    h+=drow('Observations',s.rows.length+(s.meta?' \u00b7 '+s.meta.first+' \u2192 '+s.meta.last:''));
     const sa=staleAge(id);
     h+=sa!=null?drow('Freshness',sa+'d past window','warn'):drow('Freshness','within release window','ok');
     if(s.stage==='CACHE'){const hh=s.at?Math.round((Date.now()-s.at)/36e5):null;
       h+=drow('Serving from','cache'+(hh!=null?' ('+hh+'h)':''),'warn');}
-    if(s.meta)h+=drow('Fetch',nf(s.meta.ms,1)+'s · '+nf(s.meta.kb/1024,1)+'KB · via '+s.via);}
-  else h+=drow('Status','NO DATA — omitted','err');
+    if(s.meta)h+=drow('Fetch',nf(s.meta.ms,1)+'s \u00b7 '+nf(s.meta.kb/1024,1)+'KB \u00b7 via '+s.via);}
+  else h+=drow('Status','NO DATA \u2014 omitted','err');
   if(cfgOf(id)&&!drv){const ch=chainOf(cfgOf(id));
     h+='<div class="dsec">Fallback chain</div>';
-    if(ch.length===1)h+=drow('Fallback','none — FRED-only series','warn');
+    if(ch.length===1)h+=drow('Fallback','none \u2014 FRED-only series','warn');
     h+=ch.map(x=>drow(x,(s&&s.src===x)?'\u25c0 served this build':'standby',(s&&s.src===x)?'ok':'')).join('');}
   h+='<div class="dnote">If the integrity line is silent, all feeds are current. CACHED / STALE / NSA values are context, not live prints.</div>';
-  $('dwB').innerHTML=h;$('drawer').classList.add('on');$('scrim').classList.add('on');}
+  $('dwB').innerHTML=h;$('drawer').classList.add('on');$('scrim').classList.add('on');});}
 function closeCard(){$('drawer').classList.remove('on');$('scrim').classList.remove('on');}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-fig]');
   if(t){openCard(t.getAttribute('data-fig'));return;}
   if(e.target.id==='scrim'||e.target.id==='dwX')closeCard();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeCard();});
 
-/* ============ health, sources table, masthead, copy ============ */
-function renderHealth(){let ok=0,ca=0,dd=0;
-  $('hlth').innerHTML=FEEDS.map(c=>{const s=state[c.id]||{stage:'PEND',via:'—',src:'?'};
-    let dc,tx;if(s.stage==='OK'){dc=s.via==='direct'?'dg':'da';tx='OK·'+s.via;ok++;}
+/* ============ health / sources / masthead / copy ============ */
+function renderHealth(){return safe('health',function(){
+  let ok=0,ca=0,dd=0;
+  const el=document.getElementById('hlth');if(!el)return 0;
+  el.innerHTML=FEEDS.map(c=>{const s=state[c.id]||{stage:'PEND',via:'\u2014',src:'?'};
+    let dc,tx;if(s.stage==='OK'){dc=s.via==='direct'?'dg':'da';tx='OK\u00b7'+s.via;ok++;}
     else if(s.stage==='CACHE'){dc='da';tx='CACHE';ca++;}
     else if(s.stage==='PEND'){dc='dr';tx='PEND';dd++;}
     else{dc='dr';tx='\u2717'+s.stage;dd++;}
-    return'<div class="chip" title="'+c.id+' · '+(s.src||'?')+' via '+(s.via||'?')+'"><span class="dot '+dc+'"></span><b>'+c.id+'</b>·'+tx+'</div>';}).join('');
-  $('pstats').textContent=FEEDS.length+' FEEDS · '+ok+' OK · '+ca+' CACHE · '+dd+' STUCK';return dd;}
-function renderSrcAll(){
-  $('srcAll').innerHTML='<table><tr><th>Feed</th><th>Publisher</th><th>Series / endpoint</th><th>Contract</th></tr>'+
+    return'<div class="chip" title="'+c.id+' \u00b7 '+(s.src||'?')+' via '+(s.via||'?')+'"><span class="dot '+dc+'"></span><b>'+c.id+'</b>\u00b7'+tx+'</div>';}).join('');
+  $('pstats').textContent=FEEDS.length+' FEEDS \u00b7 '+ok+' OK \u00b7 '+ca+' CACHE \u00b7 '+dd+' STUCK';
+  return dd;})||0;}
+function renderSrcAll(){safe('sources',function(){
+  const el=document.getElementById('srcAll');if(!el)return;
+  el.innerHTML='<table><tr><th>Feed</th><th>Publisher</th><th>Series / endpoint</th><th>Contract</th></tr>'+
     FEEDS.map(c=>{const s=state[c.id]||{};const sk=s.src||c.src;
       let sid=c.id;
       if(sk==='bls')sid=BLS_MAP[c.id];
       else if(sk==='yahoo')sid=c.sid;
       else if(sk==='stooq')sid=c.s;
       else if(sk==='fred')sid='fred.stlouisfed.org/data/'+c.id+'.txt';
-      return'<tr><td><b>'+c.id+'</b></td><td>'+(SRC[sk]||'?')+'</td><td>'+esc(sid)+'</td><td>'+(CONTRACT[c.id]?'front-month / continuous — see card':'—')+'</td></tr>';}).join('')+'</table>';}
-function mast(st){const o=document.querySelector('.mmeta');if(o)o.remove();
+      return'<tr><td><b>'+c.id+'</b></td><td>'+(SRC[sk]||'?')+'</td><td>'+esc(sid)+'</td><td>'+(CONTRACT[c.id]?'see card':'\u2014')+'</td></tr>';}).join('')+'</table>';});}
+function mast(st){safe('masthead',function(){
+  const o=document.querySelector('.mmeta');if(o)o.remove();
   const m=document.createElement('div');m.className='mmeta';
-  m.innerHTML='<div class="dt">'+etDate()+'</div><div class="bt">built '+etTime()+' ET · tape '+st+'</div>';
-  document.querySelector('.mast-top').insertBefore(m,document.querySelector('.acts'));}
+  m.innerHTML='<div class="dt">'+etDate()+'</div><div class="bt">built '+etTime()+' ET \u00b7 tape '+st+'</div>';
+  document.querySelector('.mast-top').insertBefore(m,document.querySelector('.acts'));});}
 const KEY=['SP500','DGS10','SPREAD','WTI','BRENT','GOLD','EURUSD','CPI_YOY','CORE_YOY','UNRATE','ICSA'];
-async function copyBrief(){const st=$('stance').textContent||'N/A';
+async function copyBrief(){safe('copy',function(){throw new Error('use copyBrief2');});}
+async function copyBrief2(){try{
+  const st=($('mood')&&$('mood').textContent.replace('Risk mood: ',''))||'N/A';
   const key=KEY.map(id=>{const v=valueFor(id);if(!v)return null;const d=deltaFor(id);
     return id.padEnd(14)+' '+v+(d!=null?'  ('+fmtD(d,duFor(id))+' '+BLAB[BASIS]+')':'');}).filter(Boolean).join('\n');
-  const ag=[...document.querySelectorAll('.ag')].map(e=>e.innerText.replace(/\n/g,' — ')).join('\n');
+  const ag=[...document.querySelectorAll('.ag')].map(e=>e.innerText.replace(/\n/g,' \u2014 ')).join('\n');
   const rep=integReport();
   const notes=rep.length?rep.map(r=>'- ['+r.lvl.toUpperCase()+'] '+r.msg).join('\n')
     :'- All '+FEEDS.length+' feeds live and within release windows.';
-  const txt='MORNING BRIEFING — '+etDate()+' · built '+etTime()+' ET\nTAPE: '+st+'\n\n'+plain.join('\n\n')+
+  const txt='MORNING BRIEFING \u2014 '+etDate()+' \u00b7 built '+etTime()+' ET\nTAPE: '+st+'\n\n'+plain.join('\n\n')+
     '\n\nKEY FIGURES (basis: '+BLAB[BASIS]+')\n'+key+'\n\nAGENDA\n'+ag+'\n\nDATA NOTES\n'+notes+
-    '\n\nSources: FRED, U.S. Treasury Fiscal Data, BLS, Yahoo Finance, Stooq (last resort). Inflation = headline/core CPI (NSA) y/y; PCE excluded (BEA-keyed). Futures are front-month contracts. Quotes ~15-min delayed; JOLTS ~7-week lag. Not investment advice.';
+    '\n\nSources: FRED, U.S. Treasury Fiscal Data, BLS, Yahoo Finance, Stooq (last resort). Inflation = headline/core CPI (NSA) y/y. Futures are front-month contracts. Quotes ~15-min delayed. Not investment advice.';
   try{await navigator.clipboard.writeText(txt);}
   catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
-  toast('Brief copied · '+txt.length.toLocaleString()+' chars');}
+  toast('Brief copied \u00b7 '+txt.length.toLocaleString()+' chars');}
+  catch(e){log('COPY FAILED \u00b7 '+esc(e.message||'?'),'lerr');}}
 
-/* ============ boot ============ */
-function setStage(n,txt){$('stg')&&($('stg').textContent=txt);status('STAGE '+(n+1)+' · '+txt);}
-function renderAll(st){derive();const s=st||narrative();
+/* ============ boot — every render traced ============ */
+function setStage(n,txt){status('STAGE '+(n+1)+' \u00b7 '+txt);}
+function renderAll(st){derive();
+  const s=st||narrative();
   renderGroups();renderCurve();renderAgenda();renderPrints();renderBlocks();
-  const dead=renderHealth();renderInteg();renderSrcAll();return{s,dead};}
+  const dead=renderHealth();renderInteg();renderSrcAll();
+  return{s:s,dead:dead};}
 async function boot(matrix){if(busy)return;busy=true;
   $('bRun').disabled=true;
   ROUTES=routes();for(const k in QZ)delete QZ[k];
-  log('\u2500\u2500 BOOT v14 · ladder: '+ROUTES.map(r=>r.n).join(' → ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
-  if(restore()){document.getElementById('snap').classList.add('on');renderAll();}
-  setStage(0,'probing routes…');
+  log('\u2500\u2500 BOOT v14.2 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
+  const snap=restore();
+  if(snap){document.getElementById('snap').classList.add('on');
+    log('render pass on snapshot data \u2014 each section traced below','ldim');
+    renderAll();flushEarly();}
+  setStage(0,'probing routes\u2026');
   if(matrix||!goodRoutes.length)goodRoutes=await diagnose();
-  else log('STAGE 1 skipped — known good: '+goodRoutes.join(', '),'ldim');
-  if(!goodRoutes.length){setStage(0,'halted — no route');document.getElementById('halt').classList.add('on');
+  else log('STAGE 1 skipped \u2014 known good: '+goodRoutes.join(', '),'ldim');
+  if(!goodRoutes.length){setStage(0,'halted \u2014 no route');document.getElementById('halt').classList.add('on');
     log('HALTED at STAGE 1','lerr');
     document.querySelector('#secPipe details').setAttribute('open','');
+    flushEarly();
     busy=false;$('bRun').disabled=false;return;}
-  if(goodRoutes.length<ROUTES.length){log('pruning dead routes — keeping: '+goodRoutes.join(', '),'ldim');
+  if(goodRoutes.length<ROUTES.length){log('pruning dead routes \u2014 keeping: '+goodRoutes.join(', '),'ldim');
     ROUTES=ROUTES.filter(r=>goodRoutes.includes(r.n));}
   setStage(1,'pilot: FRED:DGS10');
-  log('\u2500\u2500 STAGE 2 · PILOT \u2500\u2500','lhi');
+  log('\u2500\u2500 STAGE 2 \u00b7 PILOT \u2500\u2500','lhi');
   let ok=await runFeed(cfgOf('DGS10'));
-  if(!ok){log('FRED pilot failed — YAHOO pilot next','lwarn');ok=await runFeed(cfgOf('SP500'));}
-  if(!ok){setStage(1,'halted — pilot failed');document.getElementById('halt').classList.add('on');
+  if(!ok){log('FRED pilot failed \u2014 YAHOO pilot next','lwarn');ok=await runFeed(cfgOf('SP500'));}
+  if(!ok){setStage(1,'halted \u2014 pilot failed');document.getElementById('halt').classList.add('on');
     log('HALTED at STAGE 2','lerr');
     document.querySelector('#secPipe details').setAttribute('open','');
     busy=false;$('bRun').disabled=false;return;}
-  log('pilot GREEN — unlocking full build','lok');
-  setStage(2,'fetching remaining feeds · paced');
-  log('\u2500\u2500 STAGE 3 · FULL BUILD \u2500\u2500','lhi');
+  log('pilot GREEN \u2014 unlocking full build','lok');
+  setStage(2,'fetching remaining feeds \u00b7 paced');
+  log('\u2500\u2500 STAGE 3 \u00b7 FULL BUILD \u2500\u2500','lhi');
   const rest=FEEDS.filter(f=>!(state[f.id]&&state[f.id].stage==='OK'));
   await Promise.all(rest.map(c=>q2(()=>runFeed(c))));
   await fetchCurve();
   const out=renderAll();
   const bySrc={};FEEDS.forEach(c=>{const s=state[c.id];if(s&&s.rows.length)bySrc[s.src||c.src]=(bySrc[s.src||c.src]||0)+1;});
-  log('provenance: '+Object.entries(bySrc).map(e=>e[0]+'\u00d7'+e[1]).join(' · '),'lhi');
+  log('provenance: '+Object.entries(bySrc).map(e=>e[0]+'\u00d7'+e[1]).join(' \u00b7 '),'lhi');
   snapshot();document.getElementById('snap').classList.remove('on');
   setStage(3,'built '+etTime()+' ET');
-  log('\u2500\u2500 BUILD COMPLETE · '+out.dead+' feed(s) stuck · snapshot saved \u2500\u2500','lok');
+  log('\u2500\u2500 BUILD COMPLETE \u00b7 '+out.dead+' feed(s) stuck \u00b7 snapshot saved \u2500\u2500','lok');
   mast(out.s);
   busy=false;$('bRun').disabled=false;}
 
-/* ============ controls & page routing ============ */
+/* ============ controls ============ */
 const AUTO=12*36e5;let auto=true;
 setInterval(()=>{if(auto&&!busy)boot(false)},AUTO);
  $('bRun').addEventListener('click',()=>boot(false));
- $('bCopy').addEventListener('click',copyBrief);
+ $('bCopy').addEventListener('click',copyBrief2);
  $('relayIn').value=CUSTOM;
  $('relaySave').addEventListener('click',()=>{CUSTOM=$('relayIn').value.trim();
   try{CUSTOM?localStorage.setItem('mm_relay',CUSTOM):localStorage.removeItem('mm_relay')}catch(e){}
-  goodRoutes=[];log(CUSTOM?'custom relay saved — tried first':'custom relay cleared','lhi');
+  goodRoutes=[];log(CUSTOM?'custom relay saved \u2014 tried first':'custom relay cleared','lhi');
   boot(true);});
 function setBasis(b){BASIS=BLAB[b]?b:'ww';
   try{localStorage.setItem('mm_basis',BASIS)}catch(e){}
@@ -963,9 +966,9 @@ document.querySelectorAll('.bbtn').forEach(x=>x.addEventListener('click',()=>set
  $('backBtn').addEventListener('click',()=>{$('pg2').classList.remove('on');$('pg1').style.display='';window.scrollTo(0,0);});
 document.querySelectorAll('.rv').forEach((el,i)=>el.style.animationDelay=(i*60)+'ms');
 setBasis(BASIS);
-log('morning briefing v14 — presentation rebuild per spec: 43 feeds (8 FX pairs · soft/hard commodities · 10 curve tenors)','lhi');
-log('page 1: groups + basis(1D/1W/1M) + curve w/ FF target + agenda + releases + summary w/ risk mood','ldim');
-log('page 2 via curve card: segmented spreads (steepening/inflation/credit) · no levels strip · sources via drawers + diagnostics table','ldim');
+log('morning briefing v14.2 \u2014 diagnostic build: every render function wrapped in safe() with entry/exit/error tracing','lhi');
+log('if the crash recurs, the log will show: render \u25b8 <name> \u2192 render \u2717 <name> \u2014 <exact error + stack>','ldim');
+log('stance element removed from narrative() entirely; mood is written by narrative() directly (guarded)','ldim');
 boot(true);
 </script>
 </body>

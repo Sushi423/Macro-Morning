@@ -45,7 +45,8 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .gi .d{font-family:'IBM Plex Mono',monospace;font-size:10.5px;white-space:nowrap}
 .gi svg{width:48px;height:13px;flex:none;align-self:center}
 .up{color:var(--grn)}.dn{color:var(--red)}.fl{color:var(--ink2)}
-.rowcurve{display:grid;grid-template-columns:1fr 300px;gap:28px;padding:20px 0;border-top:1px solid var(--hr);border-bottom:1px solid var(--hr)}
+/* v14.5: curve + agenda merged in ONE block — no dead gutter */
+.rowcurve{display:grid;grid-template-columns:1fr 320px;gap:28px;padding:20px 0;border-top:1px solid var(--hr);border-bottom:1px solid var(--hr)}
 #curve svg{width:100%;height:auto;display:block;cursor:pointer}
 #curve .ln{fill:none;stroke:var(--ink);stroke-width:1.8}#curve .pv{fill:none;stroke:var(--ink2);stroke-width:1.2;stroke-dasharray:4 4;opacity:.7}
 #curve .ff{stroke:var(--red);stroke-width:1.1;stroke-dasharray:2 3;opacity:.8}
@@ -55,9 +56,10 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 #curve .flab{font-size:9px;fill:var(--red)}
 .cn{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dotted var(--hr2);font-family:'IBM Plex Mono',monospace;font-size:13px}
 .cn .l{color:var(--ink2);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding-top:2px}.cn .v{font-weight:600}
-.door{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;border:1px solid var(--ink);padding:8px 12px;display:inline-block;margin-top:14px}
+.door{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;border:1px solid var(--ink);padding:8px 12px;display:inline-block;margin-top:12px}
 .door:hover{background:var(--ink);color:var(--pp)}
 .cfoot{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink2);margin-top:10px}
+.rline{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--ink2);margin-top:8px;letter-spacing:.03em}
 .ag{display:flex;gap:12px;padding:7px 0;border-bottom:1px dotted var(--hr2);font-family:'IBM Plex Mono',monospace}
 .ag:last-child{border-bottom:none}
 .ag .d{font-size:10.5px;font-weight:600;min-width:92px;white-space:nowrap}
@@ -167,23 +169,21 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
     <div class="groups" id="groups"><span class="ph" style="padding:16px">feed pending…</span></div>
   </section>
 
+  <!-- v14.5: curve + upcoming data merged into ONE block -->
   <section class="rowcurve rv">
     <div>
       <div class="kick">Treasury curve — latest vs one month ago · FF target dashed</div>
       <div id="curve"><span class="ph">waiting on data…</span></div>
-      <div class="cfoot">Constant-maturity yields, FRED daily series · click the card for spreads &amp; rates detail</div>
+      <div class="rline" id="curveLine"><span class="ph">—</span></div>
+      <div class="door" id="doorRates">Spreads &amp; rates detail →</div>
+      <div class="cfoot">Constant-maturity yields, FRED daily series · click any figure for source</div>
     </div>
     <aside>
-      <div class="kick">Read</div><div id="curveRead"><span class="ph">—</span></div>
-      <div class="door" id="doorRates">Spreads &amp; rates detail →</div>
-    </div>
+      <div class="kick">Upcoming data</div><div id="agenda"><span class="ph">computing…</span></div>
+    </aside>
   </section>
 
-  <section class="rowcurve rv" style="grid-template-columns:1fr 300px">
-    <div class="agenda" style="border:none;padding:0"><div class="kick">Upcoming data</div><div id="agenda"><span class="ph">computing…</span></div></div>
-  </section>
-
-  <section class="prints rv"><div class="kick">Recent releases — announced data only</div>
+  <section class="prints rv"><div class="kick">Recent releases — announced data only · rates of change</div>
     <div id="prints"><span class="ph">feed pending…</span></div>
   </section>
 
@@ -198,7 +198,7 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
   <div class="kick">Rates &amp; spreads — detail</div>
   <div id="integ2"></div>
   <div class="spseg"><div class="sk">Steepening / policy-path view</div><div class="body" id="segSteep"><span class="ph">feed pending…</span></div></div>
-  <div class="spseg"><div class="sk">Inflation view</div><div class="body" id="segInfl"><span class="ph">feed pending…</span></div></div>
+  <div class="spseg"><div class="sk">Inflation view — rates of change</div><div class="body" id="segInfl"><span class="ph">feed pending…</span></div></div>
   <div class="spseg"><div class="sk">Credit view</div><div class="body" id="segCred"><span class="ph">feed pending…</span></div></div>
   <div class="ph" style="padding:4px 0 60px">Levels live on the curve chart; FF target on the curve card. Every figure opens its source drawer on click.</div>
 </main>
@@ -220,7 +220,7 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
   </details>
 </div></section>
 
-<footer class="wrap"><b>READING THIS BRIEF</b> — changes follow the basis you choose (1D · 1W · 1M; frequency-aware per series). The curve card opens the rates &amp; spreads detail page. "Recent releases" lists announced government data only. Every figure opens a source card on click: publisher, series ID, cadence, contract, freshness. Inflation = headline &amp; core CPI and PPI (NSA) y/y; PCE is BEA-keyed, hence absent. Futures are front-month contracts. Not investment advice.</footer>
+<footer class="wrap"><b>READING THIS BRIEF</b> — changes follow the basis you choose (1D · 1W · 1M; frequency-aware per series). The curve card opens the rates &amp; spreads detail page. "Recent releases" lists announced government data only, shown as rates of change (y/y, m/m, q/q) — never raw index levels. Every figure opens a source card on click: publisher, series ID, cadence, contract, freshness. Inflation = headline &amp; core CPI and PPI (NSA) y/y; PCE is BEA-keyed, hence absent. Futures are front-month contracts. Not investment advice.</footer>
 
 <div id="scrim"></div>
 <aside id="drawer"><div class="dwh"><span class="t" id="dwT">—</span><button id="dwX" style="font-size:15px;border:1px solid var(--ink);background:none;color:var(--ink);width:28px;height:28px;cursor:pointer">×</button></div><div id="dwB"></div></aside>
@@ -294,13 +294,20 @@ const SRC={fred:'FRED (St. Louis Fed)',treasury:'U.S. Treasury Fiscal Data',bls:
 const CAD={daily:'daily · ~1-day lag',weekly:'weekly · Thu 8:30 ET',monthly:'monthly · prior month by design',
   jolts:'monthly (JOLTS) · ~7-week lag',quarterly:'quarterly · ~1-month lag after quarter end',
   intraday:'quote · ~15-min delayed',crypto:'24/7 quote · ~15-min delayed'};
-/* v14.4: monthly/jolts no longer warn stale — a month-old monthly print is current */
-const STALE={intraday:4,daily:5,weekly:12,monthly:1e9,jolts:1e9,crypto:4};
+/* v14.5: monthly/jolts never warn stale — a month-old monthly print is current */
+const STALE={intraday:4,daily:5,weekly:12,monthly:1e9,jolts:1e9,quarterly:1e9,crypto:4};
 const FRESH={weekly:8,monthly:35,jolts:55,quarterly:100};
+/* v14.5: explicit contract + unit notes for every traded instrument */
 const CONTRACT={WTI:'front-month futures (CL=F) — nearest expiry, auto-rolls',
   BRENT:'front-month futures (BZ=F) — nearest expiry, auto-rolls',
   NATGAS:'front-month futures (NG=F) — nearest expiry, auto-rolls',
   WHEAT:'front-month futures (ZW=F) — nearest expiry, auto-rolls',
+  CORN:'front-month futures (ZC=F) — nearest expiry, auto-rolls',
+  SOYB:'front-month futures (ZS=F) — nearest expiry, auto-rolls',
+  COFFEE:'front-month futures (KC=F) — nearest expiry, auto-rolls',
+  SUGAR:'front-month futures (SB=F) — nearest expiry, auto-rolls',
+  COTTON:'front-month futures (CT=F) — nearest expiry, auto-rolls',
+  COCOA:'front-month futures (CC=F) — nearest expiry, auto-rolls',
   GOLD:'front-month futures (GC=F) — nearest expiry, auto-rolls',
   SILVER:'front-month futures (SI=F) — nearest expiry, auto-rolls',
   COPPER:'front-month futures (HG=F) — nearest expiry, auto-rolls',
@@ -312,19 +319,19 @@ const MEANS={UNRATE:'labor-market slack',JTSJOL:'labor demand — workers employ
   AHETPI:'wage growth — average hourly earnings',
   CPIAUCSL:'consumer price levels (headline, all items)',
   CPILFESL:'underlying consumer price pressure (ex food & energy)',
-  PPIACO:'producer prices — upstream inflation at the factory gate',
-  PPILFE:'core producer prices (ex food & energy)',
+  PPIACO:'upstream inflation at the factory gate',
+  WPSFD49207:'core producer prices (finished goods ex food & energy)',
   RSAFS:'consumer spending power',INDPRO:'factory and utility output',
   GDPC1:'the economy\u2019s total output, real terms',
-  HOUST:'new residential construction — housing sector pulse',
-  MORTGAGE30US:'the 30-year mortgage rate households actually pay',
+  HOUST:'new residential construction — housing pulse',
+  MORTGAGE30US:'the 30-year mortgage rate households pay',
   UMCSENT:'consumer mood — spending willingness ahead',
   BAMLC0A0CM:'IG borrowing costs vs Treasuries',
   BAMLH0A0HYM2:'HY borrowing costs — the credit-risk gauge',
   T10YIE:'market-priced decade inflation',T5YIE:'near-term market inflation expectations',
   T5YIFR:'the long-run inflation anchor',DFEDTARU:'the Fed\u2019s current policy stance'};
 
-/* ============ feed config — 51 feeds ============ */
+/* ============ feed config — 57 feeds ============ */
 const FEEDS=[
  {id:'DGS1MO',src:'fred',freq:'daily',sid:'DGS1MO',label:'US 1M',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS3MO',src:'fred',freq:'daily',sid:'DGS3MO',label:'US 3M',dp:2,span:210,du:'bp',good:-1},
@@ -350,8 +357,9 @@ const FEEDS=[
  {id:'ICSA',src:'fred',freq:'weekly',sid:'ICSA',label:'INITIAL CLAIMS',dp:0,span:210,du:'k',good:-1},
  {id:'CPIAUCSL',src:'fred',freq:'monthly',sid:'CPIAUCSL',label:'CPI (index)',dp:3,span:1500,du:'pp',good:0},
  {id:'CPILFESL',src:'fred',freq:'monthly',sid:'CPILFESL',label:'CORE CPI (idx)',dp:3,span:1500,du:'pp',good:0},
+ /* v14.5: PPILFE discontinued Dec-2015 (seen in logs) → active series WPSFD49207 */
  {id:'PPIACO',src:'fred',freq:'monthly',sid:'PPIACO',label:'PPI (index)',dp:3,span:3000,du:'pp',good:0},
- {id:'PPILFE',src:'fred',freq:'monthly',sid:'PPILFE',label:'CORE PPI (idx)',dp:3,span:3000,du:'pp',good:0},
+ {id:'WPSFD49207',src:'fred',freq:'monthly',sid:'WPSFD49207',label:'CORE PPI (idx)',dp:3,span:3000,du:'pp',good:0},
  {id:'RSAFS',src:'fred',freq:'monthly',sid:'RSAFS',label:'RETAIL SALES',dp:1,span:3000,du:'%',good:1},
  {id:'INDPRO',src:'fred',freq:'monthly',sid:'INDPRO',label:'IND PRODUCTION',dp:1,span:3000,du:'%',good:1},
  {id:'GDPC1',src:'fred',freq:'quarterly',sid:'GDPC1',label:'REAL GDP',dp:1,span:4000,du:'%',good:1},
@@ -367,8 +375,14 @@ const FEEDS=[
  {id:'NATGAS',src:'yahoo',freq:'intraday',sid:'NG=F',s:'ng.f',range:'6mo',label:'NAT GAS',dp:2,du:'%',good:1},
  {id:'GOLD',src:'yahoo',freq:'intraday',sid:'GC=F',s:'gc.f',range:'6mo',label:'GOLD',dp:0,du:'%',good:0},
  {id:'SILVER',src:'yahoo',freq:'intraday',sid:'SI=F',s:'si.f',range:'6mo',label:'SILVER',dp:2,du:'%',good:0},
- {id:'WHEAT',src:'yahoo',freq:'intraday',sid:'ZW=F',s:'zw.f',range:'6mo',label:'WHEAT',dp:1,du:'%',good:1},
  {id:'COPPER',src:'yahoo',freq:'intraday',sid:'HG=F',s:'hg.f',range:'6mo',label:'COPPER',dp:2,du:'%',good:1},
+ {id:'WHEAT',src:'yahoo',freq:'intraday',sid:'ZW=F',s:'zw.f',range:'6mo',label:'WHEAT',dp:1,du:'%',good:1},
+ {id:'CORN',src:'yahoo',freq:'intraday',sid:'ZC=F',s:'zc.f',range:'6mo',label:'CORN',dp:1,du:'%',good:1},
+ {id:'SOYB',src:'yahoo',freq:'intraday',sid:'ZS=F',s:'zs.f',range:'6mo',label:'SOYBEANS',dp:1,du:'%',good:1},
+ {id:'COFFEE',src:'yahoo',freq:'intraday',sid:'KC=F',s:'kc.f',range:'6mo',label:'COFFEE',dp:2,du:'%',good:1},
+ {id:'SUGAR',src:'yahoo',freq:'intraday',sid:'SB=F',s:'sb.f',range:'6mo',label:'SUGAR',dp:2,du:'%',good:1},
+ {id:'COTTON',src:'yahoo',freq:'intraday',sid:'CT=F',s:'ct.f',range:'6mo',label:'COTTON',dp:2,du:'%',good:1},
+ {id:'COCOA',src:'yahoo',freq:'intraday',sid:'CC=F',s:'cc.f',range:'6mo',label:'COCOA',dp:0,du:'%',good:1},
  {id:'EURUSD',src:'yahoo',freq:'intraday',sid:'EURUSD=X',s:'eurusd',range:'6mo',label:'EUR/USD',dp:4,du:'%',good:1},
  {id:'GBPUSD',src:'yahoo',freq:'intraday',sid:'GBPUSD=X',s:'gbpusd',range:'6mo',label:'GBP/USD',dp:4,du:'%',good:1},
  {id:'USDJPY',src:'yahoo',freq:'intraday',sid:'USDJPY=X',s:'usdjpy',range:'6mo',label:'USD/JPY',dp:2,du:'%',good:-1},
@@ -382,6 +396,10 @@ const UST_MAP={DGS2:'BC_2YEAR',DGS10:'BC_10YEAR',DGS30:'BC_30YEAR'};
 const BLS_MAP={UNRATE:'LNS14000000',CPIAUCSL:'CUUR0000SA0',CPILFESL:'CUUR0000SA0L1E'};
 const CURVE_TENORS=[['1M','DGS1MO'],['3M','DGS3MO'],['6M','DGS6MO'],['1Y','DGS1'],['2Y','DGS2'],
  ['5Y','DGS5'],['7Y','DGS7'],['10Y','DGS10'],['20Y','DGS20'],['30Y','DGS30']];
+/* v14.5: explicit units for traded instruments */
+const UNITS={WTI:'$/bbl',BRENT:'$/bbl',NATGAS:'$/MMBtu',GOLD:'$/oz',SILVER:'$/oz',COPPER:'$/lb',
+  WHEAT:'\u00a2/bu',CORN:'\u00a2/bu',SOYB:'\u00a2/bu',COFFEE:'\u00a2/lb',SUGAR:'\u00a2/lb',COTTON:'\u00a2/lb',COCOA:'$/t',
+  BTC:'',SP500:'',NAS:'',DOW:'',VIX:''};
 const DERIVED={
  SPREAD:{label:'2s10s spread',unit:'bp',dp:1,comps:['DGS10','DGS2'],note:'DGS10 minus DGS2, matched by date'},
  SP2S30:{label:'2s30s spread',unit:'bp',dp:1,comps:['DGS30','DGS2'],note:'DGS30 minus DGS2, matched by date'},
@@ -389,7 +407,7 @@ const DERIVED={
  CPI_YOY:{label:'Headline CPI Y/Y (NSA)',unit:'%',dp:1,comps:['CPIAUCSL'],note:'12-mo % change, headline CPI index (NSA)'},
  CORE_YOY:{label:'Core CPI Y/Y (NSA)',unit:'%',dp:1,comps:['CPILFESL'],note:'12-mo % change, core CPI index (NSA)'},
  PPI_YOY:{label:'Headline PPI Y/Y (NSA)',unit:'%',dp:1,comps:['PPIACO'],note:'12-mo % change, PPI all-commodities index (NSA)'},
- COREPPI_YOY:{label:'Core PPI Y/Y (NSA)',unit:'%',dp:1,comps:['PPILFE'],note:'12-mo % change, PPI ex food & energy (NSA)'},
+ COREPPI_YOY:{label:'Core PPI Y/Y (NSA)',unit:'%',dp:1,comps:['WPSFD49207'],note:'12-mo % change, finished consumer goods ex food & energy'},
  REAL10:{label:'10Y real (est.)',unit:'%',dp:2,comps:['DGS10','T10YIE'],note:'DGS10 minus T10YIE — approximation of TIPS'}};
 
 /* ============ route ladder ============ */
@@ -584,7 +602,7 @@ function derive(){safe('derive',function(){
   if(M.DGS2&&M.DGS10){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
     M.sp=M.DGS10.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
     M.spNow=M.sp.length?M.sp[M.sp.length-1].v:null;
-    M.inv=0;for(let i=M.sp.length-1;i>=0&&M.sp[i].v<0;i++)M.inv++;}
+    M.inv=0;for(let i=M.sp.length-1;i>=0&&M.sp[i].v<0;i--)M.inv++;}
   if(M.DGS2&&M.DGS30){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
     M.sp2=M.DGS30.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
     M.sp2Now=M.sp2.length?M.sp2[M.sp2.length-1].v:null;}
@@ -593,7 +611,7 @@ function derive(){safe('derive',function(){
     M.sp3Now=M.sp3.length?M.sp3[M.sp3.length-1].v:null;}
   if(M.DGS10&&M.T10YIE)M.real10=M.DGS10.last-M.T10YIE.last;
   M.cpiY=yoy(M.CPIAUCSL);M.coreY=yoy(M.CPILFESL);
-  M.ppiY=yoy(M.PPIACO);M.corePpiY=yoy(M.PPILFE);
+  M.ppiY=yoy(M.PPIACO);M.corePpiY=yoy(M.WPSFD49207);
   if(M.CPIAUCSL&&M.CPIAUCSL.vals.length>1)M.cpiMM=(M.CPIAUCSL.last/backE(M.CPIAUCSL,1)-1)*100;
   if(M.PPIACO&&M.PPIACO.vals.length>1)M.ppiMM=(M.PPIACO.last/backE(M.PPIACO,1)-1)*100;
   if(M.ICSA)M.claimsMA=M.ICSA.vals.slice(-4).reduce((a,r)=>a+r.v,0)/4;
@@ -609,6 +627,7 @@ function deltaRaw(id,n){
   if(c.du==='k')return(e.last-p)/1e3;
   return e.last-p;}
 function deltaFor(id){return deltaRaw(id,steps(cfgOf(id)||{freq:'daily'},BASIS));}
+/* v14.5: UNITS table drives display; no raw index levels anywhere */
 function valueFor(id){
   if(id==='SPREAD')return M.spNow!=null?nf(M.spNow,1)+'bp':null;
   if(id==='SP2S30')return M.sp2Now!=null?nf(M.sp2Now,1)+'bp':null;
@@ -623,10 +642,10 @@ function valueFor(id){
   if(id==='PAYEMS')return nf(e.last/1e3,0)+'k jobs';
   if(id==='HOUST')return nf(e.last/1e3,1)+'M units';
   if(id==='RSAFS')return'$'+nf(e.last/1e3,0)+'B';
-  if(id==='INDPRO')return nf(e.last,1);
+  if(id==='INDPRO')return nf(e.last,1)+' idx';
   if(id==='GDPC1')return'$'+nf(e.last/1e3,1)+'T';
-  if(id==='WHEAT')return nf(e.last,1)+'\u00a2';
-  if(['BTC','GOLD','SILVER','WTI','BRENT','NATGAS','COPPER'].includes(id))return'$'+nf(e.last,c.dp);
+  if(id==='UMCSENT')return nf(e.last,1);
+  if(UNITS[id]!==undefined)return UNITS[id]?nf(e.last,c.dp)+' '+UNITS[id]:nf(e.last,c.dp);
   if(c.du==='bp')return nf(e.last,c.dp)+'%';
   return nf(e.last,c.dp);}
 const goodFor=id=>id==='SPREAD'||id==='SP2S30'||id==='SP5S30'?0:(cfgOf(id)?cfgOf(id).good:0);
@@ -666,7 +685,7 @@ function renderInteg(){safe('integrity',function(){
 const GROUPS=[
  {name:'COMMODITIES',sections:[
    {sk:'Hard',items:['WTI','BRENT','NATGAS','GOLD','SILVER','COPPER']},
-   {sk:'Soft',items:['WHEAT']}]},
+   {sk:'Soft',items:['WHEAT','CORN','SOYB','COFFEE','SUGAR','COTTON','COCOA']}]},
  {name:'CURRENCIES (vs USD)',sections:[{sk:null,items:['EURUSD','GBPUSD','USDJPY','USDCNY','USDCHF','USDCAD','AUDUSD','NZDUSD']}]},
  {name:'EQUITIES \u00b7 CRYPTO',sections:[{sk:null,items:['SP500','NAS','DOW','VIX','BTC']}]}];
 function spark(vals,w,h){const v=(vals||[]).filter(x=>x!=null);if(v.length<2)return'';
@@ -686,37 +705,52 @@ function renderGroups(){safe('groups',function(){
         return'<div class="gi clk" data-fig="'+id+'"><span class="l">'+labFor(id)+'</span><span class="v">'+v+'</span>'+
           (d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+'</span>':'<span class="d fl">\u2014</span>')+sp+'</div>';}).join('')).join('');
     return'<div class="grp"><div class="gk">'+g.name+'</div>'+body+'</div>';}).join('');});}
+/* v14.5: inflation indexes shown as RATES OF CHANGE in releases — never raw index */
 function renderPrints(){safe('prints',function(){
   const el=document.getElementById('prints');if(!el)return;
+  const YY={CPIAUCSL:M.cpiY,CPILFESL:M.coreY,PPIACO:M.ppiY,WPSFD49207:M.corePpiY};
   const rows=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts'||c.freq==='quarterly'))
     .map(c=>{const s=state[c.id];if(!s||!s.rows||!s.rows.length)return null;
       const last=s.rows[s.rows.length-1];
       const age=Math.round((Date.now()-Date.parse(last.d+'T12:00:00'))/864e5);
-      const e=M[c.id];let d=null;
-      if(e&&e.vals.length>1){
+      const e=M[c.id];let d=null,v=null,du=duFor(c.id);
+      /* index series → y/y rate of change */
+      if(YY[c.id]){const y=YY[c.id];
+        if(y&&y.length){v=nf(y[y.length-1],1)+'% y/y';
+          if(y.length>1)d=y[y.length-1]-y[y.length-2];du='pp';}
+        else return null;}
+      /* GDP → q/q annualized */
+      else if(c.id==='GDPC1'){if(e&&e.vals.length>1&&backE(e,1)){
+          const q=Math.pow(e.last/backE(e,1),4)-1;v=nf(q*100,1)+'% ann.';d=q*100-(Math.pow(backE(e,1)/backE(e,2),4)-1)*100;du='pp';}
+        else return null;}
+      /* payrolls → monthly change is the headline */
+      else if(c.id==='PAYEMS'){if(e&&e.vals.length>1){v=(e.last-backE(e,1))>=0?'+':'';
+          v=nf((e.last-backE(e,1))/1e3,0)+'k jobs';d=(e.last-backE(e,1)-(backE(e,1)-backE(e,2)))/1e3;du='k';}
+        else return null;}
+      else{if(!(e&&e.vals.length>1))return null;
         if(c.du==='%')d=(e.last/backE(e,1)-1)*100;else if(c.du==='bp')d=(e.last-backE(e,1))*100;
-        else if(c.du==='k')d=(e.last-backE(e,1))/1e3;else d=e.last-backE(e,1);}
-      return{c:c,age:age,fresh:age<=FRESH[c.freq],obs:last.d,d:d,
-        v:(c.id==='ICSA'||c.id==='JTSJOL')?nf(e.last/1e3,0)+'k'
-         :(c.id==='PAYEMS')?nf(e.last/1e3,0)+'k'
+        else if(c.du==='k')d=(e.last-backE(e,1))/1e3;else d=e.last-backE(e,1);
+        v=(c.id==='ICSA'||c.id==='JTSJOL')?nf(e.last/1e3,0)+'k'
          :(c.id==='HOUST')?nf(e.last/1e3,1)+'M'
          :(c.id==='RSAFS')?'$'+nf(e.last/1e3,0)+'B'
-         :(c.id==='GDPC1')?'$'+nf(e.last/1e3,1)+'T'
-         :nf(e.last,c.dp)};})
+         :nf(e.last,c.dp);}
+      return{c:c,age:age,fresh:age<=FRESH[c.freq],obs:last.d,d:d,v:v,du:du};})
     .filter(Boolean).sort((a,b)=>a.age-b.age).slice(0,10);
   el.innerHTML=rows.length?rows.map(r=>
     '<div class="pr clk" data-fig="'+r.c.id+'"><span class="badge '+(r.fresh?'':'old')+'">'+(r.fresh?'NEW':r.age+'d')+'</span>'+
     '<span class="l">'+r.c.label+'</span><span class="v">'+r.v+'</span>'+
-    (r.d!=null?'<span class="d '+cl(r.d,goodFor(r.c.id))+'">'+fmtD(r.d,duFor(r.c.id))+' vs prior release</span>':'')+
+    (r.d!=null?'<span class="d '+cl(r.d,0)+'">'+fmtD(r.d,r.du)+' vs prior</span>':'')+
     '<span class="m">reflects: '+(MEANS[r.c.id]||'')+'</span><span class="dt">'+r.obs+'</span></div>').join('')
     :'<span class="ph">no prints available</span>';});}
 function renderCurve(){safe('curve',function(){
-  const host=document.getElementById('curve'),read=document.getElementById('curveRead');
+  const host=document.getElementById('curve'),read=document.getElementById('curveRead'),line=document.getElementById('curveLine');
   if(!host||!read)return;
   if(!M.curve||!M.curve.length){host.innerHTML='<span class="ph">curve unavailable \u2014 see diagnostics</span>';read.innerHTML='<span class="ph">\u2014</span>';return;}
   const L=M.curve[0];let P=null;
   for(const r of M.curve){if(Date.parse(L.d)-Date.parse(r.d)>=25*864e5){P=r;break;}}
   const ts=CURVE_TENORS.map(x=>x[0]).filter(t=>L.y[t]!=null);
+  /* v14.5: chart-content diagnostics — proves the SVG has real data */
+  log('curve chart \u00b7 '+ts.length+' tenors \u00b7 '+L.d+'\u00b7 range '+nf(Math.min(...ts.map(t=>L.y[t])),2)+'\u2013'+nf(Math.max(...ts.map(t=>L.y[t])),2)+'%','ldim');
   const W=680,H=250,La=44,Ra=54,T=16,B=26;
   const vs=ts.map(t=>L.y[t]);if(P)ts.forEach(t=>{if(P.y[t]!=null)vs.push(P.y[t]);});
   const ff=M.DFEDTARU?M.DFEDTARU.last:null;
@@ -739,12 +773,19 @@ function renderCurve(){safe('curve',function(){
     '<text x="'+La+'" y="'+Y(mx-pad).toFixed(1)+'" dy="-4">'+nf(mx-pad,1)+'%</text>'+
     '<text x="'+La+'" y="'+Y(mn+pad).toFixed(1)+'" dy="12">'+nf(mn+pad,1)+'%</text>'+
     '<text class="vl" x="'+X(ts.length-1).toFixed(1)+'" y="'+Y(L.y[lt]).toFixed(1)+'" dx="8" dy="4">'+nf(L.y[lt],2)+'</text></svg>';
-  const row=(l,v)=>'<div class="cn"><span class="l">'+l+'</span><span class="v">'+v+'</span></div>';
-  let h='';if(M.spNow!=null)h+=row('2s10s',nf(M.spNow,1)+'bp'+(M.spNow<0?' (inverted)':''));
-  if(M.sp2Now!=null)h+=row('2s30s',nf(M.sp2Now,1)+'bp');
-  if(ff!=null)h+=row('FF target',nf(ff,2)+'%');
-  h+=row('As of',L.d);
-  read.innerHTML='<div class="clk" data-fig="SPREAD">'+h+'</div>';});}
+  /* compact read-line under the chart (replaces the old side panel) */
+  if(line){let parts=[];
+    if(M.spNow!=null)parts.push('2s10s '+nf(M.spNow,1)+'bp'+(M.spNow<0?' (inv)':''));
+    if(M.sp2Now!=null)parts.push('2s30s '+nf(M.sp2Now,1)+'bp');
+    if(ff!=null)parts.push('FF '+nf(ff,2)+'%');
+    parts.push('as of '+L.d);
+    line.innerHTML='<span class="clk" data-fig="SPREAD">'+parts.join(' \u00b7 ')+'</span>';}
+  if(read){const row=(l,v)=>'<div class="cn"><span class="l">'+l+'</span><span class="v">'+v+'</span></div>';
+    let h='';if(M.spNow!=null)h+=row('2s10s',nf(M.spNow,1)+'bp'+(M.spNow<0?' (inverted)':''));
+    if(M.sp2Now!=null)h+=row('2s30s',nf(M.sp2Now,1)+'bp');
+    if(ff!=null)h+=row('FF target',nf(ff,2)+'%');
+    h+=row('As of',L.d);
+    read.innerHTML='<div class="clk" data-fig="SPREAD">'+h+'</div>';}});}
 function renderAgenda(){safe('agenda',function(){
   const el=document.getElementById('agenda');if(!el)return;
   const t=new Date(),items=[];const FOMC=['2025-09-17','2025-10-29','2025-12-10',
@@ -803,6 +844,8 @@ function subRow(id,l,extra){const v=valueFor(id);if(v==null)return'';
   return'<div class="sub clk" data-fig="'+id+'"><span class="lbl">'+l+'</span><span class="dots"></span>'+
     '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+' '+BLAB[BASIS]+'</span>':'')+
     (extra||'')+'</div>';}
+function subRowV(id,l,v,d,du,g){return'<div class="sub clk" data-fig="'+id+'"><span class="lbl">'+l+'</span><span class="dots"></span>'+
+    '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cl(d,g)+'">'+fmtD(d,du)+'</span>':'')+'</div>';}
 function path30(id){const s=id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:null;
   if(!s||s.length<30)return'';const block='\u2581\u2582\u2583\u2584\u2585\u2586\u2587';const v=s.slice(-30);
   const mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
@@ -812,15 +855,22 @@ function renderBlocks(){safe('blocks',function(){
   if(a)a.innerHTML=subRow('SPREAD','2s10s spread',path30('SPREAD'))+
     subRow('SP2S30','2s30s spread',path30('SP2S30'))+
     subRow('SP5S30','5s30s spread',path30('SP5S30'));
-  if(b)b.innerHTML=subRow('CPI_YOY','Headline CPI (NSA) y/y')+
-    subRow('CORE_YOY','Core CPI (NSA) y/y')+
-    subRow('CPIAUCSL','CPI M/M (NSA)',M.cpiMM!=null?null:'')+
-    subRow('PPI_YOY','Headline PPI (NSA) y/y')+
-    subRow('COREPPI_YOY','Core PPI (NSA) y/y')+
-    subRow('T10YIE','10Y breakeven')+
-    subRow('T5YIE','5Y breakeven')+
-    subRow('T5YIFR','5y5y forward')+
-    subRow('REAL10','10Y real (est.)');
+  if(b){let h='';
+    if(M.cpiY&&M.cpiY.length){const y=M.cpiY;h+=subRowV('CPI_YOY','Headline CPI (NSA) y/y',nf(y[y.length-1],1)+'%',
+      y.length>1?y[y.length-1]-y[y.length-2]:null,'pp',0);}
+    if(M.coreY&&M.coreY.length){const y=M.coreY;h+=subRowV('CORE_YOY','Core CPI (NSA) y/y',nf(y[y.length-1],1)+'%',
+      y.length>1?y[y.length-1]-y[y.length-2]:null,'pp',0);}
+    h+=subRowV('CPIAUCSL','Headline CPI M/M (NSA)',M.cpiMM!=null?nf(M.cpiMM,1)+'%':'\u2014',null);
+    if(M.ppiY&&M.ppiY.length){const y=M.ppiY;h+=subRowV('PPI_YOY','Headline PPI (NSA) y/y',nf(y[y.length-1],1)+'%',
+      y.length>1?y[y.length-1]-y[y.length-2]:null,'pp',0);}
+    if(M.corePpiY&&M.corePpiY.length){const y=M.corePpiY;h+=subRowV('COREPPI_YOY','Core PPI (NSA) y/y',nf(y[y.length-1],1)+'%',
+      y.length>1?y[y.length-1]-y[y.length-2]:null,'pp',0);}
+    h+=subRowV('PPIACO','Headline PPI M/M (NSA)',M.ppiMM!=null?nf(M.ppiMM,1)+'%':'\u2014',null);
+    h+=subRow('T10YIE','10Y breakeven')+
+      subRow('T5YIE','5Y breakeven')+
+      subRow('T5YIFR','5y5y forward')+
+      subRow('REAL10','10Y real (est.)');
+    b.innerHTML=h;}
   if(c)c.innerHTML=subRow('BAMLC0A0CM','IG corp spread (OAS)')+
     subRow('BAMLH0A0HYM2','HY corp spread (OAS)');});}
 
@@ -841,23 +891,22 @@ function openCard(id){safe('card:'+id,function(){
       :id==='COREPPI_YOY'?(M.corePpiY&&M.corePpiY.length?M.corePpiY[M.corePpiY.length-1]:null)
       :M.real10;}
   else{const c=cfgOf(id);if(!c)return;label=c.label;dp=c.dp;
-    if(s&&s.rows&&s.rows.length){val=s.rows[s.rows.length-1].v;unit=c.du==='bp'?'%':c.du==='pt'?'':c.du;
+    if(s&&s.rows&&s.rows.length){val=s.rows[s.rows.length-1].v;unit=(UNITS[id]!==undefined)?UNITS[id]:(c.du==='bp'?'%':c.du==='pt'?'':c.du);
       if(id==='ICSA'||id==='JTSJOL'){val=val/1e3;unit='k';}
       else if(id==='PAYEMS'){val=val/1e3;unit='k jobs';}
       else if(id==='HOUST'){val=val/1e3;unit='M units';}
       else if(id==='RSAFS'){val=val/1e3;unit='bn USD';}
       else if(id==='GDPC1'){val=val/1e3;unit='T USD (real)';}
-      else if(id==='INDPRO'){val=val;unit='idx';}
-      else if(id==='UMCSENT'){val=val;unit='idx (1966=100)';}
-      else if(id==='WHEAT'){unit='cents/bu';}
-      else if(id==='NATGAS')unit='$/MMBtu';else if(id==='BRENT'||id==='WTI')unit='$/bbl';
-      else if(id==='SILVER'||id==='GOLD')unit='$/oz';else if(id==='COPPER')unit='$/lb';}
+      else if(id==='INDPRO')unit='idx';
+      else if(id==='UMCSENT')unit='idx (1966=100)';}
     else val=null;}
   $('dwT').textContent=label;
   let h='<div class="dv">'+(val==null?'\u2014':nf(val,dp))+'<small> '+esc(unit)+'</small></div>';
   h+='<div class="asof" style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;color:var(--ink2);margin:2px 0 8px;text-transform:uppercase"><b>'+esc(asOf(id)||'no data')+'</b></div>';
   if(MEANS[id])h+=drow('Reflects',esc(MEANS[id]));
-  let ser=drv?(id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:(id==='CPI_YOY'?(M.cpiY||[]).map(v=>({v:v})):id==='CORE_YOY'?(M.coreY||[]).map(v=>({v:v})):id==='PPI_YOY'?(M.ppiY||[]).map(v=>({v:v})):id==='COREPPI_YOY'?(M.corePpiY||[]).map(v=>({v:v})):null)):(s&&s.rows);
+  let ser=drv?(id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3
+    :(id==='CPI_YOY'?(M.cpiY||[]).map(v=>({v:v})):id==='CORE_YOY'?(M.coreY||[]).map(v=>({v:v}))
+    :(id==='PPI_YOY'?(M.ppiY||[]).map(v=>({v:v})):id==='COREPPI_YOY'?(M.corePpiY||[]).map(v=>({v:v})):null))):(s&&s.rows);
   if(ser&&ser.length>2)h+='<div class="dsec">Recent path</div>'+cardSpark(ser.map(r=>r.v));
   const c0=cfgOf(id);
   if(c0){const d=deltaFor(id);
@@ -877,17 +926,18 @@ function openCard(id){safe('card:'+id,function(){
     h+=drow('Cadence',CAD[c.freq]||c.freq);
     if(CONTRACT[id])h+=drow('Contract',esc(CONTRACT[id]));
     if(id==='CPIAUCSL'||id==='CPILFESL')h+=drow('Adjustment','NSA \u2014 Y/Y standard; M/M seasonal. PCE is BEA-keyed, not covered.');
-    if(id==='PPIACO'||id==='PPILFE')h+=drow('Adjustment','NSA \u2014 measures prices received by domestic producers; upstream of CPI');
+    if(id==='PPIACO')h+=drow('Adjustment','NSA \u2014 prices received by domestic producers; upstream of CPI');
+    if(id==='WPSFD49207')h+=drow('Adjustment','NSA \u2014 finished consumer goods ex food & energy. Note: old PPILFE series was discontinued Dec-2015; this is its active successor');
     if(id==='BAMLC0A0CM')h+=drow('Definition','ICE BofA Corporate Index OAS (investment grade)');
     if(id==='BAMLH0A0HYM2')h+=drow('Definition','ICE BofA High Yield Index OAS');
     if(id==='INDPRO')h+=drow('Unit','index (2017=100)');
     if(id==='RSAFS')h+=drow('Unit','millions USD/month \u2014 shown as $bn');
     if(id==='JTSJOL')h+=drow('Unit','thousands of openings, month-end');
-    if(id==='PAYEMS')h+=drow('Unit','thousands of nonfarm jobs, seasonally adjusted \u2014 level shown; monthly CHANGE is the headline');
+    if(id==='PAYEMS')h+=drow('Unit','thousands of nonfarm jobs, SA \u2014 level shown; monthly CHANGE is the headline');
     if(id==='HOUST')h+=drow('Unit','thousands of units, annualized \u2014 shown as millions');
     if(id==='GDPC1')h+=drow('Unit','real GDP, billions of chained 2017 dollars \u2014 shown as $T');
     if(id==='UMCSENT')h+=drow('Unit','index (1966=100), U. Michigan consumer sentiment');
-    if(id==='MORTGAGE30US')h+=drow('Definition','30-Year Fixed Rate Mortgage Average (Freddie Mac primary market)');
+    if(id==='MORTGAGE30US')h+=drow('Definition','30-Year Fixed Rate Mortgage Average (Freddie Mac)');
     if(c.src==='yahoo'&&id.length===6&&id.endsWith('USD'))
       h+=drow('Quote convention',id.slice(0,3)+'/'+id.slice(3)+' \u2014 green means '+id.slice(0,3)+' strengthened vs USD');}
   h+='<div class="dsec">This value</div>';
@@ -968,7 +1018,7 @@ function renderAll(st){derive();
 async function boot(matrix){if(busy)return;busy=true;
   $('bRun').disabled=true;
   ROUTES=routes();for(const k in QZ)delete QZ[k];
-  log('\u2500\u2500 BOOT v14.4 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
+  log('\u2500\u2500 BOOT v14.5 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
   const snap=restoreInto();
   if(snap){document.getElementById('snap').classList.add('on');
     renderAll();flushEarly();}
@@ -1025,9 +1075,9 @@ document.querySelectorAll('.bbtn').forEach(x=>x.addEventListener('click',()=>set
  $('backBtn').addEventListener('click',()=>{$('pg2').classList.remove('on');$('pg1').style.display='';window.scrollTo(0,0);});
 document.querySelectorAll('.rv').forEach((el,i)=>el.style.animationDelay=(i*60)+'ms');
 setBasis(BASIS);
-log('morning briefing v14.4 \u2014 coverage expansion: 51 feeds (+PAYEMS \u00b7 +AHETPI \u00b7 +PPI headline/core \u00b7 +GDPC1 \u00b7 +HOUST \u00b7 +UMCSENT \u00b7 +MORTGAGE30US \u00b7 +COPPER)','lhi');
-log('monthly/jolts staleness warnings removed per review \u2014 a month-old monthly print is current by design','ldim');
-log('new prints flow into Recent releases automatically; PPI also joins page-2 inflation view and the summary','ldim');
+log('morning briefing v14.5 \u2014 curve+agenda merged into one block \u00b7 softs expanded (corn/soy/coffee/sugar/cotton/cocoa)','lhi');
+log('inflation shown as rates of change everywhere: releases show y/y (never index), page-2 m/m rows use computed values','ldim');
+log('core PPI swapped to WPSFD49207 \u2014 old PPILFE was discontinued Dec-2015 (frozen data caught in logs)','ldim');
 boot(true);
 </script>
 </body>

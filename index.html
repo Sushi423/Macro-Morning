@@ -84,6 +84,8 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .pipe summary::-webkit-details-marker{display:none}
 .pipe summary::before{content:'▸ '}
 .pipe details[open] summary::before{content:'▾ '}
+.phead{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;padding-top:22px}
+.pstats{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.13em;color:#8B8371;text-transform:uppercase}
 .pipe .inner{display:grid;grid-template-columns:1fr 320px;gap:34px;padding:14px 0 20px}
 .log{font-family:'IBM Plex Mono',monospace;font-size:11px;line-height:1.7;max-height:340px;overflow-y:auto;color:#C8C0AC}
 .log .t{color:#71695A;margin-right:10px}
@@ -208,10 +210,11 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
       ① VPN / corporate filter / ad-blocker killing relays → disable, reload.<br>
       ② Free relays down or rate-limited → deploy your own (2 min, free) and paste below.<br>
       ③ Network blocks all cross-origin → custom relay is the only client-side fix.</div>
+    <div class="phead"><div class="kick" style="flex:1">Pipeline log · feed health</div><div class="pstats" id="pstats">—</div></div>
     <div class="relay"><label for="relayIn">CUSTOM RELAY</label>
       <input id="relayIn" spellcheck="false" placeholder="https://your-worker.workers.dev/?url={url}">
       <button class="rbtn" id="relaySave">Save + re-run</button>
-      <span class="hint">supports {url} (encoded) or {raw}. Stored locally.</span></div>
+      <span class="hint">supports {url} (encoded) or {raw}. Stored locally. Auto-build runs every 12h.</span></div>
     <div class="inner"><div class="log" id="log"></div><div class="hlth" id="hlth"></div></div>
     <div class="srcall" id="srcAll"></div>
   </details>
@@ -238,7 +241,7 @@ setTimeout(function(){if(window.__mm)return;var el=document.getElementById('log'
 'use strict';
 window.__mm=true;
 
-/* ============ LOGGING — declared FIRST so every trap works ============ */
+/* ============ logging — first, so every trap works ============ */
 var LOGL=[];
 function log(msg,c){try{
   var el=document.getElementById('log');if(!el){LOGL.push(msg);return;}
@@ -256,9 +259,7 @@ function status(t){var el=document.getElementById('fs');if(el)el.textContent=t;}
 window.addEventListener('error',e=>{try{log('JS ERROR · '+(e.message||'?')+' @ '+(e.lineno||'?')+':'+(e.colno||'?'),'lerr');flushEarly();}catch(_){}});
 window.addEventListener('unhandledrejection',e=>{try{log('REJECT · '+((e.reason&&e.reason.message)||e.reason||'?'),'lerr');flushEarly();}catch(_){}});
 
-/* ============ safe() — every render call is wrapped and traced ============
-   If a render function throws, the log names the function AND the error
-   with stack, and the page continues with the other sections. */
+/* safe() — traced render wrapper: entry, exit, or exact failure in the log */
 function safe(name,fn){
   try{
     log('render ▸ '+name,'ldim');
@@ -440,14 +441,14 @@ const SNAP='mm_snapshot';
 function snapshot(){const s={t:Date.now(),curve:M.curve||null};
   FEEDS.forEach(c=>{const st=state[c.id];if(st&&st.rows.length)s[c.id]={rows:st.rows.slice(-320),via:st.via,src:st.src,at:st.at,meta:st.meta};});
   try{localStorage.setItem(SNAP,JSON.stringify(s))}catch(e){}}
-function restore(){let s;try{s=JSON.parse(localStorage.getItem(SNAP))}catch(e){}return s&&s.t?s:null;}
-function restoreInto(){let s=restore();if(!s)return 0;let n=0;
+window.addEventListener('storage',e=>{if(e.key===SNAP&&e.newValue)location.reload();});
+function restoreInto(){let s;try{s=JSON.parse(localStorage.getItem(SNAP))}catch(e){return 0;}
+  if(!s||!s.t)return 0;let n=0;
   FEEDS.forEach(c=>{const e=s[c.id];if(e&&e.rows&&e.rows.length){
     state[c.id]={rows:e.rows,via:e.via,src:e.src,at:e.at||s.t,meta:e.meta,stage:'CACHE'};n++;}});
   if(s.curve&&s.curve.length)M.curve=s.curve;
   if(n)log('snapshot restored — '+n+' feeds; refreshing in background','lhi');
   return n;}
-window.addEventListener('storage',e=>{if(e.key===SNAP&&e.newValue)location.reload();});
 
 /* ============ fetch engine ============ */
 async function hop(cfg,url,kind){const errors=[];
@@ -500,21 +501,27 @@ async function runFeed(c){c.stage='ROUTE';const att=[];
   else{flog(c.tag,'\u2717 DEAD — stuck at '+c.stage+', no cache','lerr');
     state[c.id]={rows:[],via:'err',src:'none',stage:c.stage};}
   return false;}
+
+/* v14.3 — curve assembly. FIX: runs AFTER derive() (boot enforces the
+   order; this function re-derives defensively first). Every exit logs. */
 function buildCurveFromFRED(){
+  derive();
   const maps={};const labs=[];
   for(const pair of CURVE_TENORS){const id=pair[1];
     if(M[id]&&M[id].vals&&M[id].vals.length){maps[pair[0]]=new Map(M[id].vals.map(r=>[r.d,r.v]));labs.push(pair[0]);}}
-  if(labs.length<3)return false;
-  const base=M.DGS10?M.DGS10.vals:null;if(!base||!base.length)return false;
+  if(labs.length<3){flog('UST:CURVE','only '+labs.length+' tenor(s) in M — assembly impossible','lwarn');return false;}
+  const base=M.DGS10?M.DGS10.vals:null;
+  if(!base||!base.length){flog('UST:CURVE','no 10Y calendar to anchor on','lwarn');return false;}
   const rows=[];
   for(const r of base){const y={};let n=0;
     for(const lab of labs){const v=maps[lab].get(r.d);if(v!=null){y[lab]=v;n++;}}
     if(n>=3)rows.push({d:r.d,y:y});}
   rows.sort((a,b)=>a.d<b.d?-1:1);
-  if(!rows.length)return false;M.curve=rows;
-  flog('UST:CURVE','assembled from '+labs.length+' FRED tenor series · '+rows.length+' days','lok');
+  if(!rows.length){flog('UST:CURVE','0 date-matched rows after assembly','lwarn');return false;}
+  M.curve=rows;
+  flog('UST:CURVE','assembled from '+labs.length+' FRED tenor series · '+rows.length+' days ('+rows[0].d+' → '+rows[rows.length-1].d+')','lok');
   return true;}
-function fetchCurve(){return Promise.resolve(buildCurveFromFRED());}
+async function fetchCurve(){return Promise.resolve(buildCurveFromFRED());}
 
 /* ============ stage 1 — connectivity matrix ============ */
 async function diagnose(){log('\u2500\u2500 STAGE 1 \u00b7 CONNECTIVITY MATRIX (4 upstreams \u00d7 '+ROUTES.length+' routes, parallel) \u2500\u2500','lhi');
@@ -561,7 +568,7 @@ function derive(){safe('derive',function(){
   if(M.DGS2&&M.DGS10){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
     M.sp=M.DGS10.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
     M.spNow=M.sp.length?M.sp[M.sp.length-1].v:null;
-    M.inv=0;for(let i=M.sp.length-1;i>=0&&M.sp[i].v<0;i++)M.inv++;}
+    M.inv=0;for(let i=M.sp.length-1;i>=0&&M.sp[i].v<0;i--)M.inv++;}
   if(M.DGS2&&M.DGS30){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
     M.sp2=M.DGS30.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
     M.sp2Now=M.sp2.length?M.sp2[M.sp2.length-1].v:null;}
@@ -629,7 +636,7 @@ function renderInteg(){safe('integrity',function(){
   const html=r.length?r.map(x=>'<div class="di '+x.lvl+'"><span>'+(x.lvl==='err'?'\u2717':'\u26a0')+'</span><span>'+esc(x.msg)+' \u2014 <u class="clk" data-fig="'+x.id+'">details</u></span></div>').join(''):'';
   if(h1)h1.innerHTML=html;if(h2)h2.innerHTML=html;});}
 
-/* ============ page-1 renders — all traced via safe() ============ */
+/* ============ renders — all traced ============ */
 const GROUPS=[
  {name:'COMMODITIES',sections:[
    {sk:'Hard',items:['WTI','BRENT','NATGAS','GOLD','SILVER']},
@@ -824,7 +831,7 @@ function openCard(id){safe('card:'+id,function(){
     h+=drow('Cadence',CAD[c.freq]||c.freq);
     if(CONTRACT[id])h+=drow('Contract',esc(CONTRACT[id]));
     if(id==='CPIAUCSL'||id==='CPILFESL')h+=drow('Adjustment','NSA \u2014 Y/Y standard; M/M seasonal. PCE is BEA-keyed, not covered.');
-    if(id==='BAMLC0A0CM')h+=drow('Definition','ICE BofA Corporate Index OAS (IG)');
+    if(id==='BAMLC0A0CM')h+=drow('Definition','ICE BofA Corporate Index OAS (investment grade)');
     if(id==='BAMLH0A0HYM2')h+=drow('Definition','ICE BofA High Yield Index OAS');
     if(id==='INDPRO')h+=drow('Unit','index (2017=100)');
     if(id==='RSAFS')h+=drow('Unit','millions USD/month \u2014 shown as $bn');
@@ -864,7 +871,9 @@ function renderHealth(){return safe('health',function(){
     else if(s.stage==='PEND'){dc='dr';tx='PEND';dd++;}
     else{dc='dr';tx='\u2717'+s.stage;dd++;}
     return'<div class="chip" title="'+c.id+' \u00b7 '+(s.src||'?')+' via '+(s.via||'?')+'"><span class="dot '+dc+'"></span><b>'+c.id+'</b>\u00b7'+tx+'</div>';}).join('');
-  $('pstats').textContent=FEEDS.length+' FEEDS \u00b7 '+ok+' OK \u00b7 '+ca+' CACHE \u00b7 '+dd+' STUCK';
+  /* v14.3 FIX: pstats guarded — the v14.2 crash was this line */
+  const ps=document.getElementById('pstats');
+  if(ps)ps.textContent=FEEDS.length+' FEEDS \u00b7 '+ok+' OK \u00b7 '+ca+' CACHE \u00b7 '+dd+' STUCK';
   return dd;})||0;}
 function renderSrcAll(){safe('sources',function(){
   const el=document.getElementById('srcAll');if(!el)return;
@@ -882,7 +891,6 @@ function mast(st){safe('masthead',function(){
   m.innerHTML='<div class="dt">'+etDate()+'</div><div class="bt">built '+etTime()+' ET \u00b7 tape '+st+'</div>';
   document.querySelector('.mast-top').insertBefore(m,document.querySelector('.acts'));});}
 const KEY=['SP500','DGS10','SPREAD','WTI','BRENT','GOLD','EURUSD','CPI_YOY','CORE_YOY','UNRATE','ICSA'];
-async function copyBrief(){safe('copy',function(){throw new Error('use copyBrief2');});}
 async function copyBrief2(){try{
   const st=($('mood')&&$('mood').textContent.replace('Risk mood: ',''))||'N/A';
   const key=KEY.map(id=>{const v=valueFor(id);if(!v)return null;const d=deltaFor(id);
@@ -899,7 +907,7 @@ async function copyBrief2(){try{
   toast('Brief copied \u00b7 '+txt.length.toLocaleString()+' chars');}
   catch(e){log('COPY FAILED \u00b7 '+esc(e.message||'?'),'lerr');}}
 
-/* ============ boot — every render traced ============ */
+/* ============ boot — v14.3 ordering fix: feeds → derive → curve → render ============ */
 function setStage(n,txt){status('STAGE '+(n+1)+' \u00b7 '+txt);}
 function renderAll(st){derive();
   const s=st||narrative();
@@ -909,10 +917,9 @@ function renderAll(st){derive();
 async function boot(matrix){if(busy)return;busy=true;
   $('bRun').disabled=true;
   ROUTES=routes();for(const k in QZ)delete QZ[k];
-  log('\u2500\u2500 BOOT v14.2 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
-  const snap=restore();
+  log('\u2500\u2500 BOOT v14.3 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
+  const snap=restoreInto();
   if(snap){document.getElementById('snap').classList.add('on');
-    log('render pass on snapshot data \u2014 each section traced below','ldim');
     renderAll();flushEarly();}
   setStage(0,'probing routes\u2026');
   if(matrix||!goodRoutes.length)goodRoutes=await diagnose();
@@ -937,6 +944,9 @@ async function boot(matrix){if(busy)return;busy=true;
   log('\u2500\u2500 STAGE 3 \u00b7 FULL BUILD \u2500\u2500','lhi');
   const rest=FEEDS.filter(f=>!(state[f.id]&&state[f.id].stage==='OK'));
   await Promise.all(rest.map(c=>q2(()=>runFeed(c))));
+  /* v14.3 ORDERING FIX: derive() BEFORE curve assembly — in v14.2 the
+     curve read M before derive() had populated it, and bailed silently */
+  derive();
   await fetchCurve();
   const out=renderAll();
   const bySrc={};FEEDS.forEach(c=>{const s=state[c.id];if(s&&s.rows.length)bySrc[s.src||c.src]=(bySrc[s.src||c.src]||0)+1;});
@@ -966,9 +976,8 @@ document.querySelectorAll('.bbtn').forEach(x=>x.addEventListener('click',()=>set
  $('backBtn').addEventListener('click',()=>{$('pg2').classList.remove('on');$('pg1').style.display='';window.scrollTo(0,0);});
 document.querySelectorAll('.rv').forEach((el,i)=>el.style.animationDelay=(i*60)+'ms');
 setBasis(BASIS);
-log('morning briefing v14.2 \u2014 diagnostic build: every render function wrapped in safe() with entry/exit/error tracing','lhi');
-log('if the crash recurs, the log will show: render \u25b8 <name> \u2192 render \u2717 <name> \u2014 <exact error + stack>','ldim');
-log('stance element removed from narrative() entirely; mood is written by narrative() directly (guarded)','ldim');
+log('morning briefing v14.3 \u2014 two fixes: (1) pstats element restored + guarded, (2) derive() runs BEFORE curve assembly','lhi');
+log('curve failure paths now log their reason \u2014 no silent bail-outs remain in buildCurveFromFRED','ldim');
 boot(true);
 </script>
 </body>

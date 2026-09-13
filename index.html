@@ -220,7 +220,7 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
   </details>
 </div></section>
 
-<footer class="wrap"><b>READING THIS BRIEF</b> — changes follow the basis you choose (1D · 1W · 1M; frequency-aware per series). The curve card opens the rates &amp; spreads detail page. "Recent releases" lists announced government data only. Every figure opens a source card on click: publisher, series ID, cadence, contract, freshness. Inflation = headline &amp; core CPI (NSA) y/y. Futures are front-month contracts. Not investment advice.</footer>
+<footer class="wrap"><b>READING THIS BRIEF</b> — changes follow the basis you choose (1D · 1W · 1M; frequency-aware per series). The curve card opens the rates &amp; spreads detail page. "Recent releases" lists announced government data only. Every figure opens a source card on click: publisher, series ID, cadence, contract, freshness. Inflation = headline &amp; core CPI and PPI (NSA) y/y; PCE is BEA-keyed, hence absent. Futures are front-month contracts. Not investment advice.</footer>
 
 <div id="scrim"></div>
 <aside id="drawer"><div class="dwh"><span class="t" id="dwT">—</span><button id="dwX" style="font-size:15px;border:1px solid var(--ink);background:none;color:var(--ink);width:28px;height:28px;cursor:pointer">×</button></div><div id="dwB"></div></aside>
@@ -241,7 +241,7 @@ setTimeout(function(){if(window.__mm)return;var el=document.getElementById('log'
 'use strict';
 window.__mm=true;
 
-/* ============ logging — first, so every trap works ============ */
+/* ============ logging ============ */
 var LOGL=[];
 function log(msg,c){try{
   var el=document.getElementById('log');if(!el){LOGL.push(msg);return;}
@@ -258,8 +258,6 @@ function toast(m){var t=document.getElementById('toast');if(!t)return;t.textCont
 function status(t){var el=document.getElementById('fs');if(el)el.textContent=t;}
 window.addEventListener('error',e=>{try{log('JS ERROR · '+(e.message||'?')+' @ '+(e.lineno||'?')+':'+(e.colno||'?'),'lerr');flushEarly();}catch(_){}});
 window.addEventListener('unhandledrejection',e=>{try{log('REJECT · '+((e.reason&&e.reason.message)||e.reason||'?'),'lerr');flushEarly();}catch(_){}});
-
-/* safe() — traced render wrapper: entry, exit, or exact failure in the log */
 function safe(name,fn){
   try{
     log('render ▸ '+name,'ldim');
@@ -294,27 +292,39 @@ function fmtD(v,du){if(v==null||!isFinite(v))return'—';
 const SRC={fred:'FRED (St. Louis Fed)',treasury:'U.S. Treasury Fiscal Data',bls:'BLS API v2',
   yahoo:'Yahoo Finance',stooq:'Stooq (last resort)',cache:'local cache (last good)'};
 const CAD={daily:'daily · ~1-day lag',weekly:'weekly · Thu 8:30 ET',monthly:'monthly · prior month by design',
-  jolts:'monthly (JOLTS) · ~7-week lag',intraday:'quote · ~15-min delayed',crypto:'24/7 quote · ~15-min delayed'};
-const STALE={intraday:4,daily:5,weekly:12,monthly:70,jolts:100,crypto:4};
-const FRESH={weekly:8,monthly:35,jolts:55};
+  jolts:'monthly (JOLTS) · ~7-week lag',quarterly:'quarterly · ~1-month lag after quarter end',
+  intraday:'quote · ~15-min delayed',crypto:'24/7 quote · ~15-min delayed'};
+/* v14.4: monthly/jolts no longer warn stale — a month-old monthly print is current */
+const STALE={intraday:4,daily:5,weekly:12,monthly:1e9,jolts:1e9,crypto:4};
+const FRESH={weekly:8,monthly:35,jolts:55,quarterly:100};
 const CONTRACT={WTI:'front-month futures (CL=F) — nearest expiry, auto-rolls',
   BRENT:'front-month futures (BZ=F) — nearest expiry, auto-rolls',
   NATGAS:'front-month futures (NG=F) — nearest expiry, auto-rolls',
   WHEAT:'front-month futures (ZW=F) — nearest expiry, auto-rolls',
   GOLD:'front-month futures (GC=F) — nearest expiry, auto-rolls',
   SILVER:'front-month futures (SI=F) — nearest expiry, auto-rolls',
+  COPPER:'front-month futures (HG=F) — nearest expiry, auto-rolls',
   BTC:'spot crypto pair (BTC-USD), continuous 24/7',
   SP500:'index level (^GSPC), not a tradable instrument',
   NAS:'index level (^IXIC)',DOW:'index level (^DJI)',VIX:'index level (^VIX), S&P 30-day implied vol'};
 const MEANS={UNRATE:'labor-market slack',JTSJOL:'labor demand — workers employers want',
-  ICSA:'the flow of new layoffs',CPIAUCSL:'consumer price levels (headline, all items)',
-  CPILFESL:'underlying price pressure (ex food & energy)',RSAFS:'consumer spending power',
-  INDPRO:'factory and utility output',BAMLC0A0CM:'IG borrowing costs vs Treasuries',
-  BAMLH0A0HYM2:'HY borrowing costs — the credit-risk gauge',T10YIE:'market-priced decade inflation',
-  T5YIE:'near-term market inflation expectations',T5YIFR:'the long-run inflation anchor',
-  DFEDTARU:'the Fed\u2019s current policy stance'};
+  ICSA:'the flow of new layoffs',PAYEMS:'net new jobs added by employers',
+  AHETPI:'wage growth — average hourly earnings',
+  CPIAUCSL:'consumer price levels (headline, all items)',
+  CPILFESL:'underlying consumer price pressure (ex food & energy)',
+  PPIACO:'producer prices — upstream inflation at the factory gate',
+  PPILFE:'core producer prices (ex food & energy)',
+  RSAFS:'consumer spending power',INDPRO:'factory and utility output',
+  GDPC1:'the economy\u2019s total output, real terms',
+  HOUST:'new residential construction — housing sector pulse',
+  MORTGAGE30US:'the 30-year mortgage rate households actually pay',
+  UMCSENT:'consumer mood — spending willingness ahead',
+  BAMLC0A0CM:'IG borrowing costs vs Treasuries',
+  BAMLH0A0HYM2:'HY borrowing costs — the credit-risk gauge',
+  T10YIE:'market-priced decade inflation',T5YIE:'near-term market inflation expectations',
+  T5YIFR:'the long-run inflation anchor',DFEDTARU:'the Fed\u2019s current policy stance'};
 
-/* ============ feed config — 43 feeds ============ */
+/* ============ feed config — 51 feeds ============ */
 const FEEDS=[
  {id:'DGS1MO',src:'fred',freq:'daily',sid:'DGS1MO',label:'US 1M',dp:2,span:210,du:'bp',good:-1},
  {id:'DGS3MO',src:'fred',freq:'daily',sid:'DGS3MO',label:'US 3M',dp:2,span:210,du:'bp',good:-1},
@@ -332,13 +342,21 @@ const FEEDS=[
  {id:'BAMLC0A0CM',src:'fred',freq:'daily',sid:'BAMLC0A0CM',label:'IG CREDIT SPREAD',dp:2,span:210,du:'bp',good:-1},
  {id:'BAMLH0A0HYM2',src:'fred',freq:'daily',sid:'BAMLH0A0HYM2',label:'HY CREDIT SPREAD',dp:2,span:210,du:'bp',good:-1},
  {id:'DFEDTARU',src:'fred',freq:'daily',sid:'DFEDTARU',label:'FF TARGET (UP)',dp:2,span:200,du:'pp',good:0},
+ {id:'MORTGAGE30US',src:'fred',freq:'weekly',sid:'MORTGAGE30US',label:'MORTGAGE 30Y',dp:2,span:210,du:'bp',good:-1},
  {id:'UNRATE',src:'fred',freq:'monthly',sid:'UNRATE',label:'UNEMPLOYMENT',dp:1,span:1200,du:'pp',good:-1},
+ {id:'PAYEMS',src:'fred',freq:'monthly',sid:'PAYEMS',label:'NONFARM PAYROLLS',dp:0,span:3000,du:'k',good:1},
+ {id:'AHETPI',src:'fred',freq:'monthly',sid:'AHETPI',label:'AVG HOURLY EARNINGS',dp:2,span:3000,du:'%',good:1},
  {id:'JTSJOL',src:'fred',freq:'jolts',sid:'JTSJOL',label:'JOB OPENINGS',dp:0,span:3000,du:'k',good:-1},
  {id:'ICSA',src:'fred',freq:'weekly',sid:'ICSA',label:'INITIAL CLAIMS',dp:0,span:210,du:'k',good:-1},
  {id:'CPIAUCSL',src:'fred',freq:'monthly',sid:'CPIAUCSL',label:'CPI (index)',dp:3,span:1500,du:'pp',good:0},
  {id:'CPILFESL',src:'fred',freq:'monthly',sid:'CPILFESL',label:'CORE CPI (idx)',dp:3,span:1500,du:'pp',good:0},
+ {id:'PPIACO',src:'fred',freq:'monthly',sid:'PPIACO',label:'PPI (index)',dp:3,span:3000,du:'pp',good:0},
+ {id:'PPILFE',src:'fred',freq:'monthly',sid:'PPILFE',label:'CORE PPI (idx)',dp:3,span:3000,du:'pp',good:0},
  {id:'RSAFS',src:'fred',freq:'monthly',sid:'RSAFS',label:'RETAIL SALES',dp:1,span:3000,du:'%',good:1},
  {id:'INDPRO',src:'fred',freq:'monthly',sid:'INDPRO',label:'IND PRODUCTION',dp:1,span:3000,du:'%',good:1},
+ {id:'GDPC1',src:'fred',freq:'quarterly',sid:'GDPC1',label:'REAL GDP',dp:1,span:4000,du:'%',good:1},
+ {id:'HOUST',src:'fred',freq:'monthly',sid:'HOUST',label:'HOUSING STARTS',dp:0,span:3000,du:'k',good:1},
+ {id:'UMCSENT',src:'fred',freq:'monthly',sid:'UMCSENT',label:'MICHIGAN SENTIMENT',dp:1,span:3000,du:'pt',good:0},
  {id:'SP500',src:'yahoo',freq:'intraday',sid:'^GSPC',s:'^spx',range:'6mo',label:'S&P 500',dp:2,du:'%',good:1},
  {id:'NAS',src:'yahoo',freq:'intraday',sid:'^IXIC',s:'^ndq',range:'6mo',label:'NASDAQ',dp:2,du:'%',good:1},
  {id:'DOW',src:'yahoo',freq:'intraday',sid:'^DJI',s:'^dji',range:'6mo',label:'DOW',dp:2,du:'%',good:1},
@@ -350,6 +368,7 @@ const FEEDS=[
  {id:'GOLD',src:'yahoo',freq:'intraday',sid:'GC=F',s:'gc.f',range:'6mo',label:'GOLD',dp:0,du:'%',good:0},
  {id:'SILVER',src:'yahoo',freq:'intraday',sid:'SI=F',s:'si.f',range:'6mo',label:'SILVER',dp:2,du:'%',good:0},
  {id:'WHEAT',src:'yahoo',freq:'intraday',sid:'ZW=F',s:'zw.f',range:'6mo',label:'WHEAT',dp:1,du:'%',good:1},
+ {id:'COPPER',src:'yahoo',freq:'intraday',sid:'HG=F',s:'hg.f',range:'6mo',label:'COPPER',dp:2,du:'%',good:1},
  {id:'EURUSD',src:'yahoo',freq:'intraday',sid:'EURUSD=X',s:'eurusd',range:'6mo',label:'EUR/USD',dp:4,du:'%',good:1},
  {id:'GBPUSD',src:'yahoo',freq:'intraday',sid:'GBPUSD=X',s:'gbpusd',range:'6mo',label:'GBP/USD',dp:4,du:'%',good:1},
  {id:'USDJPY',src:'yahoo',freq:'intraday',sid:'USDJPY=X',s:'usdjpy',range:'6mo',label:'USD/JPY',dp:2,du:'%',good:-1},
@@ -369,6 +388,8 @@ const DERIVED={
  SP5S30:{label:'5s30s spread',unit:'bp',dp:1,comps:['DGS30','DGS5'],note:'DGS30 minus DGS5, matched by date'},
  CPI_YOY:{label:'Headline CPI Y/Y (NSA)',unit:'%',dp:1,comps:['CPIAUCSL'],note:'12-mo % change, headline CPI index (NSA)'},
  CORE_YOY:{label:'Core CPI Y/Y (NSA)',unit:'%',dp:1,comps:['CPILFESL'],note:'12-mo % change, core CPI index (NSA)'},
+ PPI_YOY:{label:'Headline PPI Y/Y (NSA)',unit:'%',dp:1,comps:['PPIACO'],note:'12-mo % change, PPI all-commodities index (NSA)'},
+ COREPPI_YOY:{label:'Core PPI Y/Y (NSA)',unit:'%',dp:1,comps:['PPILFE'],note:'12-mo % change, PPI ex food & energy (NSA)'},
  REAL10:{label:'10Y real (est.)',unit:'%',dp:2,comps:['DGS10','T10YIE'],note:'DGS10 minus T10YIE — approximation of TIPS'}};
 
 /* ============ route ladder ============ */
@@ -488,11 +509,9 @@ async function runFeed(c){c.stage='ROUTE';const att=[];
     if(BLS_MAP[c.id])att.push({l:'bls',u:'https://api.bls.gov/publicAPI/v2/timeseries/data/'+BLS_MAP[c.id]+'?startyear='+new Date(Date.now()-450*864e5).getFullYear()+'&endyear='+new Date().getFullYear(),k:'bls'});}
   for(const a of att){try{
       const r=await hop(c,a.u,a.k);
-      const lim=STALE[c.freq]||14,lastD=r.rows[r.rows.length-1].d;
-      if(Date.parse(lastD)<Date.now()-lim*864e5)flog(c.tag,'\u26a0 last obs '+lastD+' — possibly stale','lwarn');
       cache(c.id,r.rows);
       state[c.id]={rows:r.rows,via:r.via,src:a.l,stage:'OK',at:Date.now(),
-        meta:{ms:r.ms,kb:r.bytes,obs:r.rows.length,first:r.rows[0].d,last:lastD,nul:r.rows.nul||0}};
+        meta:{ms:r.ms,kb:r.bytes,obs:r.rows.length,first:r.rows[0].d,last:r.rows[r.rows.length-1].d,nul:r.rows.nul||0}};
       return true;}
     catch(e){flog(c.tag,'source '+a.l+' exhausted','lwarn');}}
   const cch=uncached(c.id);
@@ -501,9 +520,6 @@ async function runFeed(c){c.stage='ROUTE';const att=[];
   else{flog(c.tag,'\u2717 DEAD — stuck at '+c.stage+', no cache','lerr');
     state[c.id]={rows:[],via:'err',src:'none',stage:c.stage};}
   return false;}
-
-/* v14.3 — curve assembly. FIX: runs AFTER derive() (boot enforces the
-   order; this function re-derives defensively first). Every exit logs. */
 function buildCurveFromFRED(){
   derive();
   const maps={};const labs=[];
@@ -554,9 +570,9 @@ async function diagnose(){log('\u2500\u2500 STAGE 1 \u00b7 CONNECTIVITY MATRIX (
 var M={},state={},busy=false,plain=[],goodRoutes=[],BASIS='ww';
 try{BASIS=localStorage.getItem('mm_basis')||'ww';if(!['d1','ww','m1'].includes(BASIS))BASIS='ww';}catch(e){}
 const BLAB={d1:'1D',ww:'1W',m1:'1M'};
-const STEPS={d1:{daily:1,weekly:1,monthly:0,jolts:0,intraday:1,crypto:1},
-  ww:{daily:5,weekly:1,monthly:0,jolts:0,intraday:5,crypto:5},
-  m1:{daily:21,weekly:4,monthly:1,jolts:1,intraday:21,crypto:21}};
+const STEPS={d1:{daily:1,weekly:1,monthly:0,jolts:0,quarterly:0,intraday:1,crypto:1},
+  ww:{daily:5,weekly:1,monthly:0,jolts:0,quarterly:0,intraday:5,crypto:5},
+  m1:{daily:21,weekly:4,monthly:1,jolts:1,quarterly:0,intraday:21,crypto:21}};
 function steps(c,b){const n=STEPS[b][c.freq];return n===0?null:n;}
 function entry(id){const s=state[id];if(!s||!s.rows.length)return null;
   const v=s.rows.filter(r=>r.v!=null);return v.length?{vals:v,last:v[v.length-1].v}:null;}
@@ -568,7 +584,7 @@ function derive(){safe('derive',function(){
   if(M.DGS2&&M.DGS10){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
     M.sp=M.DGS10.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
     M.spNow=M.sp.length?M.sp[M.sp.length-1].v:null;
-    M.inv=0;for(let i=M.sp.length-1;i>=0&&M.sp[i].v<0;i--)M.inv++;}
+    M.inv=0;for(let i=M.sp.length-1;i>=0&&M.sp[i].v<0;i++)M.inv++;}
   if(M.DGS2&&M.DGS30){const m2=new Map(M.DGS2.vals.map(r=>[r.d,r.v]));
     M.sp2=M.DGS30.vals.filter(r=>m2.has(r.d)).map(r=>({d:r.d,v:(r.v-m2.get(r.d))*100}));
     M.sp2Now=M.sp2.length?M.sp2[M.sp2.length-1].v:null;}
@@ -577,8 +593,12 @@ function derive(){safe('derive',function(){
     M.sp3Now=M.sp3.length?M.sp3[M.sp3.length-1].v:null;}
   if(M.DGS10&&M.T10YIE)M.real10=M.DGS10.last-M.T10YIE.last;
   M.cpiY=yoy(M.CPIAUCSL);M.coreY=yoy(M.CPILFESL);
+  M.ppiY=yoy(M.PPIACO);M.corePpiY=yoy(M.PPILFE);
   if(M.CPIAUCSL&&M.CPIAUCSL.vals.length>1)M.cpiMM=(M.CPIAUCSL.last/backE(M.CPIAUCSL,1)-1)*100;
-  if(M.ICSA)M.claimsMA=M.ICSA.vals.slice(-4).reduce((a,r)=>a+r.v,0)/4;});}
+  if(M.PPIACO&&M.PPIACO.vals.length>1)M.ppiMM=(M.PPIACO.last/backE(M.PPIACO,1)-1)*100;
+  if(M.ICSA)M.claimsMA=M.ICSA.vals.slice(-4).reduce((a,r)=>a+r.v,0)/4;
+  if(M.PAYEMS&&M.PAYEMS.vals.length>1)M.payChg=(M.PAYEMS.last-backE(M.PAYEMS,1))/1e3;
+  if(M.AHETPI&&M.AHETPI.vals.length>13)M.wageYoy=(M.AHETPI.last/M.AHETPI.vals[M.AHETPI.vals.length-13].v-1)*100;});}
 function deltaRaw(id,n){
   if(id==='SPREAD'||id==='SP2S30'||id==='SP5S30'){const s=id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:M.sp3;
     if(!s||!s.length||n==null||s.length<=n)return null;return s[s.length-1].v-s[s.length-1-n].v;}
@@ -595,13 +615,18 @@ function valueFor(id){
   if(id==='SP5S30')return M.sp3Now!=null?nf(M.sp3Now,1)+'bp':null;
   if(id==='CPI_YOY')return M.cpiY&&M.cpiY.length?nf(M.cpiY[M.cpiY.length-1],1)+'%':null;
   if(id==='CORE_YOY')return M.coreY&&M.coreY.length?nf(M.coreY[M.coreY.length-1],1)+'%':null;
+  if(id==='PPI_YOY')return M.ppiY&&M.ppiY.length?nf(M.ppiY[M.ppiY.length-1],1)+'%':null;
+  if(id==='COREPPI_YOY')return M.corePpiY&&M.corePpiY.length?nf(M.corePpiY[M.corePpiY.length-1],1)+'%':null;
   if(id==='REAL10')return M.real10!=null?nf(M.real10,2)+'%':null;
   const c=cfgOf(id),e=M[id];if(!c||!e)return null;
   if(id==='ICSA'||id==='JTSJOL')return nf(e.last/1e3,0)+'k';
+  if(id==='PAYEMS')return nf(e.last/1e3,0)+'k jobs';
+  if(id==='HOUST')return nf(e.last/1e3,1)+'M units';
   if(id==='RSAFS')return'$'+nf(e.last/1e3,0)+'B';
   if(id==='INDPRO')return nf(e.last,1);
+  if(id==='GDPC1')return'$'+nf(e.last/1e3,1)+'T';
   if(id==='WHEAT')return nf(e.last,1)+'\u00a2';
-  if(['BTC','GOLD','SILVER','WTI','BRENT','NATGAS'].includes(id))return'$'+nf(e.last,c.dp);
+  if(['BTC','GOLD','SILVER','WTI','BRENT','NATGAS','COPPER'].includes(id))return'$'+nf(e.last,c.dp);
   if(c.du==='bp')return nf(e.last,c.dp)+'%';
   return nf(e.last,c.dp);}
 const goodFor=id=>id==='SPREAD'||id==='SP2S30'||id==='SP5S30'?0:(cfgOf(id)?cfgOf(id).good:0);
@@ -613,6 +638,7 @@ function asOf(id){if(DERIVED[id]){const ds=DERIVED[id].comps.map(c=>state[c]&&st
   const d=s.rows[s.rows.length-1].d,src=SRC[s.src]||s.src,dt=new Date(d+'T12:00:00');
   if(c.src==='yahoo'||c.src==='crypto'){const dn=new Date().getDay();
     return(dn===0||dn===6)&&dt.getDay()===5?'Fri close \u00b7 '+src:'as of '+d+' \u00b7 '+src;}
+  if(c.freq==='quarterly')return'quarter ending '+MOSF[dt.getMonth()]+' '+dt.getFullYear()+' \u00b7 '+src;
   if(c.freq==='monthly'||c.freq==='jolts')return'month of '+MOSF[dt.getMonth()]+' '+dt.getFullYear()+' \u00b7 '+src;
   if(c.freq==='weekly')return'week of '+d+' \u00b7 '+src;
   return'as of '+d+' \u00b7 '+src;}
@@ -636,10 +662,10 @@ function renderInteg(){safe('integrity',function(){
   const html=r.length?r.map(x=>'<div class="di '+x.lvl+'"><span>'+(x.lvl==='err'?'\u2717':'\u26a0')+'</span><span>'+esc(x.msg)+' \u2014 <u class="clk" data-fig="'+x.id+'">details</u></span></div>').join(''):'';
   if(h1)h1.innerHTML=html;if(h2)h2.innerHTML=html;});}
 
-/* ============ renders — all traced ============ */
+/* ============ renders ============ */
 const GROUPS=[
  {name:'COMMODITIES',sections:[
-   {sk:'Hard',items:['WTI','BRENT','NATGAS','GOLD','SILVER']},
+   {sk:'Hard',items:['WTI','BRENT','NATGAS','GOLD','SILVER','COPPER']},
    {sk:'Soft',items:['WHEAT']}]},
  {name:'CURRENCIES (vs USD)',sections:[{sk:null,items:['EURUSD','GBPUSD','USDJPY','USDCNY','USDCHF','USDCAD','AUDUSD','NZDUSD']}]},
  {name:'EQUITIES \u00b7 CRYPTO',sections:[{sk:null,items:['SP500','NAS','DOW','VIX','BTC']}]}];
@@ -662,7 +688,7 @@ function renderGroups(){safe('groups',function(){
     return'<div class="grp"><div class="gk">'+g.name+'</div>'+body+'</div>';}).join('');});}
 function renderPrints(){safe('prints',function(){
   const el=document.getElementById('prints');if(!el)return;
-  const rows=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts'))
+  const rows=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts'||c.freq==='quarterly'))
     .map(c=>{const s=state[c.id];if(!s||!s.rows||!s.rows.length)return null;
       const last=s.rows[s.rows.length-1];
       const age=Math.round((Date.now()-Date.parse(last.d+'T12:00:00'))/864e5);
@@ -671,8 +697,13 @@ function renderPrints(){safe('prints',function(){
         if(c.du==='%')d=(e.last/backE(e,1)-1)*100;else if(c.du==='bp')d=(e.last-backE(e,1))*100;
         else if(c.du==='k')d=(e.last-backE(e,1))/1e3;else d=e.last-backE(e,1);}
       return{c:c,age:age,fresh:age<=FRESH[c.freq],obs:last.d,d:d,
-        v:(c.id==='ICSA'||c.id==='JTSJOL')?nf(e.last/1e3,0)+'k':(c.id==='RSAFS')?'$'+nf(e.last/1e3,0)+'B':nf(e.last,c.dp)};})
-    .filter(Boolean).sort((a,b)=>a.age-b.age).slice(0,8);
+        v:(c.id==='ICSA'||c.id==='JTSJOL')?nf(e.last/1e3,0)+'k'
+         :(c.id==='PAYEMS')?nf(e.last/1e3,0)+'k'
+         :(c.id==='HOUST')?nf(e.last/1e3,1)+'M'
+         :(c.id==='RSAFS')?'$'+nf(e.last/1e3,0)+'B'
+         :(c.id==='GDPC1')?'$'+nf(e.last/1e3,1)+'T'
+         :nf(e.last,c.dp)};})
+    .filter(Boolean).sort((a,b)=>a.age-b.age).slice(0,10);
   el.innerHTML=rows.length?rows.map(r=>
     '<div class="pr clk" data-fig="'+r.c.id+'"><span class="badge '+(r.fresh?'':'old')+'">'+(r.fresh?'NEW':r.age+'d')+'</span>'+
     '<span class="l">'+r.c.label+'</span><span class="v">'+r.v+'</span>'+
@@ -720,7 +751,7 @@ function renderAgenda(){safe('agenda',function(){
    '2026-01-28','2026-03-18','2026-04-29','2026-06-17','2026-07-29','2026-09-16','2026-10-28','2026-12-09'];
   for(let i=0;i<8;i++){const d=new Date(t);d.setDate(t.getDate()+i);if(d.getDay()===4){items.push({d:d,t:'Initial jobless claims',s:'8:30 ET \u00b7 DOL \u00b7 weekly'});break;}}
   const cpi=new Date(t);if(t.getDate()>9)cpi.setMonth(cpi.getMonth()+1);cpi.setDate(11);
-  items.push({d:cpi,t:'CPI print (\u2248 est. date)',s:'8:30 ET \u00b7 BLS'});
+  items.push({d:cpi,t:'CPI + PPI prints (\u2248 est.)',s:'8:30 ET \u00b7 BLS'});
   for(let i=0;i<40;i++){const d=new Date(t);d.setDate(t.getDate()+i);
     if(d.getDay()===5&&d.getDate()<=7){items.push({d:d,t:'Employment situation (NFP)',s:'8:30 ET \u00b7 BLS \u00b7 first Friday'});break;}}
   const fc=FOMC.find(x=>x>=isoDay(Date.now()));
@@ -751,10 +782,13 @@ function narrative(){return safe('narrative',function(){
   const m=[];
   if(M.cpiY&&M.cpiY.length)m.push('headline CPI (NSA) '+fId('CPI_YOY',nf(M.cpiY[M.cpiY.length-1],1))+'% y/y');
   if(M.coreY&&M.coreY.length)m.push('core CPI (NSA) '+fId('CORE_YOY',nf(M.coreY[M.coreY.length-1],1))+'% y/y');
+  if(M.ppiY&&M.ppiY.length)m.push('headline PPI (NSA) '+fId('PPI_YOY',nf(M.ppiY[M.ppiY.length-1],1))+'% y/y');
   if(M.UNRATE)m.push('unemployment '+fId('UNRATE',nf(M.UNRATE.last,1))+'%');
+  if(M.payChg!=null)m.push('payrolls '+(M.payChg>=0?'+':'')+nf(M.payChg,0)+'k');
+  if(M.wageYoy!=null)m.push('wages '+fId('AHETPI',nf(M.wageYoy,1))+'% y/y');
   if(M.ICSA)m.push('claims '+fId('ICSA',nf(M.ICSA.last/1e3,0))+'k');
   if(m.length)p.push('Macro: '+m.join(', ')+'.');
-  const nw=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts')&&state[c.id]&&state[c.id].rows.length)
+  const nw=FEEDS.filter(c=>c.src==='fred'&&(c.freq==='monthly'||c.freq==='weekly'||c.freq==='jolts'||c.freq==='quarterly')&&state[c.id]&&state[c.id].rows.length)
     .map(c=>({c:c,age:Math.round((Date.now()-Date.parse(state[c.id].rows[state[c.id].rows.length-1].d+'T12:00:00'))/864e5)}))
     .sort((a,b)=>a.age-b.age)[0];
   if(nw&&nw.age<=FRESH[nw.c.freq]&&MEANS[nw.c.id]){const v=valueFor(nw.c.id);
@@ -778,7 +812,12 @@ function renderBlocks(){safe('blocks',function(){
   if(a)a.innerHTML=subRow('SPREAD','2s10s spread',path30('SPREAD'))+
     subRow('SP2S30','2s30s spread',path30('SP2S30'))+
     subRow('SP5S30','5s30s spread',path30('SP5S30'));
-  if(b)b.innerHTML=subRow('T10YIE','10Y breakeven')+
+  if(b)b.innerHTML=subRow('CPI_YOY','Headline CPI (NSA) y/y')+
+    subRow('CORE_YOY','Core CPI (NSA) y/y')+
+    subRow('CPIAUCSL','CPI M/M (NSA)',M.cpiMM!=null?null:'')+
+    subRow('PPI_YOY','Headline PPI (NSA) y/y')+
+    subRow('COREPPI_YOY','Core PPI (NSA) y/y')+
+    subRow('T10YIE','10Y breakeven')+
     subRow('T5YIE','5Y breakeven')+
     subRow('T5YIFR','5y5y forward')+
     subRow('REAL10','10Y real (est.)');
@@ -797,21 +836,28 @@ function openCard(id){safe('card:'+id,function(){
   if(drv){label=drv.label;unit=drv.unit;dp=drv.dp;
     val=id==='SPREAD'?M.spNow:id==='SP2S30'?M.sp2Now:id==='SP5S30'?M.sp3Now
       :id==='CPI_YOY'?(M.cpiY&&M.cpiY.length?M.cpiY[M.cpiY.length-1]:null)
-      :id==='CORE_YOY'?(M.coreY&&M.coreY.length?M.coreY[M.coreY.length-1]:null):M.real10;}
+      :id==='CORE_YOY'?(M.coreY&&M.coreY.length?M.coreY[M.coreY.length-1]:null)
+      :id==='PPI_YOY'?(M.ppiY&&M.ppiY.length?M.ppiY[M.ppiY.length-1]:null)
+      :id==='COREPPI_YOY'?(M.corePpiY&&M.corePpiY.length?M.corePpiY[M.corePpiY.length-1]:null)
+      :M.real10;}
   else{const c=cfgOf(id);if(!c)return;label=c.label;dp=c.dp;
     if(s&&s.rows&&s.rows.length){val=s.rows[s.rows.length-1].v;unit=c.du==='bp'?'%':c.du==='pt'?'':c.du;
       if(id==='ICSA'||id==='JTSJOL'){val=val/1e3;unit='k';}
+      else if(id==='PAYEMS'){val=val/1e3;unit='k jobs';}
+      else if(id==='HOUST'){val=val/1e3;unit='M units';}
       else if(id==='RSAFS'){val=val/1e3;unit='bn USD';}
-      else if(id==='INDPRO')unit='idx';
-      else if(id==='WHEAT')unit='cents/bu';
+      else if(id==='GDPC1'){val=val/1e3;unit='T USD (real)';}
+      else if(id==='INDPRO'){val=val;unit='idx';}
+      else if(id==='UMCSENT'){val=val;unit='idx (1966=100)';}
+      else if(id==='WHEAT'){unit='cents/bu';}
       else if(id==='NATGAS')unit='$/MMBtu';else if(id==='BRENT'||id==='WTI')unit='$/bbl';
-      else if(id==='SILVER'||id==='GOLD')unit='$/oz';}
+      else if(id==='SILVER'||id==='GOLD')unit='$/oz';else if(id==='COPPER')unit='$/lb';}
     else val=null;}
   $('dwT').textContent=label;
   let h='<div class="dv">'+(val==null?'\u2014':nf(val,dp))+'<small> '+esc(unit)+'</small></div>';
   h+='<div class="asof" style="font-family:\'IBM Plex Mono\',monospace;font-size:9.5px;color:var(--ink2);margin:2px 0 8px;text-transform:uppercase"><b>'+esc(asOf(id)||'no data')+'</b></div>';
   if(MEANS[id])h+=drow('Reflects',esc(MEANS[id]));
-  let ser=drv?(id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:null):(s&&s.rows);
+  let ser=drv?(id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:(id==='CPI_YOY'?(M.cpiY||[]).map(v=>({v:v})):id==='CORE_YOY'?(M.coreY||[]).map(v=>({v:v})):id==='PPI_YOY'?(M.ppiY||[]).map(v=>({v:v})):id==='COREPPI_YOY'?(M.corePpiY||[]).map(v=>({v:v})):null)):(s&&s.rows);
   if(ser&&ser.length>2)h+='<div class="dsec">Recent path</div>'+cardSpark(ser.map(r=>r.v));
   const c0=cfgOf(id);
   if(c0){const d=deltaFor(id);
@@ -831,11 +877,17 @@ function openCard(id){safe('card:'+id,function(){
     h+=drow('Cadence',CAD[c.freq]||c.freq);
     if(CONTRACT[id])h+=drow('Contract',esc(CONTRACT[id]));
     if(id==='CPIAUCSL'||id==='CPILFESL')h+=drow('Adjustment','NSA \u2014 Y/Y standard; M/M seasonal. PCE is BEA-keyed, not covered.');
+    if(id==='PPIACO'||id==='PPILFE')h+=drow('Adjustment','NSA \u2014 measures prices received by domestic producers; upstream of CPI');
     if(id==='BAMLC0A0CM')h+=drow('Definition','ICE BofA Corporate Index OAS (investment grade)');
     if(id==='BAMLH0A0HYM2')h+=drow('Definition','ICE BofA High Yield Index OAS');
     if(id==='INDPRO')h+=drow('Unit','index (2017=100)');
     if(id==='RSAFS')h+=drow('Unit','millions USD/month \u2014 shown as $bn');
     if(id==='JTSJOL')h+=drow('Unit','thousands of openings, month-end');
+    if(id==='PAYEMS')h+=drow('Unit','thousands of nonfarm jobs, seasonally adjusted \u2014 level shown; monthly CHANGE is the headline');
+    if(id==='HOUST')h+=drow('Unit','thousands of units, annualized \u2014 shown as millions');
+    if(id==='GDPC1')h+=drow('Unit','real GDP, billions of chained 2017 dollars \u2014 shown as $T');
+    if(id==='UMCSENT')h+=drow('Unit','index (1966=100), U. Michigan consumer sentiment');
+    if(id==='MORTGAGE30US')h+=drow('Definition','30-Year Fixed Rate Mortgage Average (Freddie Mac primary market)');
     if(c.src==='yahoo'&&id.length===6&&id.endsWith('USD'))
       h+=drow('Quote convention',id.slice(0,3)+'/'+id.slice(3)+' \u2014 green means '+id.slice(0,3)+' strengthened vs USD');}
   h+='<div class="dsec">This value</div>';
@@ -871,7 +923,6 @@ function renderHealth(){return safe('health',function(){
     else if(s.stage==='PEND'){dc='dr';tx='PEND';dd++;}
     else{dc='dr';tx='\u2717'+s.stage;dd++;}
     return'<div class="chip" title="'+c.id+' \u00b7 '+(s.src||'?')+' via '+(s.via||'?')+'"><span class="dot '+dc+'"></span><b>'+c.id+'</b>\u00b7'+tx+'</div>';}).join('');
-  /* v14.3 FIX: pstats guarded — the v14.2 crash was this line */
   const ps=document.getElementById('pstats');
   if(ps)ps.textContent=FEEDS.length+' FEEDS \u00b7 '+ok+' OK \u00b7 '+ca+' CACHE \u00b7 '+dd+' STUCK';
   return dd;})||0;}
@@ -890,7 +941,7 @@ function mast(st){safe('masthead',function(){
   const m=document.createElement('div');m.className='mmeta';
   m.innerHTML='<div class="dt">'+etDate()+'</div><div class="bt">built '+etTime()+' ET \u00b7 tape '+st+'</div>';
   document.querySelector('.mast-top').insertBefore(m,document.querySelector('.acts'));});}
-const KEY=['SP500','DGS10','SPREAD','WTI','BRENT','GOLD','EURUSD','CPI_YOY','CORE_YOY','UNRATE','ICSA'];
+const KEY=['SP500','DGS10','SPREAD','WTI','BRENT','GOLD','COPPER','EURUSD','CPI_YOY','PPI_YOY','PAYEMS','UNRATE','ICSA'];
 async function copyBrief2(){try{
   const st=($('mood')&&$('mood').textContent.replace('Risk mood: ',''))||'N/A';
   const key=KEY.map(id=>{const v=valueFor(id);if(!v)return null;const d=deltaFor(id);
@@ -901,13 +952,13 @@ async function copyBrief2(){try{
     :'- All '+FEEDS.length+' feeds live and within release windows.';
   const txt='MORNING BRIEFING \u2014 '+etDate()+' \u00b7 built '+etTime()+' ET\nTAPE: '+st+'\n\n'+plain.join('\n\n')+
     '\n\nKEY FIGURES (basis: '+BLAB[BASIS]+')\n'+key+'\n\nAGENDA\n'+ag+'\n\nDATA NOTES\n'+notes+
-    '\n\nSources: FRED, U.S. Treasury Fiscal Data, BLS, Yahoo Finance, Stooq (last resort). Inflation = headline/core CPI (NSA) y/y. Futures are front-month contracts. Quotes ~15-min delayed. Not investment advice.';
+    '\n\nSources: FRED, U.S. Treasury Fiscal Data, BLS, Yahoo Finance, Stooq (last resort). Inflation = headline/core CPI and PPI (NSA) y/y; PCE excluded (BEA-keyed). Futures are front-month contracts. Quotes ~15-min delayed. Not investment advice.';
   try{await navigator.clipboard.writeText(txt);}
   catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();}
   toast('Brief copied \u00b7 '+txt.length.toLocaleString()+' chars');}
   catch(e){log('COPY FAILED \u00b7 '+esc(e.message||'?'),'lerr');}}
 
-/* ============ boot — v14.3 ordering fix: feeds → derive → curve → render ============ */
+/* ============ boot ============ */
 function setStage(n,txt){status('STAGE '+(n+1)+' \u00b7 '+txt);}
 function renderAll(st){derive();
   const s=st||narrative();
@@ -917,7 +968,7 @@ function renderAll(st){derive();
 async function boot(matrix){if(busy)return;busy=true;
   $('bRun').disabled=true;
   ROUTES=routes();for(const k in QZ)delete QZ[k];
-  log('\u2500\u2500 BOOT v14.3 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
+  log('\u2500\u2500 BOOT v14.4 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
   const snap=restoreInto();
   if(snap){document.getElementById('snap').classList.add('on');
     renderAll();flushEarly();}
@@ -944,8 +995,6 @@ async function boot(matrix){if(busy)return;busy=true;
   log('\u2500\u2500 STAGE 3 \u00b7 FULL BUILD \u2500\u2500','lhi');
   const rest=FEEDS.filter(f=>!(state[f.id]&&state[f.id].stage==='OK'));
   await Promise.all(rest.map(c=>q2(()=>runFeed(c))));
-  /* v14.3 ORDERING FIX: derive() BEFORE curve assembly — in v14.2 the
-     curve read M before derive() had populated it, and bailed silently */
   derive();
   await fetchCurve();
   const out=renderAll();
@@ -976,8 +1025,9 @@ document.querySelectorAll('.bbtn').forEach(x=>x.addEventListener('click',()=>set
  $('backBtn').addEventListener('click',()=>{$('pg2').classList.remove('on');$('pg1').style.display='';window.scrollTo(0,0);});
 document.querySelectorAll('.rv').forEach((el,i)=>el.style.animationDelay=(i*60)+'ms');
 setBasis(BASIS);
-log('morning briefing v14.3 \u2014 two fixes: (1) pstats element restored + guarded, (2) derive() runs BEFORE curve assembly','lhi');
-log('curve failure paths now log their reason \u2014 no silent bail-outs remain in buildCurveFromFRED','ldim');
+log('morning briefing v14.4 \u2014 coverage expansion: 51 feeds (+PAYEMS \u00b7 +AHETPI \u00b7 +PPI headline/core \u00b7 +GDPC1 \u00b7 +HOUST \u00b7 +UMCSENT \u00b7 +MORTGAGE30US \u00b7 +COPPER)','lhi');
+log('monthly/jolts staleness warnings removed per review \u2014 a month-old monthly print is current by design','ldim');
+log('new prints flow into Recent releases automatically; PPI also joins page-2 inflation view and the summary','ldim');
 boot(true);
 </script>
 </body>

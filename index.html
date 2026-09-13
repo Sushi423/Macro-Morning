@@ -44,6 +44,7 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 .gi .v{font-family:'IBM Plex Mono',monospace;font-size:14.5px;font-weight:600;white-space:nowrap}
 .gi .d{font-family:'IBM Plex Mono',monospace;font-size:10.5px;white-space:nowrap}
 .gi svg{width:48px;height:13px;flex:none;align-self:center}
+.up{color:var(--grn)}.dn{color:var(--red)}.fl{color:var(--ink2)}
 .rowcurve{display:grid;grid-template-columns:1fr 320px;gap:28px;padding:20px 0;border-top:1px solid var(--hr);border-bottom:1px solid var(--hr)}
 #curve svg{width:100%;height:auto;display:block;cursor:pointer}
 #curve .ln{fill:none;stroke:var(--ink);stroke-width:1.8}#curve .pv{fill:none;stroke:var(--ink2);stroke-width:1.2;stroke-dasharray:4 4;opacity:.7}
@@ -54,7 +55,7 @@ h1{font-size:clamp(32px,4.6vw,52px);font-weight:550;letter-spacing:-.02em;line-h
 #curve .flab{font-size:9px;fill:var(--red)}
 .rline{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink2);margin-top:10px}
 .rline b{color:var(--ink)}
-.door{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;border:1px solid var(--ink);padding:8px 12px;display:inline-block;margin-top:14px}
+.door{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);cursor:pointer;border:1px solid var(--ink);padding:8px 12px;display:inline-block;margin-top:12px}
 .door:hover{background:var(--ink);color:var(--pp)}
 .cfoot{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--ink2);margin-top:10px}
 .ag{display:flex;gap:12px;padding:7px 0;border-bottom:1px dotted var(--hr2);font-family:'IBM Plex Mono',monospace}
@@ -197,21 +198,51 @@ footer{font-family:'IBM Plex Mono',monospace;font-size:10.5px;line-height:1.9;co
 <div id="toast"></div>
 
 <script>
-/* WATCHDOG v2 — distinguishes PARSE ERROR from TRUNCATION, appends (never overwrites) */
+/* =====================================================================
+   WATCHDOG + DUPLICATE-DECLARATION SCANNER
+   Runs BEFORE the main script. If the main script fails to parse, this
+   block (a) reports the browser's exact error with line:col, and
+   (b) scans the main script's source text for EVERY identifier declared
+   more than once at top level, printing each with its line numbers.
+   This is what finally exposed the duplicate UNITS — it is permanent.
+===================================================================== */
 window.__mm=false;window.__be='';
-window.addEventListener('error',function(e){window.__be=(e.message||'?')+' @ '+(e.lineno||'?')+':'+(e.colno||'?');
+window.addEventListener('error',function(e){
+  window.__be=(e.message||'?')+' @ '+(e.lineno||'?')+':'+(e.colno||'?');
   try{var el=document.getElementById('log');
-    if(el)el.innerHTML='<div class="lerr">BOOT FAIL · '+window.__be+'</div><div class="lerr">→ parse error. Send me this exact line.</div>';
+    if(el)el.innerHTML='<div class="lerr">BOOT FAIL \u00b7 '+window.__be+'</div>';
     else{document.title='MM FAIL';alert(window.__be);}}catch(_){}});
-setTimeout(function(){if(window.__mm)return;
-  var m='<div class="lerr">WATCHDOG · main script never executed.</div>'+
-    (window.__be?'<div class="lerr">Captured: '+window.__be+' → parse error. Send me this line.</div>'
-                :'<div class="ldim">No error event → file arrived truncated. Check it ends with boot(true);</div>');
+setTimeout(function(){
+  if(window.__mm)return;
+  var out='<div class="lerr">WATCHDOG \u00b7 main script never executed \u2014 parse error.</div>';
+  if(window.__be)out+='<div class="lerr">Browser error: '+window.__be+'</div>';
+  /* scan the main script source for duplicate top-level declarations */
+  try{
+    var ms=document.getElementById('mmMain');
+    if(ms&&ms.textContent){
+      var lines=ms.textContent.split('\n'),decl={},dups=[];
+      lines.forEach(function(line,i){
+        var dm=line.match(/^\s*(?:const|let|var)\s+(.*)$/);
+        if(dm){var ids=[];
+          var first=dm[1].match(/^([A-Za-z_$][\w$]*)/);if(first)ids.push(first[1]);
+          var re=/,\s*([A-Za-z_$][\w$]*)\s*=/g,mm;
+          while((mm=re.exec(dm[1])))ids.push(mm[1]);
+          ids.filter(Boolean).forEach(function(n){(decl[n]=decl[n]||[]).push(i+1);});}
+        var fm=line.match(/^\s*(?:async\s+)?function\s+([A-Za-z_$][\w$]*)/);
+        if(fm)(decl[fm[1]]=decl[fm[1]]||[]).push(i+1);
+      });
+      Object.keys(decl).forEach(function(k){
+        if(decl[k].length>1)dups.push('\u00b7 <b>'+k+'</b> declared at lines '+decl[k].join(', '));});
+      if(dups.length)out+='<div class="lerr">DUPLICATE DECLARATIONS FOUND:<br>'+dups.join('<br>')+'</div>';
+      else out+='<div class="ldim">No duplicate top-level declarations found \u2014 the parse error is a different syntax fault. Browser error above names it.</div>';
+    }
+  }catch(e){}
+  out+='<div class="ldim">Fix the named line(s), save, reload.</div>';
   try{var el=document.getElementById('log');
-    if(el)el.innerHTML=m;else{document.title='MM FAIL';alert(window.__be||'truncated');}}catch(_){}},8000);
+    if(el)el.innerHTML=out;else{document.title='MM FAIL';alert('main script never executed');}}catch(_){}},8000);
 </script>
 
-<script>
+<script id="mmMain">
 'use strict';
 window.__mm=true;
 
@@ -220,7 +251,7 @@ var LOGL=[];
 function log(msg,c){try{
   var el=document.getElementById('log');if(!el){LOGL.push(msg);return;}
   var d=document.createElement('div');d.className=c||'';
-  d.innerHTML='<span class="t">'+T()+'</span>'+msg;el.appendChild(d);
+  d.innerHTML='<span class="t">'+nowT()+'</span>'+msg;el.appendChild(d);
   while(el.children.length>260)el.removeChild(el.firstChild);
   el.scrollTop=el.scrollHeight;}catch(e){}}
 function flushE(){var el=document.getElementById('log');if(!el||!LOGL.length)return;
@@ -229,10 +260,11 @@ function flushE(){var el=document.getElementById('log');if(!el||!LOGL.length)ret
 function flog(tag,msg,c){log('<span style="color:#8B8371">['+esc(tag)+']</span> '+msg,c);}
 function toast(m){var t=document.getElementById('toast');if(!t)return;t.textContent=m;t.classList.add('on');
   clearTimeout(t._h);t._h=setTimeout(function(){t.classList.remove('on')},2400);}
+function setStatus(t){var el=document.getElementById('fs');if(el)el.textContent=t;}
 window.addEventListener('error',e=>{try{log('JS ERROR · '+(e.message||'?')+' @ '+(e.lineno||'?')+':'+(e.colno||'?'),'lerr');flushE();}catch(_){}});
 window.addEventListener('unhandledrejection',e=>{try{log('REJECT · '+((e.reason&&e.reason.message)||e.reason||'?'),'lerr');flushE();}catch(_){}});
 
-/* safe() — traced wrapper: every render logs entry, exit, or exact failure+stack */
+/* safe() — traced wrapper on every render */
 function safe(name,fn){try{log('▸ '+name,'ldim');var r=fn();log('✓ '+name,'ldim');return r;}
   catch(e){log('✗ <b>'+name+'</b> — '+(e&&e.message||e)+'<br>'+(e&&e.stack?esc(String(e.stack).split('\n').slice(0,4).join('<br>')):''),'lerr');return null;}}
 
@@ -240,12 +272,13 @@ function safe(name,fn){try{log('▸ '+name,'ldim');var r=fn();log('✓ '+name,'l
 const $=id=>document.getElementById(id);
 const nf=(x,d)=>x==null||!isFinite(x)?'—':x.toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
 const sg=x=>x>0?'+':x<0?'\u2212':'';
-const cl=(d,g)=>d==null||d===0||!g?'fl':(d>0?1:-1)===Math.sign(g)?'up':'dn';
+const cls=(d,g)=>d==null||d===0||!g?'fl':(d>0?1:-1)===Math.sign(g)?'up':'dn';
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');
-const MOSF=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],DOWS=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+const MOSF=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOWS=['SUN','MON','TUE','WED','THU','FRI','SAT'];
 const isoDay=t=>new Date(t).toISOString().slice(0,10);
-const T=()=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit'}).format(new Date());
-const DAY=()=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',year:'numeric'}).format(new Date());
+const nowT=()=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hourCycle:'h23',hour:'2-digit',minute:'2-digit'}).format(new Date());
+const dayS=()=>new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',month:'short',day:'numeric',year:'numeric'}).format(new Date());
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 function fmtD(v,du){if(v==null||!isFinite(v))return'—';
   if(du==='bp')return sg(v)+nf(Math.abs(v),Math.abs(v)<10?1:0)+'bp';
@@ -283,6 +316,10 @@ const MEANS={UNRATE:'labor-market slack',JTSJOL:'labor demand — workers employ
   BAMLC0A0CM:'IG borrowing costs vs Treasuries',BAMLH0A0HYM2:'HY borrowing costs — the credit-risk gauge',
   T10YIE:'market-priced decade inflation',T5YIE:'near-term market inflation expectations',
   T5YIFR:'the long-run inflation anchor',DFEDTARU:'the Fed\u2019s current policy stance'};
+/* v14.7: UNITS declared EXACTLY ONCE (the v14.6/14.7 duplicate was the parse killer) */
+const UNITS={WTI:'$/bbl',BRENT:'$/bbl',NATGAS:'$/MMBtu',GOLD:'$/oz',SILVER:'$/oz',COPPER:'$/lb',
+  WHEAT:'\u00a2/bu',CORN:'\u00a2/bu',SOYB:'\u00a2/bu',COFFEE:'\u00a2/lb',SUGAR:'\u00a2/lb',COTTON:'\u00a2/lb',COCOA:'$/t',
+  PUREAUSDM:'$/mt',PDAPUSDM:'$/mt',PPOTKUSDM:'$/mt',BTC:'',SP500:'',NAS:'',DOW:'',VIX:'',BDRY:''};
 
 /* ============ feed config — 65 feeds ============ */
 const FEEDS=[
@@ -353,9 +390,6 @@ const UST_MAP={DGS2:'BC_2YEAR',DGS10:'BC_10YEAR',DGS30:'BC_30YEAR'};
 const BLS_MAP={UNRATE:'LNS14000000',CPIAUCSL:'CUUR0000SA0',CPILFESL:'CUUR0000SA0L1E'};
 const TEN=[['1M','DGS1MO'],['3M','DGS3MO'],['6M','DGS6MO'],['1Y','DGS1'],['2Y','DGS2'],
  ['5Y','DGS5'],['7Y','DGS7'],['10Y','DGS10'],['20Y','DGS20'],['30Y','DGS30']];
-const UNITS={WTI:'$/bbl',BRENT:'$/bbl',NATGAS:'$/MMBtu',GOLD:'$/oz',SILVER:'$/oz',COPPER:'$/lb',
-  WHEAT:'\u00a2/bu',CORN:'\u00a2/bu',SOYB:'\u00a2/bu',COFFEE:'\u00a2/lb',SUGAR:'\u00a2/lb',COTTON:'\u00a2/lb',COCOA:'$/t',
-  PUREAUSDM:'$/mt',PDAPUSDM:'$/mt',PPOTKUSDM:'$/mt',BTC:'',SP500:'',NAS:'',DOW:'',VIX:'',BDRY:''};
 const DER={
  SPREAD:{label:'2s10s spread',unit:'bp',dp:1,comps:['DGS10','DGS2'],note:'DGS10 minus DGS2, matched by date'},
  SP2S30:{label:'2s30s spread',unit:'bp',dp:1,comps:['DGS30','DGS2'],note:'DGS30 minus DGS2, matched by date'},
@@ -406,8 +440,8 @@ function pStooq(t){const out=[];
 function pYah(t){const j=JSON.parse(t);const r=j&&j.chart&&j.chart.result&&j.chart.result[0];
   if(!r||!r.meta)throw new Error('no chart.result');
   if(j.chart.error)throw new Error('yahoo: '+(j.chart.error.description||j.chart.error.code));
-  const ts=r.timestamp||[],cl=(r.indicators&&r.indicators.quote[0]&&r.indicators.quote[0].close)||[];
-  const rows=ts.map((tt,i)=>({d:new Date(tt*1e3).toISOString().slice(0,10),v:isFinite(cl[i])?cl[i]:null})).filter(x=>x.v!=null);
+  const ts=r.timestamp||[],clArr=(r.indicators&&r.indicators.quote[0]&&r.indicators.quote[0].close)||[];
+  const rows=ts.map((tt,i)=>({d:new Date(tt*1e3).toISOString().slice(0,10),v:isFinite(clArr[i])?clArr[i]:null})).filter(x=>x.v!=null);
   const mp=r.meta.regularMarketPrice;
   if(typeof mp==='number'&&isFinite(mp)){const ld=r.meta.regularMarketDate?new Date(r.meta.regularMarketDate*1e3).toISOString().slice(0,10):isoDay(Date.now());
     if(rows.length&&rows[rows.length-1].d===ld)rows[rows.length-1].v=mp;else rows.push({d:ld,v:mp});}
@@ -513,7 +547,7 @@ function fetchCurve(){return Promise.resolve(buildCurve());}
 
 /* ============ stage 1 — connectivity matrix ============ */
 async function diagnose(){log('\u2500\u2500 STAGE 1 \u00b7 CONNECTIVITY (4 upstreams \u00d7 '+ROUTES.length+' routes, parallel) \u2500\u2500','lhi');
-  status('STAGE 1 \u00b7 probing routes\u2026');
+  setStatus('STAGE 1 \u00b7 probing routes\u2026');
   try{const t0=performance.now();await fetchText('https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR',8e3);
     log('control \u00b7 CORS-native \u2192 200 \u00b7 '+((performance.now()-t0)/1e3).toFixed(1)+'s','lok');}
   catch(e){log('control \u2192 FAIL: '+esc(why(e)),'lerr');}
@@ -638,7 +672,6 @@ function renderInteg(){safe('integrity',function(){
   if(h1)h1.innerHTML=html;if(h2)h2.innerHTML=html;});}
 
 /* ============ renders — all traced ============ */
-/* two balanced rows: physical commodities row 1, financials+fertilisers row 2 */
 const GROWS=[
  [{name:'ENERGY',items:['WTI','BRENT','NATGAS']},
   {name:'FREIGHT',items:['BDRY']},
@@ -661,7 +694,7 @@ function renderGroups(){safe('groups',function(){
         const d=deltaFor(id),e=M[id];
         const sp=(e&&e.vals)?spark(e.vals.slice(-40),48,13):'';
         return'<div class="gi clk" data-fig="'+id+'"><span class="l">'+labFor(id)+'</span><span class="v">'+v+'</span>'+
-          (d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+'</span>':'<span class="d fl">\u2014</span>')+sp+'</div>';}).join('');
+          (d!=null?'<span class="d '+cls(d,goodFor(id))+'">'+fmtD(d,duFor(id))+'</span>':'<span class="d fl">\u2014</span>')+sp+'</div>';}).join('');
       return'<div class="grp"><div class="gk">'+grp.name+'</div>'+body+'</div>';}).join('');});});}
 function renderPrints(){safe('prints',function(){
   const el=document.getElementById('prints');if(!el)return;
@@ -692,7 +725,7 @@ function renderPrints(){safe('prints',function(){
   el.innerHTML=rows.length?rows.map(r=>
     '<div class="pr clk" data-fig="'+r.c.id+'"><span class="badge '+(r.fresh?'':'old')+'">'+(r.fresh?'NEW':r.age+'d')+'</span>'+
     '<span class="l">'+r.c.label+'</span><span class="v">'+r.v+'</span>'+
-    (r.d!=null?'<span class="d '+cl(r.d,0)+'">'+fmtD(r.d,r.du)+' vs prior</span>':'')+
+    (r.d!=null?'<span class="d '+cls(r.d,0)+'">'+fmtD(r.d,r.du)+' vs prior</span>':'')+
     '<span class="m">reflects: '+(MEANS[r.c.id]||'')+'</span><span class="dt">'+r.obs+'</span></div>').join('')
     :'<span class="ph">no prints available</span>';});}
 function renderCurve(){safe('curve',function(){
@@ -703,12 +736,12 @@ function renderCurve(){safe('curve',function(){
   for(const r of M.curve){if(Date.parse(L.d)-Date.parse(r.d)>=25*864e5){P=r;break;}}
   const ts=TEN.map(x=>x[0]).filter(t=>L.y[t]!=null);
   log('curve \u00b7 '+ts.length+' tenors \u00b7 '+L.d+' \u00b7 '+nf(Math.min(...ts.map(t=>L.y[t])),2)+'\u2013'+nf(Math.max(...ts.map(t=>L.y[t])),2)+'%','ldim');
-  const W=680,H=250,La=44,Ra=54,T=16,B=26;
+  const W=680,H=250,La=44,Ra=54,TM=16,B=26;
   const vs=ts.map(t=>L.y[t]);if(P)ts.forEach(t=>{if(P.y[t]!=null)vs.push(P.y[t]);});
   const ff=M.DFEDTARU?M.DFEDTARU.last:null;
   if(ff!=null)vs.push(ff);
   let mn=Math.min(...vs),mx=Math.max(...vs);const pad=Math.max((mx-mn)*.14,.12);mn-=pad;mx+=pad;
-  const X=i=>La+i/(ts.length-1)*(W-La-Ra),Y=v=>T+(mx-v)/(mx-mn)*(H-T-B);
+  const X=i=>La+i/(ts.length-1)*(W-La-Ra),Y=v=>TM+(mx-v)/(mx-mn)*(H-TM-B);
   let pL='';ts.forEach((t,i)=>pL+=(i?'L':'M')+X(i).toFixed(1)+','+Y(L.y[t]).toFixed(1));
   let pP='';if(P)ts.forEach((t,i)=>{if(P.y[t]!=null)pP+=(pP?'L':'M')+X(i).toFixed(1)+','+Y(P.y[t]).toFixed(1);});
   let dots='';ts.forEach((t,i)=>dots+='<circle class="dt2" cx="'+X(i).toFixed(1)+'" cy="'+Y(L.y[t]).toFixed(1)+'" r="2.6"/>');
@@ -760,7 +793,6 @@ function computeStance(){let t=0;
   if(M.sp&&M.sp.length>5){const d=M.sp[M.sp.length-1].v-M.sp[M.sp.length-6].v;t+=d>3?.5:d<-3?-.5:0;}
   return t>=2?['RISK-ON','risk appetite is firm']:t<=-2?['RISK-OFF','risk appetite is under strain']:['MIXED','risk mood is mixed'];}
 const fId=(id,t)=>'<span class="fig clk" data-fig="'+id+'">'+t+'</span>';
-/* v14.7: factual summary — levels + directions, no causal or forward claims */
 function narrative(){return safe('narrative',function(){
   plain=[];const p=[];
   const st=computeStance();
@@ -809,10 +841,10 @@ function narrative(){return safe('narrative',function(){
 function subRow(id,l,extra){const v=valueFor(id);if(v==null)return'';
   const d=deltaFor(id);
   return'<div class="sub clk" data-fig="'+id+'"><span class="lbl">'+l+'</span><span class="dots"></span>'+
-    '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cl(d,goodFor(id))+'">'+fmtD(d,duFor(id))+' '+BLAB[BASIS]+'</span>':'')+
+    '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cls(d,goodFor(id))+'">'+fmtD(d,duFor(id))+' '+BLAB[BASIS]+'</span>':'')+
     (extra||'')+'</div>';}
 function subRowV(id,l,v,d,du,g){return'<div class="sub clk" data-fig="'+id+'"><span class="lbl">'+l+'</span><span class="dots"></span>'+
-    '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cl(d,g)+'">'+fmtD(d,du)+'</span>':'')+'</div>';}
+    '<span class="val">'+v+'</span>'+(d!=null?'<span class="d '+cls(d,g)+'">'+fmtD(d,du)+'</span>':'')+'</div>';}
 function path30(id){const s=id==='SPREAD'?M.sp:id==='SP2S30'?M.sp2:id==='SP5S30'?M.sp3:null;
   if(!s||s.length<30)return'';const block='\u2581\u2582\u2583\u2584\u2585\u2586\u2587';const v=s.slice(-30);
   const mn=Math.min(...v),mx=Math.max(...v),rg=(mx-mn)||1;
@@ -962,7 +994,7 @@ function renderSrcAll(){safe('sources',function(){
 function mast(st){safe('masthead',function(){
   const o=document.querySelector('.mmeta');if(o)o.remove();
   const m=document.createElement('div');m.className='mmeta';
-  m.innerHTML='<div class="dt">'+DAY()+'</div><div class="bt">built '+T()+' ET \u00b7 tape '+st+'</div>';
+  m.innerHTML='<div class="dt">'+dayS()+'</div><div class="bt">built '+nowT()+' ET \u00b7 tape '+st+'</div>';
   document.querySelector('.mtop').insertBefore(m,document.querySelector('.acts'));});}
 const KEY=['SP500','DGS10','SPREAD','WTI','BRENT','GOLD','COPPER','EURUSD','CPI_YOY','PPI_YOY','PAYEMS','UNRATE','ICSA'];
 async function copyBrief2(){try{
@@ -973,7 +1005,7 @@ async function copyBrief2(){try{
   const rep=integReport();
   const notes=rep.length?rep.map(r=>'- ['+r.lvl.toUpperCase()+'] '+r.msg).join('\n')
     :'- All '+FEEDS.length+' feeds live and within release windows.';
-  const txt='MORNING BRIEFING \u2014 '+DAY()+' \u00b7 built '+T()+' ET\nTAPE: '+st+'\n\n'+plain.join('\n\n')+
+  const txt='MORNING BRIEFING \u2014 '+dayS()+' \u00b7 built '+nowT()+' ET\nTAPE: '+st+'\n\n'+plain.join('\n\n')+
     '\n\nKEY FIGURES (basis: '+BLAB[BASIS]+')\n'+key+'\n\nAGENDA\n'+ag+'\n\nDATA NOTES\n'+notes+
     '\n\nSources: FRED, U.S. Treasury Fiscal Data, BLS, Yahoo Finance, Stooq (last resort). Inflation = headline/core CPI (SA) and PPI (NSA) y/y; PCE excluded (BEA-keyed). Coal is PPI-based; freight is ETF-based. Futures are front-month contracts. Quotes ~15-min delayed. Not investment advice.';
   try{await navigator.clipboard.writeText(txt);}
@@ -982,7 +1014,7 @@ async function copyBrief2(){try{
   catch(e){log('COPY FAILED \u00b7 '+esc(e.message||'?'),'lerr');}}
 
 /* ============ boot ============ */
-function setStage(n,txt){status('STAGE '+(n+1)+' \u00b7 '+txt);}
+function setStage(n,txt){setStatus('STAGE '+(n+1)+' \u00b7 '+txt);}
 function renderAll(st){derive();
   const s=st||narrative();
   renderGroups();renderCurve();renderAgenda();renderPrints();renderBlocks();
@@ -991,7 +1023,7 @@ function renderAll(st){derive();
 async function boot(matrix){if(busy)return;busy=true;
   $('bRun').disabled=true;
   ROUTES=routes();for(const k in QZ)delete QZ[k];
-  log('\u2500\u2500 BOOT v14.7 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
+  log('\u2500\u2500 BOOT v14.7.1 \u00b7 ladder: '+ROUTES.map(r=>r.n).join(' \u2192 ')+(CUSTOM?' (custom relay)':'')+' \u2500\u2500','lhi');
   const snap=restoreInto();
   if(snap){document.getElementById('snap').classList.add('on');
     renderAll();flushE();}
@@ -1024,7 +1056,7 @@ async function boot(matrix){if(busy)return;busy=true;
   const bySrc={};FEEDS.forEach(c=>{const s=state[c.id];if(s&&s.rows.length)bySrc[s.src||c.src]=(bySrc[s.src||c.src]||0)+1;});
   log('provenance: '+Object.entries(bySrc).map(e=>e[0]+'\u00d7'+e[1]).join(' \u00b7 '),'lhi');
   snapshot();document.getElementById('snap').classList.remove('on');
-  setStage(3,'built '+T()+' ET');
+  setStage(3,'built '+nowT()+' ET');
   log('\u2500\u2500 BUILD COMPLETE \u00b7 '+out.dead+' feed(s) stuck \u00b7 snapshot saved \u2500\u2500','lok');
   mast(out.s);
   busy=false;$('bRun').disabled=false;}
@@ -1048,9 +1080,9 @@ document.querySelectorAll('.bbtn').forEach(x=>x.addEventListener('click',()=>set
  $('backBtn').addEventListener('click',()=>{$('pg2').classList.remove('on');$('pg1').style.display='';window.scrollTo(0,0);});
 document.querySelectorAll('.rv').forEach((el,i)=>el.style.animationDelay=(i*60)+'ms');
 setBasis(BASIS);
-log('morning briefing v14.7 \u2014 compact rebuild (~30% smaller) \u00b7 watchdog v2 distinguishes parse error vs truncation','lhi');
-log('65 feeds: +coal (PPI proxy) \u00b7 +urea/DAP/potash \u00b7 +freight (BDRY ETF) \u00b7 summary below groups, factual commentary','ldim');
-log('inflation everywhere as rates of change; CPI = SA \u00b7 core PPI = WPSFD49207 (PPILFE discontinued 2015)','ldim');
+log('morning briefing v14.7.1 \u2014 duplicate UNITS removed (single declaration verified by watchdog scanner)','lhi');
+log('watchdog now scans the main script for ALL duplicate top-level declarations with line numbers on any parse failure','ldim');
+log('65 feeds \u00b7 curve from 10 FRED tenors \u00b7 summary below groups \u00b7 inflation as rates of change (CPI=SA, PPI=NSA)','ldim');
 boot(true);
 </script>
 </body>

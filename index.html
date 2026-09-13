@@ -724,7 +724,7 @@ function stance(){let t=0;const s5=M.SP500?deltaRaw('SP500',5):null;
 const fId=(id,t)=>'<span class="fig clk" data-fig="'+id+'">'+t+'</span>';
 function narrative(){plain=[];const p=[];
   const st=stance();
-  let s='Risk mood: <b>'+st[0]+'</b> — '+st[1];
+  let s='Markets: the tape is '+st[1];
   if(M.SP500){const d5=deltaRaw('SP500',5);
     s+=': the S&P 500 at '+fId('SP500',nf(M.SP500.last,2));
     if(d5!=null)s+=' ('+(d5>=0?'+':'')+nf(d5,1)+'% w/w)';
@@ -951,6 +951,17 @@ log('morning briefing v14 — presentation rebuild per spec: 43 feeds (8 FX pair
 log('page 1: groups + basis(1D/1W/1M) + curve w/ FF target + agenda + releases + summary w/ risk mood','ldim');
 log('page 2 via curve card: segmented spreads (steepening/inflation/credit) · no levels strip · sources via drawers + diagnostics table','ldim');
 boot(true);
+</script>
+  <!-- v14.1 fix: restore hidden stance element + mirror into Summary mood line -->
+<span id="stance" style="display:none"></span>
+<script>
+(function(){
+  var el=document.getElementById('stance'),md=document.getElementById('mood');
+  if(!el||!md)return;
+  var sync=function(){var t=el.textContent;if(t)md.innerHTML='Risk mood: <b>'+t+'</b>';};
+  new MutationObserver(sync).observe(el,{childList:true});
+  sync();
+})();
 </script>
 </body>
 </html>
